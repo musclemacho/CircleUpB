@@ -44,7 +44,7 @@ const upload = multer({ storage: storage });
 // MySQL 接続設定
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
+  user: "a4",
   password: "aaaa",
 });
 
