@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- SwiperのCSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<!-- SwiperのJS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <title>サークル詳細</title>
+    <div class="w-full max-w-[500px] bg-white shadow-lg min-h-screen">
+    
+</head>
+<!-- ヘッダー -->
+<header class="bg-white text-black py-2 px-4 flex justify-between items-center  sticky top-0 z-50">
+   <!-- 戻るボタン -->
+<div class="z-50">
+    <button onclick="history.back()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
+        <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
+    </button>
+</div>
+
+<!-- お気に入りボタンヘッダー -->
+<div class="flex gap-3 mr-2">
+<label for="favoriteCheckbox" id="favoriteLabel2" >
+    <input type="checkbox" id="favoriteCheckbox" class="hidden">
+    <i id="favoriteIcon" class="fa-regular fa-star text-gray-500 text-2xl bg-white"></i>
+</label>
+    <div class="flex items-center gap-3">
+        <!-- ホームアイコン -->
+        <a href="/" class="text-black hover:text-gray-600">
+            <i class="fa-solid fa-house text-2xl"></i>
+        </a>
+    </div>
+</div>
+</header>
+<body class="font-sans bg-gray-100 flex justify-center">
+ 
+
+
+    <div class=" mx-auto bg-white shadow-md overflow-hidden">
+        <!-- 写真セクション -->
+        <div class="p-6 pb-12 text-center" style="background-image: linear-gradient(135deg, #F6D242 10%, #FF52E5 100%);">
+            <% if (circle.topPhoto || circle.photo) { %>
+                <div class="w-full mx-auto relative" style="aspect-ratio: 1 / 1;"> <!-- スマホ幅の80%で正方形 -->
+
+                    <img id="mainPhoto" 
+                         src="/uploads/<%= circle.topPhoto || circle.photo.split(',')[0].trim() %>" 
+                         alt="メイン写真" 
+                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 rounded-3xl">
+                </div>
+                <div class="flex overflow-x-auto space-x-4 py-2 mt-2 scrollbar-hide justify-center md:justify-start">
+                    <% if (circle.topPhoto) { %>
+                        <img src="/uploads/<%= circle.topPhoto %>" 
+                             alt="トップ写真" 
+                             class="w-16 h-16 object-cover cursor-pointer transition-transform duration-300 hover:scale-110 thumbnail-photo rounded-xl flex-shrink-0">
+                    <% } %>
+                    <% if (circle.subPhotos) { %>
+                        <% circle.subPhotos.split(',').forEach(subPhotos => { %>
+                            <img src="/uploads/<%= subPhotos.trim() %>" 
+                                 alt="サブ写真" 
+                                 class="w-16 h-16 object-cover rounded-md cursor-pointer transition-transform duration-300 hover:scale-110 thumbnail-photo flex-shrink-0">
+                        <% }) %>
+                    <% } %>
+                </div>
+                
+                
+            <% } %>
+        </div>
+
+        <style>
+            /* スクロールバーを非表示にする */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+        </style>
+<!-- コンテンツセクション (少し上にずらす) -->
+
+<div class="text-center rounded-2xl bg-white content-section">
+    <div class="p-5 border-gray-300 border-b">
+    <h1 class="text-2xl font-bold text-pink-500 flex justify-between items-start pt-2">
+        <%= circle.circleName %>
+        
+        <% if (circle.instagram) { %>
+            <a href="<%= circle.instagram %>" target="_blank" class="flex flex-col items-center gap-1">
+                <i class="fa-brands fa-instagram text-3xl text-pink-400 transition-transform duration-300 hover:scale-110"></i>
+                <p class="text-gray-600 text-[10px] leading-none">Instagram</p>
+            </a>
+        <% } %>
+    </h1>
+</div>
+
+<style>
+    .content-section {
+        position: relative;
+        top: -40px; /* 🔹 ここで上にずらす量を調整 */
+        z-index: 10; /* 🔹 背景の上に表示 */
+    }
+</style>
+
+<!-- お気に入り -->
+<label for="favoriteCheckbox" id="favoriteLabel" class="z-10 fixed bottom-[-100px] left-1/2 transform -translate-x-1/2 w-3/5 max-w-[400px] bg-yellow-200 opacity-80 text-white py-2 px-6 rounded-full text-center shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer">
+    <input type="checkbox" id="favoriteCheckbox" class="hidden">
+    <i id="favoriteIcon" class="fa-regular fa-star text-xl"></i>
+    <span class="text-gray-800 text-base">お気に入り</span>
+</label>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const favoriteCheckbox = document.getElementById("favoriteCheckbox");
+        const favoriteIcon = document.getElementById("favoriteIcon");
+        const favoriteLabel = document.getElementById("favoriteLabel");
+
+        const circleId = "<%= circle.id %>";
+        const showHeight = 500; // 🔹 ボタンが出るスクロール位置
+
+        // ✅ お気に入り状態を localStorage から取得
+        function updateFavoriteButton() {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            const isFavorite = favorites.includes(circleId);
+
+            // チェックボックスの状態を更新
+            favoriteCheckbox.checked = isFavorite;
+
+            // アイコンの見た目を変更
+            favoriteIcon.classList.toggle("fa-solid", isFavorite);
+            favoriteIcon.classList.toggle("fa-regular", !isFavorite);
+            favoriteIcon.classList.toggle("text-yellow-200", isFavorite);
+
+            // 🔹 チェックボックス（ラベル全体）の背景色を変更
+            if (isFavorite) {
+                favoriteLabel.classList.remove("bg-yellow-200");
+                favoriteLabel.classList.add("bg-yellow-400"); // ✅ 明るい黄色
+            } else {
+                favoriteLabel.classList.remove("bg-yellow-400");
+                favoriteLabel.classList.add("bg-yellow-200"); // ✅ 薄い黄色
+            }
+        }
+
+        // ✅ ボタンクリック時の処理
+        favoriteCheckbox.addEventListener("change", function () {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+            if (favoriteCheckbox.checked) {
+                favorites.push(circleId);
+            } else {
+                favorites = favorites.filter(id => id !== circleId);
+            }
+
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            updateFavoriteButton();
+        });
+
+        // ✅ 指定のスクロール位置でボタンを出す処理
+        window.addEventListener("scroll", function () {
+            if (window.scrollY > showHeight) {
+                favoriteLabel.style.bottom = "20px"; // 🔹 指定位置を超えたらボタンを表示
+            } else {
+                favoriteLabel.style.bottom = "-100px"; // 🔹 指定位置以下なら隠す
+            }
+        });
+
+        // ✅ 初期状態を適用
+        updateFavoriteButton();
+    });
+</script>
+
+        
+
+
+<!-- コンテンツbody -->
+
+   <!-- 人数・男女比・活動頻度・雰囲気 -->
+   <div class="p-5 my-6 space-y-5">
+    <!-- 人数 -->
+    <div>
+        <div class="flex justify-between text-sm text-gray-500 mb-2">
+            <span>人数</span>
+            <span class="font-bold text-gray-700">   
+                <% if (circle.tag && circle.tag.includes("null1")) { %>
+                未登録
+            <% } else { %><%= circle.parsedSlider1 || 0 %>人
+                <% } %>
+            </span>
+            <span>300人</span>
+        </div>
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+            <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500" 
+            style="width:<%= (circle.tag && circle.tag.includes('null1')) ? '0%' : ((circle.parsedSlider1 || 0) / 3) + '%' %>;">
+        </div>
+        </div>
+    </div>
+
+    <!-- 男女比 -->
+    <div>
+        <div class="flex justify-between text-sm text-gray-500 mb-2">
+            <span>男</span>
+            <span class="font-bold text-gray-700">
+                <% if (circle.tag && circle.tag.includes("null2")) { %>
+                    未登録
+                <% } else { %>
+                <% 
+                    const femaleRatio = 10 - (circle.parsedSlider2 || 0);
+                    const maleRatio = (circle.parsedSlider2 || 0);
+                %>
+                <%= maleRatio %>:<%= femaleRatio %>
+                <% } %>
+            </span>
+            <span>女</span>
+        </div>
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+            <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500" 
+            style="width:<%= (circle.tag && circle.tag.includes('null2')) ? '0%' : ((circle.parsedSlider2 || 0) * 10) + '%' %>;">
+        </div>
+        </div>
+    </div>
+
+    <!-- 活動頻度 -->
+    <div>
+        <div class="flex justify-between text-sm text-gray-500 mb-2">
+            <span>活動頻度</span>
+            <span class="font-bold text-gray-700">
+                <% if (circle.tag && circle.tag.includes("null3")) { %>
+                    未登録
+                <% } else { %>
+                <% 
+                    const activityFrequency = ['不定期', '年一回', '半年に一回', '３か月に一回', '２か月に一回', '月一', '月２', '週一', 'ほぼ毎日'];
+                    const activityIndex = Math.round((circle.parsedSlider3 || 0) / 12.5);
+                %>
+                <%= activityFrequency[activityIndex] %>
+                <% } %>
+            </span>
+            <span>多い</span>
+        </div>
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+            <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500" 
+            style="width:<%= (circle.tag && circle.tag.includes('null3')) ? '0%' : ((circle.parsedSlider3 || 0)) + '%' %>;">
+        </div>
+        </div>
+    </div>
+
+    <!-- 雰囲気 -->
+    <div>
+        <div class="flex justify-between text-sm text-gray-500 mb-2">
+            <span>雰囲気</span>
+            <span class="font-bold text-gray-700">
+                <% if (circle.tag && circle.tag.includes("null4")) { %>
+                    未登録
+                <% } else { %>
+                <%= circle.parsedSlider4 || 0 %>%
+                <% } %>
+            </span>
+            <span>全力エンジョイ</span>
+        </div>
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+            <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500" 
+            style="width:<%= (circle.tag && circle.tag.includes('null4')) ? '0%' : ((circle.parsedSlider4 || 0)) + '%' %>;">
+        </div>
+        </div>
+    </div>
+</div>
+        <div class="p-5 border-t border-gray-300">
+            <!-- 紹介文 -->
+            <div class=" mt-5 w-full  py-2">
+                <h2 class="text-left mb-2 font-bold text-lg">紹介文</h2>
+                <p class="text-gray-800 my-6"><%= circle.description %></p>
+            </div>
+        </div>
+        <!-- タグ -->
+        <div class="mt-6 py-2 flex flex-wrap gap-2 border-t border-gray-300 px-5 py-10">
+            <% circle.tag.split(',').forEach(tag => { %>
+                <% if (!["null1", "null2", "null3", "null4"].includes(tag.trim())) { %>
+                    <span class="bg-blue-300 text-white px-3 py-1 rounded-full text-sm">
+                        <%= tag.trim() %>
+                    </span>
+                <% } %>
+            <% }) %>
+        </div>
+        
+        
+
+        <!-- カレンダー画像-->
+        <% if (circle.calendarPhotos && circle.calendarPhotos.trim() !== "") { %>
+            <div class="w-full p-5 border-t border-gray-300 bord">
+                <h1 class="my-7 text-lg">新歓カレンダー</h1>
+                <div class="w-full mx-auto relative overflow-hidden" style="aspect-ratio: 1 / 1;">
+                    <div class="swiper calendar-swiper">
+                        <div class="swiper-wrapper">
+                            <% circle.calendarPhotos.split(',').forEach(photo => { %>
+                                <div class="swiper-slide">
+                                    <img src="/uploads/<%= photo.trim() %>" 
+                                        alt="カレンダー画像" 
+                                        class="w-full h-full object-cover">
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <!-- ページネーション（ドット） -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        <% } %>
+        
+    
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Swiper(".calendar-swiper", {
+            loop: true, // 無限ループ
+            pagination: { 
+                el: ".swiper-pagination", 
+                clickable: true 
+            },
+          
+        });
+    });
+    </script>
+    
+
+
+            <!-- サークル情報 -->
+             <div class="my-10 w-full border-t border-b border-gray-300 p-5">
+                <h1 class="text-left text-lg mt-5">詳細情報</h1>
+
+                <div class="my-6 text-left w-full flex flex-col gap-2">
+                    <p class="flex my-2">
+                        <span class="font-bold w-1/4">ジャンル</span>
+                        <span class="w-1/2 pl-10"><%= circle.mainGenre %></span>
+                    </p>
+                    <p class="flex my-2">                    <span class="font-bold w-1/4">入会費</span>
+                        <span class="w-1/2 pl-10"><%= circle.admissionFee ? circle.admissionFee + '円' : '未登録' %></span>
+                    </p>
+                    <p class="flex my-2">                    <span class="font-bold w-1/4">年会費</span>
+                        <span class="w-1/2 pl-10"><%= circle.annualFee ? circle.annualFee + '円' : '未登録' %></span>
+                    </p>
+                    <p class="flex my-2">                    <span class="font-bold w-1/4">活動地</span>
+                        <span class="w-1/2 pl-10"><%= circle.location %></span>
+                    </p>
+                </div>
+            <% if (circle.instagram) { %>
+                <a href="<%= circle.instagram %>" target="_blank" class="flex flex-col items-center">
+                    <i class="fa-brands fa-instagram text-5xl text-pink-400 transition-transform duration-300 hover:scale-110"></i>
+                    <p class="text-gray-600 text-xs mt-1">Instagram</p>
+                </a>
+            <% } %>
+
+        </div>
+        <div class="px-5 pb-5">
+            <button onclick="history.back()" class="w-full block my-5 bg-blue-400 text-white text-center py-2 rounded-lg hover:bg-blue-500 transition duration-300">
+                ← 戻る
+            </button>
+            <a href="#" class="block mt-5 mb-14 bg-blue-400 text-white text-center py-2 px-6 rounded-lg hover:bg-blue-500 transition duration-300"
+            onclick="openPasswordModal(<%= circle.id %>)">
+             管理者ページへ
+         </a>
+         
+        </div>
+     
+    </div>
+
+ <!-- パスワード入力モーダル -->
+<div id="passwordModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <h2 class="text-lg font-bold text-gray-700 mb-4">パスワードを入力</h2>
+        <input type="password" id="passwordInput" placeholder="パスワードを入力"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <div class="flex justify-end gap-2 my-6">
+            <button onclick="closePasswordModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                キャンセル
+            </button>
+            <button onclick="submitPassword()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                確認
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+   
+</body>
+</html>
+
+<script>
+    let editingCircleId = null;
+
+    // パスワードモーダルを開く
+    function openPasswordModal(circleId) {
+        editingCircleId = circleId;
+        document.getElementById("passwordModal").classList.remove("hidden");
+    }
+
+    // パスワードモーダルを閉じる
+    function closePasswordModal() {
+        document.getElementById("passwordModal").classList.add("hidden");
+        document.getElementById("passwordInput").value = "";
+    }
+
+    // パスワードを送信
+    function submitPassword() {
+    const password = document.getElementById("passwordInput").value;
+
+    if (!password) {
+        alert("パスワードを入力してください");
+        return;
+    }
+
+    console.log("送信する URL:", `/circle/edit/${editingCircleId}/auth`);
+
+    fetch(`/circle/edit/${editingCircleId}/auth`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password })
+    })
+    .then(response => {
+        if (response.redirected) {
+            console.log("リダイレクトURL:", response.url);
+            window.location.href = response.url; // `editCircle.ejs` にリダイレクト
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.error) {
+            alert(data.error);
+        }
+    })
+    .catch(error => {
+        console.error("エラー:", error);
+        alert("認証に失敗しました");
+    });
+
+    closePasswordModal();
+}
+
+
+    // メイン写真とサブ写真の入れ替え機能
+    document.addEventListener('DOMContentLoaded', () => {
+        const mainPhoto = document.getElementById('mainPhoto');
+        const thumbnailPhotos = document.querySelectorAll('.thumbnail-photo');
+
+        thumbnailPhotos.forEach(thumbnailPhoto => {
+            thumbnailPhoto.addEventListener('click', () => {
+                mainPhoto.src = thumbnailPhoto.src;
+            });
+        });
+    });
+</script>
+

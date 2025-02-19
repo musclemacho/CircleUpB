@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>サークルを掲載する</title>
+</head>
+<body class="bg-blue-50 font-sans">
+
+    <!-- ヘッダー -->
+    <header class="bg-blue-300 text-white py-4 shadow-md sticky top-0 z-50">
+        <h1 class="text-center text-lg font-bold">サークルを掲載する</h1>
+    </header>
+   
+   <!-- フォーム -->
+   <form id="circle-form" enctype="multipart/form-data" class="bg-white max-w-lg mx-auto mt-6 p-6 rounded-lg shadow-md">
+       <!-- トップ画像 -->
+
+        <div class="mb-6 flex justify-center relative flex-col">
+            <label for="topPhoto" class="block text-gray-700 font-bold mb-2">メイン画像<span class="text-red-600">＊再選択</span></label>
+            <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl relative cursor-pointer" id="topPhotoUpload" style="padding-top: 100%;">
+                <span class="absolute inset-0 flex items-center justify-center text-4xl text-gray-400">+</span>
+                <img id="topPhotoPreview" src="#" alt="プレビュー画像" class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
+                <button id="removeTopPhoto" class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1 hidden">×</button>
+            </div>
+            <input type="file" id="topPhoto" name="topPhoto" accept="image/*" class="hidden">
+        </div>
+
+        <!-- サブ画像 -->
+        <div class="mb-6">
+            <label for="subPhotos" class="block text-gray-700 font-bold mb-2">サブ画像（最大5枚）<span class="text-red-600">＊再選択</span></label>
+            <div id="subPhotoUpload" class="flex gap-2 flex-wrap">
+                <div id="addSubPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
+                    <span class="text-2xl text-gray-400">+</span>
+                    <input type="file" id="subPhotos" accept="image/*" class="hidden">
+                </div>
+            </div>
+            <div id="subPhotoPreviewContainer" class="flex gap-2 flex-wrap mt-4">
+                <!-- プレビュー画像がここに追加される -->
+            </div>
+        </div>
+
+<!-- トリミングモーダル -->
+<!-- トリミングモーダル -->
+<div id="cropModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-50">
+    <div class="bg-white w-full max-w-[450px] h-screen rounded-2xl shadow-lg flex flex-col">
+        <!-- 画像エリア（上部の無駄なスペースを削除） -->
+        <div class="relative w-full flex-1 max-h-[85vh] flex justify-center items-center">
+            <img id="cropImage" class="w-full h-auto max-h-full object-contain">
+        </div>
+        <!-- ボタンエリア（画面の下部に固定） -->
+        <div class="absolute inset-x-0 bottom-0 bg-white py-3 shadow-lg flex justify-center space-x-4">
+            <button id="cropCancel" class="px-5 py-2 bg-gray-500 text-white rounded-lg">キャンセル</button>
+            <button id="cropSave" class="px-5 py-2 bg-blue-500 text-white rounded-lg">保存</button>
+        </div>
+    </div>
+</div>
+
+
+
+ <!-- `circleId` を送信するための hidden input -->
+ <input type="hidden" id="circleId" name="circleId" value="<%= circle.id %>">
+
+
+
+     <!-- サークル名 -->
+<div class="form-group mb-4">
+    <label for="circleName" class="block text-gray-700 font-bold mb-2">サークル名</label>
+    <input type="text" id="circleName" name="circleName" required value="<%= circle.circleName %>"
+           class="w-full border border-blue-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+
+         
+
+
+         
+
+       <!-- メインジャンル -->
+       <div class="mb-4">
+        <label for="mainGenre" class="block text-gray-700 font-bold mb-2">ジャンルを選択<span class="text-red-600">＊再選択</span></label>
+        <select id="mainGenre" name="mainGenre" class="appearance-none w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+            <option value="">選択してください</option>
+            <option value="スポーツ">スポーツ</option>
+            <option value="テニス">テニス</option>
+            <option value="ダンス">ダンス</option>
+            <option value="軽音">軽音</option>
+            <option value="文化系">文化系</option>
+            <option value="イベント">イベント</option>
+            <option value="ボランティア">ボランティア</option>
+            <option value="国際交流">国際交流</option>
+            <option value="部活">部活</option>
+        </select>
+    </div>
+
+    <!-- サブジャンル -->
+    <div class="mb-4">
+        <label for="subGenre" class="block text-gray-700 font-bold mb-2">サブジャンルを選択 <span class="text-red-600">＊再選択</span></label>
+        <select id="subGenre" name="subGenre" class="appearance-none w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+            <option value="">メインジャンルを選択してください</option>
+        </select>
+    </div>
+
+    <script>
+   document.addEventListener("DOMContentLoaded", function () {
+    const mainGenre = document.getElementById("mainGenre");
+    const subGenre = document.getElementById("subGenre");
+
+    // 初期状態でサブジャンルを無効化
+    subGenre.disabled = true;
+
+    const subOptions = {
+        "スポーツ": ["スポーツ", "イベント", "サッカー・フットサル", "テニス", "バスケットボール", "バレーボール", "バドミントン", "スキー・スノボー", "ハンドボール", "ラグビー", "陸上", "野球", "空手", "柔道", "弓道", "自転車", "お出かけ・旅行", "その他", "未選択"],
+        "テニス": ["イベント", "スポーツ"],
+        "ダンス": ["イベント", "よさこい", "その他", "未選択"],  // 余分なスペース削除
+        "軽音": ["イベント", "未選択"],
+        "文化系": ["委員会・研究会", "広告", "料理", "アカペラ・合唱", "ボランティア", "IT・eスポーツ", "その他", "未選択"],
+        "イベント": ["お出かけ・旅行", "スポーツ", "ボランティア", "国際交流", "その他", "未選択"],
+        "ボランティア": ["お出かけ・旅行", "国際交流", "イベント", "その他", "未選択"],
+        "国際交流": ["お出かけ・旅行", "イベント", "ボランティア", "その他", "未選択"],
+        "部活": ["アメフト部", "ラグビー部", "サッカー部", "バスケ部", "バレーボール部", "ハンドボール部", "野球部", "ソフトボール部", "テニス部", "バドミントン部", "陸上部", "フットサル部", "ダンス部", "よさこい部", "スキー部", "軽音・バンド部", "アカペラ・合唱部", "写真部", "その他", "未選択"]
+    };
+
+    mainGenre.addEventListener("change", function () {
+        const selectedGenre = mainGenre.value;
+        subGenre.innerHTML = "<option value=''>サブジャンルを選択</option>";
+
+        if (selectedGenre && subOptions[selectedGenre]) {
+            subOptions[selectedGenre].forEach(sub => {
+                const option = document.createElement("option");
+                option.value = sub;
+                option.textContent = sub;
+                subGenre.appendChild(option);
+            });
+            subGenre.disabled = false;
+        } else {
+            subGenre.disabled = true;
+            subGenre.value = ""; // 無効化時に値をリセット
+        }
+    });
+});
+
+    </script>
+<!-- その他 -->
+<div class="mt-4">
+    <label for="other" class="block text-gray-700 font-bold mb-2">その他</label>
+    <input type="text" id="other" name="other" value="<%= circle.other || '' %>"
+           class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+     
+     
+
+       
+        <!-- サークル選択グラフ -->
+        <h2 class="text-lg font-bold mb-4">サークル選択グラフ</h2>
+        <div class="space-y-6">
+            <!-- スライダー: 人数 -->
+            <div>
+                <label for="slider1" class="block text-gray-700 font-bold mb-2">人数</label>
+                <div class="flex justify-between text-sm text-gray-500 mb-2">
+                    <span>1人</span>
+                    <span>300人</span>
+                </div>
+                <input type="range" id="slider1" name="slider1" min="0" max="300" step="10" value="<%= circle.parsedSlider1 || 150 %>" class="w-full">
+        <div class="text-center text-blue-500 font-bold mt-2"><span id="slider1Value"><%= circle.parsedSlider1 || 150 %></span> 人</div>
+    </div>
+      
+        
+            <!-- スライダー: 男女比 -->
+            <div>
+                <label for="slider2" class="block text-gray-700 font-bold mb-2">男女比</label>
+                <div class="flex justify-between text-sm text-gray-500 mb-2">
+                    <span>男子多め</span>
+                    <span>女子多め</span>
+                </div>
+                <input type="range" id="slider2" name="slider2" min="0" max="10" value="<%= circle.parsedSlider2 || 5 %>" class="w-full">
+                <div class="text-center text-blue-500 font-bold mt-2"><span id="slider2Value"><%= circle.parsedSlider2 || 5 %>:<%= 10 - (circle.parsedSlider2 || 5) %></span></div>
+            </div>
+       
+        
+            <!-- スライダー: 活動頻度 -->
+            <div>
+                <label for="slider3" class="block text-gray-700 font-bold mb-2">活動頻度</label>
+                <div class="flex justify-between text-sm text-gray-500 mb-2">
+                    <span>年数回</span>
+                    <span>ほぼ毎日</span>
+                </div>
+                <input type="range" id="slider3" name="slider3" min="0" max="100" value="<%= circle.parsedSlider3 || 50 %>" class="w-full">
+                <div class="text-center text-blue-500 font-bold mt-2"><span id="slider3Value"><%= circle.parsedSlider3 || 50 %></span>%</div>
+            </div>
+        
+     
+        
+            <!-- スライダー: 雰囲気 -->
+            <div>
+                <label for="slider4" class="block text-gray-700 font-bold mb-2">雰囲気</label>
+                <div class="flex justify-between text-sm text-gray-500 mb-2">
+                    <span>真面目</span>
+                    <span>全力エンジョイ</span>
+                </div>
+                <label for="slider4" class="block text-gray-700 font-bold mb-2">雰囲気</label>
+        <input type="range" id="slider4" name="slider4" min="0" max="100" value="<%= circle.parsedSlider4 || 50 %>" class="w-full">
+        <div class="text-center text-blue-500 font-bold mt-2"><span id="slider4Value"><%= circle.parsedSlider4 || 50 %></span>%</div>
+    </div>
+        </div>
+     
+
+    
+       <!-- フォーム -->
+    
+       <div>
+           
+            
+        <h3 class="text-lg font-bold mb-6 mt-6">公認・登録団体の場合はチェック</h3>
+       <!-- チェックボックスの状態を保持 -->
+<div class="flex flex-wrap gap-4">
+<div>
+    <input type="checkbox" id="officialCircle" name="tag" value="公認"
+           class="hidden peer" <%= circle.tag.includes("公認") ? "checked" : "" %>>
+    <label for="officialCircle"  class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        公認
+    </label>
+</div>
+<div>
+    <input type="checkbox" id="certifiedCircle" name="tag" value="登録団体"
+           class="hidden peer" <%= circle.tag.includes("登録団体") ? "checked" : "" %>>
+    <label for="certifiedCircle"  class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        登録団体
+    </label>
+</div>
+
+<h3 class="text-lg font-bold mb-4 mt-4">サークルの雰囲気・規模</h3>
+
+<div class="flex flex-wrap gap-4">
+    <div>
+        <input type="checkbox" id="smallFriendly" name="tag" value="少人数で仲良し" class="hidden peer"
+               <%= circle.tag.includes("少人数で仲良し") ? "checked" : "" %>>
+        <label for="smallFriendly" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            少人数で仲良し
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="largeFun" name="tag" value="大人数でわいわい" class="hidden peer"
+               <%= circle.tag.includes("大人数でわいわい") ? "checked" : "" %>>
+        <label for="largeFun" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            大人数でわいわい
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="hasCamps" name="tag" value="合宿あり" class="hidden peer"
+               <%= circle.tag.includes("合宿あり") ? "checked" : "" %>>
+        <label for="hasCamps" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            合宿あり
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="richMeetup" name="tag" value="出会い豊富" class="hidden peer"
+               <%= circle.tag.includes("出会い豊富") ? "checked" : "" %>>
+        <label for="richMeetup" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            出会い豊富
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="manyEvents" name="tag" value="イベント多い" class="hidden peer"
+               <%= circle.tag.includes("イベント多い") ? "checked" : "" %>>
+        <label for="manyEvents" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            イベント多い
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="calmCircle" name="tag" value="穏やかサークル" class="hidden peer"
+               <%= circle.tag.includes("穏やかサークル") ? "checked" : "" %>>
+        <label for="calmCircle" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            穏やかサークル
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="livelyCircle" name="tag" value="ノリがいい" class="hidden peer"
+               <%= circle.tag.includes("ノリがいい") ? "checked" : "" %>>
+        <label for="livelyCircle" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            ノリがいい
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="smallHomey" name="tag" value="少なめの人数でアットホーム" class="hidden peer"
+               <%= circle.tag.includes("少なめの人数でアットホーム") ? "checked" : "" %>>
+        <label for="smallHomey" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            少なめの人数でアットホーム
+        </label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="livelyBig" name="tag" value="わいわい賑やかサークル" class="hidden peer"
+               <%= circle.tag.includes("わいわい賑やかサークル") ? "checked" : "" %>>
+        <label for="livelyBig" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+            わいわい賑やかサークル
+        </label>
+    </div>
+</div>
+
+      <h3 class="text-lg font-bold mb-6 mt-6">活動スタイル・メンバー</h3>
+
+<div class="flex flex-wrap gap-4">
+<div>
+    <input type="checkbox" id="moreBoys" name="tag" value="男子多め" class="hidden peer"
+           <%= circle.tag.includes("男子多め") ? "checked" : "" %>>
+    <label for="moreBoys" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        男子多め
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="moreGirls" name="tag" value="女子多め" class="hidden peer"
+           <%= circle.tag.includes("女子多め") ? "checked" : "" %>>
+    <label for="moreGirls" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        女子多め
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="balancedGender" name="tag" value="男女のバランスがいい" class="hidden peer"
+           <%= circle.tag.includes("男女のバランスがいい") ? "checked" : "" %>>
+    <label for="balancedGender" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        男女のバランスがいい
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="handsomeGuys" name="tag" value="イケメンが多い" class="hidden peer"
+           <%= circle.tag.includes("イケメンが多い") ? "checked" : "" %>>
+    <label for="handsomeGuys" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        イケメンが多い
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="prettyGirls" name="tag" value="美女が多い" class="hidden peer"
+           <%= circle.tag.includes("美女が多い") ? "checked" : "" %>>
+    <label for="prettyGirls" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        美女が多い
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="indoor" name="tag" value="インドア向き" class="hidden peer"
+           <%= circle.tag.includes("インドア向き") ? "checked" : "" %>>
+    <label for="indoor" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        インドア向き
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="outdoor" name="tag" value="アウトドア向き" class="hidden peer"
+           <%= circle.tag.includes("アウトドア向き") ? "checked" : "" %>>
+    <label for="outdoor" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        アウトドア向き
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="drinksOk" name="tag" value="ソフドリ全然OK!" class="hidden peer"
+           <%= circle.tag.includes("ソフドリ全然OK!") ? "checked" : "" %>>
+    <label for="drinksOk" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        ソフドリ全然OK!
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="drinkingParty" name="tag" value="飲み会で盛り上がる" class="hidden peer"
+           <%= circle.tag.includes("飲み会で盛り上がる") ? "checked" : "" %>>
+    <label for="drinkingParty" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        飲み会で盛り上がる
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="experienced" name="tag" value="経験者・ガチ勢多め" class="hidden peer"
+           <%= circle.tag.includes("経験者・ガチ勢多め") ? "checked" : "" %>>
+    <label for="experienced" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        経験者・ガチ勢多め
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="beginnersWelcome" name="tag" value="初心者大歓迎" class="hidden peer"
+           <%= circle.tag.includes("初心者大歓迎") ? "checked" : "" %>>
+    <label for="beginnersWelcome" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        初心者大歓迎
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="sportsBackground" name="tag" value="運動部出身多め" class="hidden peer"
+           <%= circle.tag.includes("運動部出身多め") ? "checked" : "" %>>
+    <label for="sportsBackground" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        運動部出身多め
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="cultureBackground" name="tag" value="文化部出身多め" class="hidden peer"
+           <%= circle.tag.includes("文化部出身多め") ? "checked" : "" %>>
+    <label for="cultureBackground" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        文化部出身多め
+    </label>
+</div>
+</div>
+<h3 class="text-lg font-bold mb-6 mt-6">実績・得られるもの</h3>
+
+<div class="flex flex-wrap gap-4">
+<div>
+    <input type="checkbox" id="seriousCircle" name="tag" value="結構ガチです" class="hidden peer"
+           <%= circle.tag.includes("結構ガチです") ? "checked" : "" %>>
+    <label for="seriousCircle" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        結構ガチです
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="enjoyable" name="tag" value="楽しめればOK" class="hidden peer"
+           <%= circle.tag.includes("楽しめればOK") ? "checked" : "" %>>
+    <label for="enjoyable" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        楽しめればOK
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="careerBenefit" name="tag" value="就活にも役立つ" class="hidden peer"
+           <%= circle.tag.includes("就活にも役立つ") ? "checked" : "" %>>
+    <label for="careerBenefit" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        就活にも役立つ
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="globalExchange" name="tag" value="国際交流できる" class="hidden peer"
+           <%= circle.tag.includes("国際交流できる") ? "checked" : "" %>>
+    <label for="globalExchange" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        国際交流できる
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="freeMembership" name="tag" value="入会費・年会費無料" class="hidden peer"
+           <%= circle.tag.includes("入会費・年会費無料") ? "checked" : "" %>>
+    <label for="freeMembership" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        入会費・年会費無料
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="languageLearning" name="tag" value="言語を学べる" class="hidden peer"
+           <%= circle.tag.includes("言語を学べる") ? "checked" : "" %>>
+    <label for="languageLearning" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        言語を学べる
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="achievements" name="tag" value="ガクチカ作れる" class="hidden peer"
+           <%= circle.tag.includes("ガクチカ作れる") ? "checked" : "" %>>
+    <label for="achievements" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        ガクチカ作れる
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="senpaiFriendly" name="tag" value="先輩とも仲良し" class="hidden peer"
+           <%= circle.tag.includes("先輩とも仲良し") ? "checked" : "" %>>
+    <label for="senpaiFriendly" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        先輩とも仲良し
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="volunteer" name="tag" value="ボランティア" class="hidden peer"
+           <%= circle.tag.includes("ボランティア") ? "checked" : "" %>>
+    <label for="volunteer" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        ボランティア
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="awardWinning" name="tag" value="表彰経験あり" class="hidden peer"
+           <%= circle.tag.includes("表彰経験あり") ? "checked" : "" %>>
+    <label for="awardWinning" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        表彰経験あり
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="studySupport" name="tag" value="過去問もらえる" class="hidden peer"
+           <%= circle.tag.includes("過去問もらえる") ? "checked" : "" %>>
+    <label for="studySupport" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        過去問もらえる
+    </label>
+</div>
+
+<div>
+    <input type="checkbox" id="internationalStudents" name="tag" value="留学生多め" class="hidden peer"
+           <%= circle.tag.includes("留学生多め") ? "checked" : "" %>>
+    <label for="internationalStudents" class="block px-4 py-2 bg-blue-300 text-white rounded-lg cursor-pointer text-center shadow-md transition duration-200 transform peer-checked:bg-blue-500 peer-checked:scale-105 peer-checked:shadow-lg">
+        留学生多め
+    </label>
+</div>
+</div>
+</div>
+    
+
+   
+<!-- 一言メッセージ -->
+<div class="mt-6">
+<label for="comment" class="block text-gray-700 font-bold mb-2">一言メッセージ</label>
+<input type="text" id="comment" name="comment" value="<%= circle.comment || '' %>"
+       class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+
+<!-- 紹介文 -->
+<div class="mb-6 mt-6">
+<label for="description" class="block text-gray-700 font-bold mb-2">紹介文</label>
+<textarea id="description" name="description" rows="5"
+          class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"><%= circle.description || '' %></textarea>
+</div>
+
+ <!-- 新歓カレンダー画像 -->
+   
+ <div class="mb-6">
+    <label for="calendarPhotos" class="block text-gray-700 font-bold mb-2">カレンダー画像（最大3枚）</label>
+    <div id="calendarPhotoUpload" class="flex gap-2 flex-wrap">
+        <div id="addCalendarPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
+            <span class="text-2xl text-gray-400">+</span>
+            <input type="file" id="calendarPhotos" accept="image/*" class="hidden">
+        </div>
+    </div>
+    <div id="calendarPhotoPreviewContainer" class="flex gap-2 flex-wrap mt-4">
+        <!-- プレビュー画像がここに追加される -->
+    </div>
+</div>
+
+
+<!-- 入会金 -->
+<div class="mt-4">
+<label for="admissionFee" class="block text-gray-700 font-bold mb-2">入会金　(無料の場合は未入力)</label>
+<input type="number" id="admissionFee" name="admissionFee" value="<%= circle.admissionFee || '' %>"
+       class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+
+<!-- 年会費 -->
+<div class="mt-6">
+<label for="annualFee" class="block text-gray-700 font-bold mb-2">年会費　(無料の場合は未入力)</label>
+<input type="number" id="annualFee" name="annualFee" value="<%= circle.annualFee || '' %>"
+       class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+<!-- 活動場所 -->
+<div class="mb-4">
+<label for="location" class="block text-gray-700 font-bold mb-2">活動場所</label>
+<select id="location" name="location" class="appearance-none w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+    <option value="今出川" <%= circle.location === "今出川" ? 'selected' : '' %>>今出川</option>
+    <option value="京田辺" <%= circle.location === "京田辺" ? 'selected' : '' %>>京田辺</option>
+    <option value="今出川・京田辺" <%= circle.location === "今出川・京田辺" ? 'selected' : '' %>>今出川・京田辺</option>
+    <option value="未選択" <%= !circle.location ? 'selected' : '' %>>未選択</option>
+</select>
+</div>
+
+
+<!-- Instagram -->
+<div class="mt-6">
+<label for="instagram" class="block text-gray-700 font-bold mb-2">Instagram リンク</label>
+<input type="text" id="instagram" name="instagram" value="<%= circle.instagram || '' %>"
+       class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+
+<!-- パスワード入力欄 -->
+<div class="mt-6 mb-6">
+<label for="password" class="block text-gray-700 font-bold mb-2">パスワード</label>
+<p class="text-sm text-gray-500 mb-2">※パスワードを変更する場合のみ入力してください</p>
+<input type="password" id="password" name="password" placeholder="新しいパスワードを入力" value="<%= circle.password %>"
+       class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400">
+</div>
+
+        <!-- サブミットボタン -->
+        <input type="submit" value="サークルを掲載する"
+               class="w-full bg-blue-400 text-white py-2 rounded-lg hover:bg-blue-500 transition duration-300">
+    
+</form>
+<script>
+
+ 
+
+    // 人数スライダー
+    const slider1 = document.getElementById('slider1');
+    const slider1Value = document.getElementById('slider1Value');
+    slider1.addEventListener('input', () => {
+        slider1Value.textContent = slider1.value + '人';
+    });
+
+    // 活動頻度スライダー
+    const activityFrequency = ['不定期', '年一回', '半年に一回', '３か月に一回', '２か月に一回', '月一', '月２', '週一', 'ほぼ毎日'];
+    const slider3 = document.getElementById('slider3');
+    const slider3Value = document.getElementById('slider3Value');
+    slider3.addEventListener('input', () => {
+        const index = Math.round(slider3.value / 12.5);
+        slider3Value.textContent = activityFrequency[index];
+    });
+
+    // 男女比スライダー
+    const slider2 = document.getElementById('slider2');
+    const slider2Value = document.getElementById('slider2Value');
+    slider2.addEventListener('input', () => {
+        const index = Math.round(slider2.value);
+        const maleRatio = 10 - index;
+        const femaleRatio = index;
+        slider2Value.textContent = `${maleRatio}:${femaleRatio}`;
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const slider4 = document.getElementById("slider4");
+        const slider4Value = document.getElementById("slider4Value");
+
+        slider4.addEventListener("input", () => {
+            slider4Value.textContent = slider4.value + "%";
+        });
+    });
+
+    // 初期値設定
+    slider3.dispatchEvent(new Event('input'));
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+    let cropper;
+    let cropTarget = null; // 'top' or 'sub'
+    let croppedTopFile = null; // トリミング後のトップ画像
+    let croppedSubFiles = []; // トリミング後のサブ画像
+    let currentSubFile = null; // 現在選択中のサブ画像
+    let croppedCalendarFiles = [];
+    let currentCalendarFile = null;
+
+   
+    const cropModal = document.getElementById("cropModal");
+    const cropImage = document.getElementById("cropImage");
+    const topPhotoInput = document.getElementById("topPhoto");
+    const subPhotoInput = document.getElementById("subPhotos");
+    const topPhotoPreview = document.getElementById("topPhotoPreview");
+    const subPhotoPreviewContainer = document.getElementById("subPhotoPreviewContainer");
+    const calendarPhotoInput = document.getElementById("calendarPhotos");
+    const calendarPhotoPreviewContainer = document.getElementById("calendarPhotoPreviewContainer");
+
+
+      // // 画像アップロード処理（トップ画像）
+    document.getElementById('topPhotoUpload').addEventListener('click', () => {
+        document.getElementById('topPhoto').click();
+    });
+    // **トップ画像選択時にトリミング開始**
+    topPhotoInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            openCropModal(file, "top");
+        }
+    });
+
+        // // サブ画像アップロード
+    document.getElementById('subPhotoUpload').addEventListener('click', () => {
+        document.getElementById('subPhotos').click();
+    });
+    // **サブ画像を1枚選択ごとにトリミング開始**
+    subPhotoInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            currentSubFile = file; // 現在のサブ画像を保存
+            openCropModal(file, "sub");
+        }
+    });
+
+  // // calendar画像アップロード
+  document.getElementById('calendarPhotoUpload').addEventListener('click', () => {
+    document.getElementById('calendarPhotos').click();
+    });
+
+  // **calendar画像を1枚選択ごとにトリミング開始**
+  calendarPhotoInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            currentCalendarFile = file; // 現在のサブ画像を保存
+            openCropModal(file, "calendar");
+        }
+    });
+
+
+    // **トリミングモーダルを開く**
+    function openCropModal(file, target) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            cropImage.src = e.target.result;
+            cropModal.classList.remove("hidden");
+            cropTarget = target;
+
+            // Cropper.js の初期化
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropImage, {
+            aspectRatio: 1,         // **トリミング枠だけ正方形に固定**
+            viewMode: 2,            // **iPhoneのように、トリミング枠を中心に画像を表示**
+            dragMode: "move",       // **画像のみ動かせる**
+            cropBoxMovable: false,  // **トリミング枠の移動を禁止**
+            cropBoxResizable: false,// **トリミング枠のサイズ変更を禁止**
+            autoCropArea: 0.9,      // **トリミング枠を大きめに表示**
+            zoomable: true,         // **ピンチイン・アウトでズーム可能**
+            scalable: false,        // **画像のリサイズ不可**
+            modal: true,            // **トリミング枠の外側を半透明にする**
+            background: false,       // **背景を消して見やすくする**
+            viewMode: 1,            // **画像がトリミング枠より外にはみ出てもOK**
+            autoCropArea: 1       // **トリミング枠を最大化**
+        });
+
+           
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // **トリミングをキャンセル**
+    document.getElementById("cropCancel").addEventListener("click", function () {
+        event.preventDefault(); 
+        event.stopPropagation(); 
+        cropModal.classList.add("hidden");
+        subPhotoInput.value = "";
+    });
+
+
+
+
+    // **トリミング画像を保存**
+    document.getElementById("cropSave").addEventListener("click", function () {
+        event.preventDefault(); 
+        event.stopPropagation(); 
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+            const croppedFile = new File([blob], "cropped.jpg", { type: "image/jpeg" });
+
+            if (cropTarget === "top") {
+                // トップ画像の保存＆プレビュー
+                croppedTopFile = croppedFile;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    topPhotoPreview.src = e.target.result;
+                    topPhotoPreview.classList.remove("hidden");
+                   
+                    removeTopPhoto.classList.remove("hidden"); // **削除ボタンを確実に表示**
+                };
+                reader.readAsDataURL(croppedFile);
+            }else  if (cropTarget === "sub") {
+                // サブ画像の保存＆プレビュー
+                croppedSubFiles.push(croppedFile);
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const container = document.createElement("div");
+                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.alt = "サブ画像プレビュー";
+                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
+                    container.appendChild(img);
+
+                    // 🔹 削除ボタン
+                    const removeBtn = document.createElement("button");
+                    removeBtn.innerHTML = "×";
+                    removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
+                    container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
+                    subPhotoPreviewContainer.appendChild(container);
+
+                     // 🔹 削除ボタンのクリックイベント
+                     removeBtn.addEventListener("click", function () {
+                        event.preventDefault(); 
+                        event.stopPropagation(); 
+                        const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
+                        croppedSubFiles.splice(containerIndex, 1); // 🔹 `croppedSubFiles` から削除
+                        container.remove(); // 🔹 HTML上の要素を削除
+                        updateSubPhotoIndexes(); // 🔹 インデックスを更新
+                    });
+
+                };
+                reader.readAsDataURL(croppedFile);
+
+                // 次のサブ画像を選択できるようにリセット
+                subPhotoInput.value = "";
+            }else if (cropTarget === "calendar") {
+                // サブ画像の保存＆プレビュー
+                croppedCalendarFiles.push(croppedFile);
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const container = document.createElement("div");
+                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.alt = "サブ画像プレビュー";
+                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
+                    container.appendChild(img);
+
+                    // 🔹 削除ボタン
+                    const removeBtn = document.createElement("button");
+                    removeBtn.innerHTML = "×";
+                    removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
+                    container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
+                    calendarPhotoPreviewContainer.appendChild(container);
+
+                     // 🔹 削除ボタンのクリックイベント
+                     removeBtn.addEventListener("click", function () {
+                        event.preventDefault(); 
+                        event.stopPropagation(); 
+                        const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
+                        croppedCalendarFiles.splice(containerIndex, 1); // 🔹 `croppedCalendarFiles` から削除
+                        container.remove(); // 🔹 HTML上の要素を削除
+                        updateCalendarIndexes(); // 🔹 インデックスを更新
+                    });
+
+                };
+                reader.readAsDataURL(croppedFile);
+
+                // 次のサブ画像を選択できるようにリセット
+                calendarPhotos.value = "";
+            }
+
+            cropModal.classList.add("hidden");
+        }, "image/jpeg");
+    });
+
+
+    // トップ画像の削除処理
+    removeTopPhoto.addEventListener("click", function () {
+        event.preventDefault(); 
+        event.stopPropagation(); 
+        topPhotoPreview.src = "#";
+        topPhotoPreview.classList.add("hidden");
+        removeTopPhoto.classList.add("hidden"); // 🔹 削除ボタンを隠す
+        topPhotoInput.value = ""; // ファイル選択をリセット
+        croppedTopFile = null; // **FormData に送信されないようにする**
+    });
+
+
+    // **フォーム送信時にトリミング後の画像を `FormData` に追加**
+    document.getElementById("circle-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const form = document.getElementById("circle-form");
+        const formData = new FormData(form);
+
+        // **トリミング後のトップ画像を `FormData` にセット**
+       // **削除済みのデータを送信しないようにする**
+    if (croppedTopFile) {
+        formData.set("topPhoto", croppedTopFile);
+    } else {
+        formData.delete("topPhoto"); // **削除済みなら FormData からも削除**
+    }
+
+    // **サブ画像も、削除されたものを除いて送信**
+    formData.delete("subPhotos"); // **既存の subPhotos を削除**
+    croppedSubFiles.forEach((file) => {
+        formData.append("subPhotos", file);
+    });
+
+     // **calendar画像も、削除されたものを除いて送信**
+     formData.delete("calendarPhotos"); // **既存の calendarPhotos を削除**
+    croppedCalendarFiles.forEach((file) => {
+        formData.append("calendarPhotos", file);
+    });
+
+       
+
+
+    
+        // **スライダーの値を追加**
+        formData.append("slider1", document.getElementById("slider1").value);
+        formData.append("slider2", document.getElementById("slider2").value);
+        formData.append("slider3", document.getElementById("slider3").value);
+        formData.append("slider4", document.getElementById("slider4").value);
+
+      // 選択されたタグを取得し、カンマ区切りの文字列にする
+    const tagCheckboxes = document.querySelectorAll('input[name="tag"]:checked');
+    const tags = Array.from(tagCheckboxes).map(checkbox => checkbox.value).join(',');
+
+        // **デバッグ用（`FormData` の内容を表示）**
+        for (const pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+        }
+
+
+        
+        // **サーバーへ送信（fetch を1回だけ実行）**
+        fetch("/circles/edit/${circleId}", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || "登録に失敗しました");
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("サークルが登録されました！");
+            window.location.href = `/circle/${data.id}`;  
+        })
+        .catch(error => {
+            console.error("エラー:", error);
+            alert(`登録中に問題が発生しました: ${error.message}`);
+        });
+    });
+});
+
+
+    </script>
+</body>
+</html>

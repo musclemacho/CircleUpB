@@ -1,0 +1,27 @@
+{
+  "name": "circleup",
+  "version": "1.0.0",
+  "main": "app copy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dev": "npx tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
+    "build:prod": "NODE_ENV=production npx tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.12.0",
+    "nodemailer": "^6.10.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17"
+  },
+  "keywords": [],
+  "description": ""
+}
