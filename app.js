@@ -463,6 +463,12 @@ app.delete("/circle/delete/:id", (req, res) => {
 // 編集ページのルート
 app.get("/circle/edit/:id", (req, res) => {
   const circleId = req.params.id;
+  const referer = req.get("referer"); // リファラー取得
+
+  // 管理者ページからのアクセス以外はリダイレクト
+  if (!referer || !referer.includes("/admin")) {
+      return res.redirect("/");
+  }
 
   const query = `SELECT * FROM Circles WHERE id = ?`;
   db.query(query, [circleId], (err, results) => {
@@ -479,7 +485,6 @@ app.get("/circle/edit/:id", (req, res) => {
       res.render("editCircle", { circle }); // `editCircle.ejs` をレンダリング
   });
 });
-
 
 
 

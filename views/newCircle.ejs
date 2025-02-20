@@ -12,19 +12,31 @@
 <body class="font-sans">
 
     <!-- ヘッダー -->
-    <header class="bg-blue-300 text-white py-4 shadow-md sticky top-0 z-50">
-        <h1 class="text-center text-lg font-bold">サークルを掲載する</h1>
-    </header>
+    <header class="text-black pt-3 pb-2 px-4 flex justify-between items-center sticky top-0 z-50"
+    style="background: linear-gradient(to bottom, rgb(255, 210, 121), rgb(255, 222, 138));">
+    <div class="z-50">
+        <button onclick="history.back()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
+            <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
+        </button>
+    </div>
+    <h1 class="text-lg font-bold p-2">サークルを掲載</h1>
+    <div class="flex items-center gap-3">
+        <!-- ホームアイコン -->
+        <a href="/" class="text-black hover:text-gray-600">
+            <i class="fa-solid fa-house text-lg"></i>
+        </a>
+    </div>
    
+</header>
    <!-- フォーム -->
    <form id="circle-form" enctype="multipart/form-data" class="bg-white max-w-lg mx-auto rounded-lg shadow-md">
     
-    <h1 class="text-2xl font-bold my-5 p-5">サークルを掲載</h1>
+ 
     <!-- トップ画像 -->
     <div class="p-6 border-t border-gray-300">
         <div class="mb-6 flex justify-center relative flex-col">
             <label for="topPhoto" class="block text-gray-700 font-bold my-4">トップ画像　<span class="text-red-500 opacity-80">＊必須</span></label>
-            <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl relative cursor-pointer" id="topPhotoUpload" style="padding-top: 100%;">
+            <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl border border-[#ddc4ff] shadow-lg  relative cursor-pointer" id="topPhotoUpload" style="padding-top: 100%;">
                 <span class="absolute inset-0 flex items-center justify-center text-4xl text-gray-400">+</span>
                 <img id="topPhotoPreview" src="#" alt="プレビュー画像" class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
                 <button id="removeTopPhoto" class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1 hidden">×</button>
@@ -36,7 +48,7 @@
         <div class="mb-12">
             <label for="subPhotos" class="block text-gray-700 font-bold my-5">サブ画像（最大5枚）</label>
             <div id="subPhotoUpload" class="flex gap-2 flex-wrap">
-                <div id="addSubPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
+                <div id="addSubPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg border border-[#ddc4ff] shadow-lg  flex items-center justify-center cursor-pointer">
                     <span class="text-2xl text-gray-400">+</span>
                     <input type="file" id="subPhotos" accept="image/*" class="hidden">
                 </div>
@@ -71,7 +83,7 @@
         <div class="form-group my-5">
             <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊必須</span></label>
             <input type="text" id="circleName" name="circleName" placeholder="例: Green" required
-                   class="w-full border border-[#12bbd4] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                   class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
         </div>
 
 
@@ -80,11 +92,9 @@
        <!-- メインジャンル -->
        <div class="my-7">
         <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
-        <select id="mainGenre" name="mainGenre" class="w-full p-3 border-1 border-transparent rounded-lg bg-white 
-        shadow-[0px_0px_0px_1px_transparent,0px_0px_0px_1px_rgba(49,196,190,0.75)] 
-        focus:shadow-none focus:border-blue-300 focus:ring-2 focus:ring-blue-300 
-        appearance-none pr-10 bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'black\'><path d=\'M5.5 7l4.5 4 4.5-4\'/></svg>')] 
-        bg-no-repeat bg-right bg-[length:12px] transition duration-300">
+        <select id="mainGenre" name="mainGenre"                     class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
+
             <option value="">選択してください</option>
             <option value="スポーツ">スポーツ</option>
             <option value="テニス">テニス</option>
@@ -101,11 +111,8 @@
     <!-- サブジャンル -->
     <div class="my-7">
         <label for="subGenre" class="block text-gray-700 font-bold mb-4">サブジャンルを選択</label>
-        <select id="subGenre" name="subGenre"  class="w-full p-3 border-1 border-transparent rounded-lg bg-white 
-        shadow-[0px_0px_0px_1px_transparent,0px_0px_0px_1px_rgba(49,196,190,0.75)] 
-        focus:shadow-none focus:border-blue-300 focus:ring-2 focus:ring-blue-300 
-        appearance-none pr-10 bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'black\'><path d=\'M5.5 7l4.5 4 4.5-4\'/></svg>')] 
-        bg-no-repeat bg-right bg-[length:12px] transition duration-300">
+        <select id="subGenre" name="subGenre"                    class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
             <option value="">メインジャンルを選択してください</option>
         </select>
     </div>
@@ -154,7 +161,7 @@
         <div class="my-4">
             <label for="other" class="block text-gray-700 font-bold mb-4">その他</label>
             <input type="text" id="other" name="other" placeholder="例: ラクロス" 
-                class="w-full  rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
         </div>
 
 </div>
@@ -180,11 +187,11 @@
                 </div>
                 <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>1人</span> 
-                     <span id="slider1Value"class="text-lg text-[#12bbd4] font-bold">150人</span>
+                     <span id="slider1Value"class="text-lg text-[#eba789] font-bold">150人</span>
                     <span>300人以上</span>
                 </div>
                 <input type="range" id="slider1" class="w-full slider" min="0" max="300" step="10" value="150">
-                <div class="text-center text-[#12bbd4] font-bold mt-2">
+                <div class="text-center text-[#eba789] font-bold mt-2">
                   
                 </div>
                
@@ -205,11 +212,11 @@
                 </div>
                 <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>男</span>
-                    <span id="slider2Value"class="text-lg text-[#12bbd4] font-bold">5:5</span>
+                    <span id="slider2Value"class="text-lg text-[#eba789] font-bold">5:5</span>
                     <span>女</span>
                 </div>
                 <input type="range" id="slider2" class="w-full slider" min="0" max="10" value="5">
-                <div class="text-center text-[#12bbd4] font-bold mt-2">
+                <div class="text-center text-[#eba789] font-bold mt-2">
                 </div>
             </div>
         
@@ -228,11 +235,11 @@
                 </div>
                 <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>年数回</span>
-                    <span id="slider3Value"class="text-lg text-[#12bbd4] font-bold"></span>
+                    <span id="slider3Value"class="text-lg text-[#eba789] font-bold"></span>
                     <span>ほぼ毎日</span>
                 </div>
                 <input type="range" id="slider3" class="w-full slider" min="0" max="100" value="50">
-                <div class="text-center text-[#12bbd4] font-bold mt-2">
+                <div class="text-center text-[#eba789] font-bold mt-2">
                 </div>
             </div>
         
@@ -251,7 +258,7 @@
             </div>
             <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                 <span>真面目</span>
-                <span id="slider4Value" class="text-lg text-[#12bbd4] font-bold">50%</span>
+                <span id="slider4Value" class="text-lg text-[#eba789] font-bold">50%</span>
                 <span>全力エンジョイ</span>
             </div>
             <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="50">
@@ -276,14 +283,14 @@
 .slider::-moz-range-thumb {
     width: 18px;
     height: 18px;
-    background: #12bbd4;
+    background: #eba789;
     border-radius: 50%;
     cursor: pointer;
 }
 
 /* 初期状態で左側に色を付ける */
 .slider {
-    background: linear-gradient(to right, #1bdbf8 0%, #12bbd4 0%, #fff 0%);
+    background: linear-gradient(to right, #eba789 0%, #ffc062 0%, #fec86b 0%);
 }
 
             </style>
@@ -302,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let max = slider.max;
             let percentage = ((value - min) / (max - min)) * 100; // 0% - 100%
 
-            slider.style.background = `linear-gradient(to right, #1bdbf8 ${percentage}%, #12bbd4 ${percentage}%, #fff ${percentage}%)`;
+            slider.style.background = `linear-gradient(to right, #fec86b ${percentage}%, #eba789 ${percentage}%, #fff ${percentage}%)`;
         }
 
         // 初期値設定
@@ -808,8 +815,8 @@ ul.ks-cboxtags li label {
 
 /* チェック時のスタイル */
 ul.ks-cboxtags li input[type="checkbox"]:checked + label {
-    border-color: #1bdbf8;
-    background-color: #12bbd4;
+    border-color: #6dfec7;
+    background-color: #58ebb1;
     color: #fff;
     transition: all .2s;
 }
@@ -834,7 +841,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
 
     </style>
         
- <div class="p-6 border-t border-gray-300">
+ <div class="p-6 border-t">
        
    <!-- 一言 -->
    <div class="mt-6">
@@ -845,14 +852,16 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <h3 class="mb-4 text-sm opacity-70">トップ画面に表示される紹介文です（70字以内）</h3>
     <textarea id="comment" name="comment" maxlength="70" placeholder="例: みんな仲良しのイベントサークルです！" 
         rows="2"
-        class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"></textarea>
+        class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+    </textarea>
 </div>
 
    <!-- 紹介文 -->
 <div class="mb-6 mt-6">
     <label for="description" class="block text-gray-700 font-bold mb-4">紹介文</label>
     <textarea id="description" name="description" maxlength="1000" placeholder="サークルの特徴や活動内容を入力してください..." rows="10" 
-              class="w-full border  rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-400"></textarea>
+    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+</textarea>
 </div>
 
 
@@ -880,11 +889,8 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <!-- 活動場所 -->
     <div class="my-7">
         <label for="location" class="block text-gray-700 font-bold mb-4">主な活動場所・推奨所属キャンパスを選択</label>
-        <select id="location" name="location"  class="w-full p-3 border-1 border-transparent rounded-lg bg-white 
-        shadow-[0px_0px_0px_1px_transparent,0px_0px_0px_1px_rgba(49,196,190,0.75)] 
-        focus:shadow-none focus:border-blue-300 focus:ring-2 focus:ring-blue-300 
-        appearance-none pr-10 bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'black\'><path d=\'M5.5 7l4.5 4 4.5-4\'/></svg>')] 
-        bg-no-repeat bg-right bg-[length:12px] transition duration-300">
+        <select id="location" name="location"   class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
             <option value="今出川">今出川</option>
             <option value="京田辺">京田辺</option>
             <option value="今出川・京田辺">今出川・京田辺</option>
@@ -895,17 +901,20 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
   <!-- 入会金と年会費 -->
   <div class="mt-4">
     <label for="admissionFee" class="block text-gray-700 font-bold mb-4">入会金　(無料の場合は０を入力)</label>
-    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 5000" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
+    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 5000"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
 </div>
 
 <div class="mt-6">
     <label for="annualFee" class="block text-gray-700 font-bold mb-4">年会費　(無料の場合は０を入力)</label>
-    <input type="number" id="annualFee" name="annualFee" placeholder="例: 10000" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
+    <input type="number" id="annualFee" name="annualFee" placeholder="例: 10000"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
 </div>
 <!-- instagramlink -->
 <div class="mt-6">
     <label for="instagram" class="block text-gray-700 font-bold mb-4">Instagram リンク</label>
-    <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
+    <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
 </div>
 
 </div>
@@ -918,7 +927,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <label for="password" class="block text-gray-700 font-bold mb-4">パスワード　<span class="text-red-500 opacity-80">＊必須</span></label>
     <h3 class="mb-4 text-sm opacity-70">管理者用パスワードを設定してください(６文字以上)。<br>サークルページの編集、削除時に必要です。</h3>
     <input type="password" id="password" name="password" placeholder="管理者用パスワードを設定" required minlength="6"
-           class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-400">
+    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
 </div>
 
             <!-- サブミットボタン -->
@@ -928,7 +937,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     </form>
     <style>
         .submitbutton {
-            background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+            background-image: linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
             box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
 }
 
@@ -942,14 +951,14 @@ input:not(.slider), select, textarea {
     background-color: #fff;
 
     /* ✅ border の代わりに box-shadow を使ってグラデーションを適用 */
-    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 1px rgba(49, 196, 190, 0.75);
+    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 1px  rgba(239, 194, 81, 0.75);
 }
 
 
 
 /* ✅ フォーカス時にボーダーのグラデーションを適用 */
 input:focus, select:focus, textarea:focus {
-    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 2px linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 2px linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
 }
 
 
@@ -1091,12 +1100,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const container = document.createElement("div");
-                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
+                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden", "shadow-lg");
 
                     const img = document.createElement("img");
                     img.src = e.target.result;
                     img.alt = "サブ画像プレビュー";
-                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
+                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-[#ddc4ff]");
                     container.appendChild(img);
 
                     // 🔹 削除ボタン
