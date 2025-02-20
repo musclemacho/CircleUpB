@@ -6,6 +6,21 @@ const multer = require('multer');
 const mysql = require("mysql2");
 const { getBuiltinModule } = require("process");
 const nodemailer = require("nodemailer");
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+
+
+app.use(session({
+    secret: 'your_secret_key',  // セッションを保護するキー
+    resave: false,  // セッションが変更されない場合は保存しない
+    saveUninitialized: false,  // 未初期化のセッションを保存しない
+    cookie: {
+        secure: false,  // HTTPS なら true
+        httpOnly: true, // JavaScript からクッキーを読めないようにする（XSS対策）
+        sameSite: 'lax',  // CSRF対策'strict'
+        maxAge: 1000 * 60 * 60 // 1時間（セッションの有効期限）
+    }
+}));
 
 
 // リクエストをログに記録するミドルウェア
@@ -44,8 +59,9 @@ const upload = multer({ storage: storage });
 // MySQL 接続設定
 const db = mysql.createConnection({
   host: "localhost",
-  user: "a4",
-  password: "Hide_Nakai_2003",
+  user: "root",
+  password: "aaaa",
+  // 俺のはaaaa、Hide_Nakai_2003
 });
 
 db.connect((err) => {
@@ -371,8 +387,9 @@ app.get("/search", (req, res) => {
 app.get('/newCircle', (req, res) => {
   res.render('newCircle', { title: '新しいサークル掲載' });
 });
-app.get('/schedule', (req, res) => {
-  res.render('schedule');
+
+app.get('/starnightmuscle', (req, res) => {
+  res.render('ourpage');
 });
 
 app.get("/", (req, res) => {
@@ -385,12 +402,9 @@ app.get("/", (req, res) => {
 });
 
 // パスワード認証（編集ページ）
-app.post("/circle/edit/:id/auth", (req, res) => {
-  const circleId = req.params.id;
+app.post("/circle/admin/:id/auth", (req, res) => {
+  const circleId = parseInt(req.params.id, 10);
   const { password } = req.body;
-
-  console.log("受け取った circleId:", circleId);
-  console.log("受け取ったパスワード:", password);
 
   if (!circleId) {
       return res.status(400).json({ error: "サークルIDが不正です" });
@@ -408,17 +422,24 @@ app.post("/circle/edit/:id/auth", (req, res) => {
       }
 
       const circle = results[0];
-      console.log("データベースのパスワード:", circle.password);
 
-      if ((circle.password || '') !== password) {
+      if (circle.password !== password) {
           console.log("パスワードが一致しません！");
           return res.status(403).json({ error: "パスワードが正しくありません" });
       }
 
-      // 認証成功 → `editCircle.ejs` にリダイレクト
-      res.redirect(`/circle/admin/${circleId}`);
+      // ✅ 認証成功したらセッションに保存
+      req.session.admin = circleId;
+
+req.session.save(() => {
+    res.json({ success: true, redirect: `/circle/admin/${circle.id}` });
+});
+
+  
+    
   });
 });
+
 
 
 
@@ -515,17 +536,25 @@ app.get("/circle/:id", (req, res) => {
       });
   });
 });
-app.get("/circle/admin/:id", (req, res) => {
+
+const requireAuth = (req, res, next) => {
+  console.log("セッション情報:", req.session);  // ✅ デバッグ用ログ
+  console.log("リクエストID:", req.params.id);
+  console.log("保存された admin ID:", req.session.admin);
+
+  if (!req.session.admin || req.session.admin != req.params.id) {
+      return res.status(403).json({ error: "認証が必要です。" });
+  }
+  next();
+};
+
+app.get("/circle/admin/:id", requireAuth, (req, res) => {
   const circleId = parseInt(req.params.id, 10);
 
   if (isNaN(circleId)) {
-      console.error("❌ 無効な circleId:", req.params.id);
       return res.status(400).json({ error: "無効な ID です" });
   }
 
-  console.log(`📌 [DEBUG] 管理者ページにアクセス: circleId=${circleId}`);
-
-  // 過去15日間の日別閲覧数を取得
   const query = `
       SELECT c.id, c.circleName, c.description, c.tag, c.instagram, 
              dv.viewDate, dv.viewCount
@@ -537,7 +566,7 @@ app.get("/circle/admin/:id", (req, res) => {
 
   db.query(query, [circleId], (err, results) => {
       if (err) {
-          console.error("❌ [ERROR] データ取得エラー:", err);
+          console.error("データ取得エラー:", err);
           return res.status(500).json({ error: "データ取得に失敗しました。" });
       }
 
@@ -545,7 +574,6 @@ app.get("/circle/admin/:id", (req, res) => {
           return res.status(404).json({ error: "サークルが見つかりません。" });
       }
 
-      // サークル情報
       const circle = {
           id: results[0].id,
           circleName: results[0].circleName,
@@ -554,13 +582,10 @@ app.get("/circle/admin/:id", (req, res) => {
           instagram: results[0].instagram,
       };
 
-      // 日別閲覧数データをリストに整形
       const stats = results.map(row => ({
           date: row.viewDate,
           count: row.viewCount
       }));
-
-      console.log("✅ [SUCCESS] 管理ページデータ取得成功:", circle, stats);
 
       res.render("admin", { circle, stats });
   });
@@ -582,3 +607,4 @@ app.get("/api/getCircles", (req, res) => {
       res.json(rows);
   });
 });
+

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" >
 <head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content=" rgb(255, 210, 121)"> <!-- オレンジ色 (フォールバック) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -9,13 +10,15 @@
     <title>サークルアップ</title>
 </head>
 
-<body class="font-sans bg-gray-100 flex justify-center">
-    <div class="w-full max-w-[500px] bg-white shadow-lg min-h-screen">
+
+<body class="font-sans flex justify-center pb-32" >
+    <div class="w-full max-w-[500px]  min-h-screen" >
     
 
 
 <!-- ヘッダー -->
-<header class="bg-white mb-3 text-black py-2 px-4 flex justify-between items-center  sticky top-0 z-50">
+<header class="text-black pt-3 pb-2 px-4 flex justify-between items-center sticky top-0 z-50"
+    style="background: linear-gradient(to bottom, rgb(255, 210, 121), rgb(255, 222, 138));">
     <div class="flex items-center gap-3">
         <div class="hamburger cursor-pointer flex flex-col justify-around h-5" onclick="toggleMenu()">
             <span class="block w-5 h-0.5 bg-black"></span>
@@ -29,11 +32,10 @@
             <i class="fa-solid fa-house text-lg"></i>
         </a>
     </div>
-    <div class="relative w-3/4">
+    <div class="relative w-3/4 bg-white rounded-lg">
         <form action="/search" id="searchname" method="get">
-            <div class="flex items-center border border-gray-300 rounded-lg px-3 py-1 focus-within:ring-2 focus-within:ring-blue-400">
+            <div class="flex items-center  rounded-lg px-3 py-1 focus-within:ring-2 focus-within:ring-blue-400">
                 <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 12.65z"></path>
                 </svg>
                 <input 
                     id="inputname" 
@@ -49,7 +51,7 @@
 <!-- サイドメニュー -->
 <div 
     id="menu" 
-    class="fixed top-0 left-[-280px] w-[270px] h-full bg-white shadow-lg p-5 transition-all duration-300 ease-in-out z-50 border-r border-gray-200"
+    class="fixed top-0 left-[-280px] w-[270px] h-full bg-white shadow-lg p-5 transition-all duration-300 ease-in-out z-50 border-r border-gray-200" style="background: linear-gradient(to bottom,rgb(255, 210, 121), yellow);"
 >
 <button 
         class="my-3 mx-3 top-4 left-4 text-gray-700 hover:text-black transition"
@@ -84,7 +86,7 @@
     });
 </script>
 <!-- header下 -->
-<div class="flex justify-around items-center mb-4 pb-3 px-4 bg-white shadow-md rounded-b-2xl gap-4">
+<div class="flex justify-around items-center mb-4 py-3 px-4 bg-white shadow-md rounded-b-2xl gap-4" style="background: linear-gradient(to bottom,rgb(255, 222, 138), rgb(255, 255, 131));"">
     <!-- 🔍 検索ボタン -->
     <div data-target="search1" class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
          onclick="toggleModal(this)">
@@ -107,11 +109,11 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
 </div>
 
 <!-- メインコンテンツ -->
-<div class="w-full px-4 ">
+<div class="w-full px-4">
     
  
 
-    <div class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-1 gap-4 mb-2">
         <% circles.forEach(circle => { %>
         <div class="p-4 border  bg-white rounded-3xl shadow-md hover:shadow-lg transition duration-300 cursor-pointer relative"
             onclick="location.href='/circle/<%= circle.id %>'">
@@ -149,7 +151,6 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
                 letter-spacing: 4px; /* 文字の間隔を広げる */
                 position: absolute;
                 font-size: 16px;
-                color: rgba(31, 29, 29, 0.671);
                 font-weight: bold;
                 text-align: center;
                 top: 40%;
@@ -162,13 +163,13 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
             
             <% if (circle.tag.includes("公認")) { %>
                 <div class="icon-container">
-                    <i class="fas fa-bookmark"></i>
-                    <span class="icon-text">公認</span>
+                    <i class="fas fa-bookmark bg-gradient-to-r from-[#ffee00] via-[#ffcc00] to-[#ffbb00] bg-clip-text text-transparent drop-shadow-[0_4px_15px_rgba(255,220,50,0.85)]"></i>
+                    <span class="icon-text text-white">公認</span>
                 </div>
             <% } else if (circle.tag.includes("登録団体")) { %>
                 <div class="icon-container">
-                    <i class="fas fa-bookmark"> </i>
-                    <span class="icon-text">登録</span>
+                    <i class="fas fa-bookmark  bg-gradient-to-r from-[#40b8b4] via-[#66ffe8] to-[#25aae1] bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(49,196,190,0.75)]"></i>
+                    <span class="icon-text text-white">登録</span>
                 </div>
             <% } %>
             
@@ -211,9 +212,10 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
 <!-- コメント -->
 <% if (circle.comment && circle.comment.trim() !== "") { %>
     <!-- コメントセクション（データがある場合のみ表示） -->
-    <div class="relative mt-2">
+    <div class="relative mt-3">
         <!-- 鉛筆アイコン（左上固定） -->
-        <i class="fas fa-pencil-alt text-gray-500 text-sm absolute top-0 left-0"></i>
+        <i class="fas fa-pencil-alt text-sm absolute top-0 left-0 bg-gradient-to-r from-[#f5ce62] via-[#e43603] via-[#fa7199] to-[#e85a19] bg-clip-text text-transparent drop-shadow-[0_4px_15px_rgba(229,66,10,0.75)]"></i>
+
         
         <!-- コメントテキスト -->
         <p class="text-sm text-gray-700 line-clamp-3 overflow-hidden pl-4">
@@ -224,11 +226,13 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
 
             <!-- タグ（写真＋テキストの下に横いっぱいに配置、横スクロール対応） -->
             <% if (circle.tag) { %>
-                <div class="mt-3 w-full overflow-x-auto scrollbar-hide">
-                    <div class="flex flex-wrap gap-x-2 gap-y-1 w-max" style="column-count: 2;">
+                <div class="mt-2 w-full py-1 overflow-x-auto scrollbar-hide">
+                    <div class="flex flex-wrap gap-x-2 w-max">
                         <% circle.tag.split(',').forEach(tag => { %>
                             <% if (!["null1", "null2", "null3", "null4"].includes(tag.trim())) { %>
-                                <span class="border-[#12bbd4] border bg-[#1bdbf8] text-white px-3 py-1 opacity-70 rounded-full text-sm">
+                                <span class="border border-[#f5ce62] bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#ffc850] 
+                                            text-white px-3 py-1 opacity-90 rounded-full text-sm 
+                                            shadow-lg transition duration-300 cursor-pointer">
                                     <%= tag.trim() %>
                                 </span>
                             <% } %>
@@ -236,6 +240,7 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
                     </div>
                 </div>
             <% } %>
+            
             
         </div>
         <% }) %>
@@ -252,18 +257,6 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
     }
 </style>
 
-<!-- <div class="flex-col fixed top-20 right-4 opacity-70 "> -->
-<!-- お気に入り一覧ボタン -->
-<!-- <button onclick="FavoriteCircles()" class=" w-12 h-12 bg-yellow-400 text-white rounded-full shadow-lg hover:scale-105 transition-transform">
-    <i class="fa-solid fa-star"></i> 
-</button> -->
-
-<!-- 検索絞り込み -->
-<!-- <div data-target="search1" onclick="toggleModal(this)" 
-    class="mt-3 flex items-center justify-center w-12 h-12 bg-blue-400 bg-opacity-70 text-white rounded-full shadow-lg cursor-pointer hover:scale-105 transition-transform">
-    <i class="fa-solid fa-magnifying-glass text-xl"></i>
-</div>
-</div> -->
 
 
 <script>
@@ -332,7 +325,8 @@ function handleFavoriteButtonClick() {
             <div class="tile">
                 <input type="checkbox" id="tennis" name="searchGenre" value="テニス" class="hidden peer">
                 <label for="tennis" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
                     <i class="fas fa-table-tennis text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">テニス</h6>
@@ -343,7 +337,8 @@ function handleFavoriteButtonClick() {
             <div class="tile">
                 <input type="checkbox" id="lightMusic" name="searchGenre" value="軽音" class="hidden peer">
                 <label for="lightMusic" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
                     <i class="fas fa-guitar text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">軽音</h6>
@@ -354,7 +349,8 @@ function handleFavoriteButtonClick() {
             <div class="tile">
                 <input type="checkbox" id="sports" name="searchGenre" value="スポーツ" class="hidden peer">
                 <label for="sports" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
                     <i class="fas fa-dumbbell text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">スポーツ</h6>
@@ -365,7 +361,8 @@ function handleFavoriteButtonClick() {
             <div class="tile">
                 <input type="checkbox" id="events" name="searchGenre" value="イベント" class="hidden peer">
                 <label for="events" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
                     <i class="fas fa-tent text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">イベント</h6>
@@ -375,19 +372,21 @@ function handleFavoriteButtonClick() {
             <!-- 文化系 -->
             <div class="tile">
                 <input type="checkbox" id="culture" name="searchGenre" value="文化系" class="hidden peer">
-                <label for="culture" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                <label for="culture"class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                    <i class="fas fa-book text-3xl"></i>
+                    <i class="fas fa-tent text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">文化系</h6>
                 </label>
             </div>
-    
+            
             <!-- 部活 -->
             <div class="tile">
                 <input type="checkbox" id="club" name="searchGenre" value="部活" class="hidden peer">
                 <label for="club" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
                     <i class="fas fa-users text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">部活</h6>
@@ -398,40 +397,48 @@ function handleFavoriteButtonClick() {
             <div class="tile">
                 <input type="checkbox" id="dance" name="searchGenre" value="ダンス" class="hidden peer">
                 <label for="dance" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                    <i class="fas fa-music text-3xl"></i>
+                    <i class="fas fa-users text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">ダンス</h6>
                 </label>
             </div>
+            
     
             <!-- サッカー -->
             <div class="tile">
                 <input type="checkbox" id="soccerFutsal" name="searchGenre" value="サッカー・フットサル" class="hidden peer">
                 <label for="soccerFutsal" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                    <i class="fas fa-futbol text-3xl"></i>
+                    <i class="fas fa-hands-helping text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">サッカー</h6>
                 </label>
             </div>
+            
     
             <!-- 国際交流 -->
             <div class="tile">
                 <input type="checkbox" id="global" name="searchGenre" value="国際交流" class="hidden peer">
-                <label for="global" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                <label for="global"class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                    <i class="fas fa-globe text-3xl"></i>
+                    <i class="fas fa-hands-helping text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">国際交流</h6>
                 </label>
             </div>
+            
+            
     
             <!-- ボランティア -->
             <div class="tile">
                 <input type="checkbox" id="volunteer" name="searchGenre" value="ボランティア" class="hidden peer">
                 <label for="volunteer" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                    peer-checked:bg-[#12bbd4] peer-checked:border-[#1bdbf8] peer-checked:text-white peer-checked:scale-105 
+                peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
                     transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
                     <i class="fas fa-hands-helping text-3xl"></i>
                     <h6 class="mt-2 text-lg font-semibold">ボランティア</h6>
@@ -609,13 +616,14 @@ function handleFavoriteButtonClick() {
     outline: none;
 }
 
-/* .btn-hover.color-1 {
-    background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+.btn-hover.color-2 {
+    background-image: linear-gradient(to right, #25aae1, #66ffe8, #40b8b4, #2bb673);
     box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
 }
-   */
+
+
 .btn-hover.color-1 {
-    background-image: linear-gradient(to right, #f5ce62, #e43603, #fa7199, #e85a19);
+    background-image: linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #ffc850);
     box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
 }
 

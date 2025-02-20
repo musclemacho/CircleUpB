@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サークル管理ページ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    
+    <!-- ヘッダー -->
+    <header class="bg-blue-500 text-white py-4 shadow-md sticky top-0 z-50">
+        <h1 class="text-center text-xl font-bold">サークル管理ページ</h1>
+    </header>
+
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+        <!-- サークル統計情報 -->
+        <div class="mb-8">
+            <h2 class="text-lg font-bold mb-4">サークル統計情報</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="p-4 bg-blue-100 rounded-lg shadow">
+                    <p class="text-gray-700">投稿されたサークル数</p>
+                    <p class="text-2xl font-bold text-blue-600"><%= totalCircles %> 件</p>
+                </div>
+                <div class="p-4 bg-green-100 rounded-lg shadow">
+                    <p class="text-gray-700">総アクセス数</p>
+                    <p class="text-2xl font-bold text-green-600"><%= totalViews %> 回</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- サークル一覧 -->
+        <div>
+            <h2 class="text-lg font-bold mb-4">サークル一覧</h2>
+            <div class="bg-white shadow-md rounded-lg">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="py-2 px-4 border">サークル名</th>
+                            <th class="py-2 px-4 border">ジャンル</th>
+                            <th class="py-2 px-4 border">アクセス数</th>
+                            <th class="py-2 px-4 border">管理</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% circles.forEach(circle => { %>
+                        <tr class="border-t">
+                            <td class="py-2 px-4 border"><%= circle.circleName %></td>
+                            <td class="py-2 px-4 border"><%= circle.mainGenre %></td>
+                            <td class="py-2 px-4 border"><%= circle.views %></td>
+                            <td class="py-2 px-4 border text-center">
+                                <a href="/circle/edit/<%= circle.id %>" class="text-blue-500 hover:underline">編集</a> |
+                                <button onclick="deleteCircle('<%= circle.id %>')" class="text-red-500 hover:underline">削除</button>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteCircle(circleId) {
+            if (confirm("本当に削除しますか？")) {
+                fetch(`/circle/delete/${circleId}`, { method: "DELETE" })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("サークルが削除されました！");
+                            location.reload();
+                        } else {
+                            alert("削除に失敗しました。");
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

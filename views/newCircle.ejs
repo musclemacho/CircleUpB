@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>サークルを掲載する</title>
 </head>
-<body class="bg-blue-50 font-sans">
+<body class="font-sans">
 
     <!-- ヘッダー -->
     <header class="bg-blue-300 text-white py-4 shadow-md sticky top-0 z-50">
@@ -17,11 +17,13 @@
     </header>
    
    <!-- フォーム -->
-   <form id="circle-form" enctype="multipart/form-data" class="bg-white max-w-lg mx-auto p-6 rounded-lg shadow-md">
-       <!-- トップ画像 -->
-
+   <form id="circle-form" enctype="multipart/form-data" class="bg-white max-w-lg mx-auto rounded-lg shadow-md">
+    
+    <h1 class="text-2xl font-bold my-5 p-5">サークルを掲載</h1>
+    <!-- トップ画像 -->
+    <div class="p-6 border-t border-gray-300">
         <div class="mb-6 flex justify-center relative flex-col">
-            <label for="topPhoto" class="block text-gray-700 font-bold mb-3">トップ画像　<span class="text-red-500 opacity-80">＊必須</span></label>
+            <label for="topPhoto" class="block text-gray-700 font-bold my-4">トップ画像　<span class="text-red-500 opacity-80">＊必須</span></label>
             <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl relative cursor-pointer" id="topPhotoUpload" style="padding-top: 100%;">
                 <span class="absolute inset-0 flex items-center justify-center text-4xl text-gray-400">+</span>
                 <img id="topPhotoPreview" src="#" alt="プレビュー画像" class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
@@ -31,8 +33,8 @@
         </div>
 
         <!-- サブ画像 -->
-        <div class="mb-6">
-            <label for="subPhotos" class="block text-gray-700 font-bold mb-3">サブ画像（最大5枚）</label>
+        <div class="mb-12">
+            <label for="subPhotos" class="block text-gray-700 font-bold my-5">サブ画像（最大5枚）</label>
             <div id="subPhotoUpload" class="flex gap-2 flex-wrap">
                 <div id="addSubPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
                     <span class="text-2xl text-gray-400">+</span>
@@ -43,8 +45,8 @@
                 <!-- プレビュー画像がここに追加される -->
             </div>
         </div>
-
-<!-- トリミングモーダル -->
+    </div>
+    </div>
 <!-- トリミングモーダル -->
 <div id="cropModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-50">
     <div class="bg-white w-full max-w-[450px] h-screen rounded-2xl shadow-lg flex flex-col">
@@ -64,21 +66,25 @@
 
 
 
-
+<div class="p-6 border-t border-gray-300">
         <!-- サークル名 -->
-        <div class="form-group mb-4">
-            <label for="circleName" class="block text-gray-700 font-bold mb-2">サークル名　<span class="text-red-500 opacity-80">＊必須</span></label>
+        <div class="form-group my-5">
+            <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊必須</span></label>
             <input type="text" id="circleName" name="circleName" placeholder="例: Green" required
-                   class="w-full border border-blue-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                   class="w-full border border-[#12bbd4] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
         </div>
 
 
          
 
        <!-- メインジャンル -->
-       <div class="mb-4">
-        <label for="mainGenre" class="block text-gray-700 font-bold mb-2">ジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
-        <select id="mainGenre" name="mainGenre" class="appearance-none w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+       <div class="my-7">
+        <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
+        <select id="mainGenre" name="mainGenre" class="w-full p-3 border-1 border-transparent rounded-lg bg-white 
+        shadow-[0px_0px_0px_1px_transparent,0px_0px_0px_1px_rgba(49,196,190,0.75)] 
+        focus:shadow-none focus:border-blue-300 focus:ring-2 focus:ring-blue-300 
+        appearance-none pr-10 bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'black\'><path d=\'M5.5 7l4.5 4 4.5-4\'/></svg>')] 
+        bg-no-repeat bg-right bg-[length:12px] transition duration-300">
             <option value="">選択してください</option>
             <option value="スポーツ">スポーツ</option>
             <option value="テニス">テニス</option>
@@ -93,9 +99,13 @@
     </div>
 
     <!-- サブジャンル -->
-    <div class="mb-4">
-        <label for="subGenre" class="block text-gray-700 font-bold mb-2">サブジャンルを選択</label>
-        <select id="subGenre" name="subGenre" class="appearance-none w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+    <div class="my-7">
+        <label for="subGenre" class="block text-gray-700 font-bold mb-4">サブジャンルを選択</label>
+        <select id="subGenre" name="subGenre"  class="w-full p-3 border-1 border-transparent rounded-lg bg-white 
+        shadow-[0px_0px_0px_1px_transparent,0px_0px_0px_1px_rgba(49,196,190,0.75)] 
+        focus:shadow-none focus:border-blue-300 focus:ring-2 focus:ring-blue-300 
+        appearance-none pr-10 bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'black\'><path d=\'M5.5 7l4.5 4 4.5-4\'/></svg>')] 
+        bg-no-repeat bg-right bg-[length:12px] transition duration-300">
             <option value="">メインジャンルを選択してください</option>
         </select>
     </div>
@@ -140,38 +150,41 @@
 });
 
     </script>
-<!-- その他 -->
-<div class="mt-4">
-    <label for="other" class="block text-gray-700 font-bold mb-2">その他</label>
-    <input type="text" id="other" name="other" placeholder="例: ラクロス" 
-           class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <!-- その他 -->
+        <div class="my-4">
+            <label for="other" class="block text-gray-700 font-bold mb-4">その他</label>
+            <input type="text" id="other" name="other" placeholder="例: ラクロス" 
+                class="w-full  rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
+        </div>
+
 </div>
-
-     
-     
-
+<div class="p-6 mb-6 border-t border-gray-300">
         <!-- サークル選択グラフ -->
-        <h2 class="text-lg font-bold mb-4">サークル選択グラフ</h2>
-        <div class="space-y-6">
+        <h2 class="text-lg font-bold my-10">サークル選択グラフ</h2>
+        <ul class="ks-cboxtags">
+        <div class="space-y-7">
             <!-- スライダー: 人数 -->
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="slider1" class="block text-gray-700 font-bold mb-2">人数</label>
+                    <label for="slider1" class="block text-lg text-gray-700 font-bold mb-4">人数</label>
                     
                     <!-- 🔹 チェックボックス -->
                     <div class="flex items-center">
-                        <input type="checkbox" name="tag" value="null1" id="toggle1" class="ml-2" 
-                               onchange="toggleSlider('toggle1', 'slider1', 'slider1Value', '150人')">
-                        <span id="toggle1Text" class="ml-2 text-gray-700">選択しない</span>
+                       <li>
+                        <input type="checkbox" id="toggle1" name="tag" value="null1" class="hidden peer" onchange="toggleSlider('toggle1', 'slider1', 'slider1Value', '150人')">
+                        <label for="toggle1"class="shadow-md">
+                            未選択
+                        </label>
+                    </li>
                     </div>
                 </div>
-                <div class="flex justify-between items-baseline text-sm text-gray-500 mb-2">
+                <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>1人</span> 
-                     <span id="slider1Value"class="text-lg text-blue-500 font-bold">150人</span>
-                    <span>300人</span>
+                     <span id="slider1Value"class="text-lg text-[#12bbd4] font-bold">150人</span>
+                    <span>300人以上</span>
                 </div>
                 <input type="range" id="slider1" class="w-full slider" min="0" max="300" step="10" value="150">
-                <div class="text-center text-blue-500 font-bold mt-2">
+                <div class="text-center text-[#12bbd4] font-bold mt-2">
                   
                 </div>
                
@@ -180,63 +193,129 @@
             <!-- スライダー: 男女比 -->
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="slider2" class="block text-gray-700 font-bold mb-2">男女比</label>
+                    <label for="slider2" class="block text-gray-700 text-lg font-bold mb-4">男女比</label>
                     <div class="flex items-center">
-                        <input type="checkbox" name="tag" value="null2" id="toggle2" class="ml-2" 
-                               onchange="toggleSlider('toggle2', 'slider2', 'slider2Value', '5:5')">
-                        <span id="toggle2Text" class="ml-2 text-gray-700">選択しない</span>
+                        <li>
+                            <input type="checkbox" id="toggle2" name="tag" value="null2" class="hidden peer" onchange="toggleSlider('toggle2', 'slider2', 'slider2Value', '5:5')">
+                            <label for="toggle2"class="shadow-md">
+                                未選択
+                            </label>
+                        </li>
                     </div>
                 </div>
-                <div class="flex justify-between items-baseline text-sm text-gray-500 mb-2">
+                <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>男</span>
-                    <span id="slider2Value"class="text-lg text-blue-500 font-bold">5:5</span>
+                    <span id="slider2Value"class="text-lg text-[#12bbd4] font-bold">5:5</span>
                     <span>女</span>
                 </div>
                 <input type="range" id="slider2" class="w-full slider" min="0" max="10" value="5">
-                <div class="text-center text-blue-500 font-bold mt-2">
+                <div class="text-center text-[#12bbd4] font-bold mt-2">
                 </div>
             </div>
         
             <!-- スライダー: 活動頻度 -->
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="slider3" class="block text-gray-700 font-bold mb-2">活動頻度</label>
+                    <label for="slider3" class="block text-gray-700 text-lg font-bold mb-4">活動頻度</label>
                     <div class="flex items-center">
-                        <input type="checkbox" name="tag" value="null3" id="toggle3" class="ml-2" 
-                               onchange="toggleSlider('toggle3', 'slider3', 'slider3Value', '月一')">
-                        <span id="toggle3Text" class="ml-2 text-gray-700">選択しない</span>
+                        <li>
+                            <input type="checkbox" id="toggle3" name="tag" value="null3" class="hidden peer" onchange="toggleSlider('toggle3', 'slider3', 'slider3Value', '２か月に一回')">
+                            <label for="toggle3"class="shadow-md">
+                                未選択
+                            </label>
+                        </li>
                     </div>
                 </div>
-                <div class="flex justify-between items-baseline text-sm text-gray-500 mb-2">
+                <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>年数回</span>
-                    <span id="slider3Value"class="text-lg text-blue-500 font-bold"></span>
+                    <span id="slider3Value"class="text-lg text-[#12bbd4] font-bold"></span>
                     <span>ほぼ毎日</span>
                 </div>
                 <input type="range" id="slider3" class="w-full slider" min="0" max="100" value="50">
-                <div class="text-center text-blue-500 font-bold mt-2">
+                <div class="text-center text-[#12bbd4] font-bold mt-2">
                 </div>
             </div>
         
           <!-- スライダー: 雰囲気 -->
-<div>
-    <div class="flex items-center justify-between">
-        <label for="slider4" class="block text-gray-700 font-bold mb-2">活動頻度</label>
-        <div class="flex items-center">
-            <input type="checkbox" name="tag" value="null4" id="toggle4" class="ml-2" 
-                   onchange="toggleSlider('toggle4', 'slider4', 'slider4Value', '50%')">
-            <span id="toggle4Text" class="ml-2 text-gray-700">選択しない</span>
+        <div>
+            <div class="flex items-center justify-between">
+                <label for="slider4" class="block text-gray-700 text-lg font-bold mb-4">活動頻度</label>
+                <div class="flex items-center">
+                    <li>
+                        <input type="checkbox" id="toggle4" name="tag" value="null4" class="hidden peer" onchange="toggleSlider('toggle4', 'slider4', 'slider4Value', '50%')">
+                        <label for="toggle4"class="shadow-md">
+                            未選択
+                        </label>
+                    </li>
+                </div>
+            </div>
+            <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
+                <span>真面目</span>
+                <span id="slider4Value" class="text-lg text-[#12bbd4] font-bold">50%</span>
+                <span>全力エンジョイ</span>
+            </div>
+            <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="50">
         </div>
-    </div>
-    <div class="flex justify-between items-baseline text-sm text-gray-500 mb-2">
-        <span>真面目</span>
-        <span id="slider4Value" class="text-lg text-blue-500 font-bold">50%</span>
-        <span>全力エンジョイ</span>
-    </div>
-    <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="50">
 </div>
+</ul>
+</div>
+        <style>
+         /* 共通のスライダー設定 */
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    outline: none;
 
-        </div>
+}
+
+
+
+.slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #12bbd4;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* 初期状態で左側に色を付ける */
+.slider {
+    background: linear-gradient(to right, #1bdbf8 0%, #12bbd4 0%, #fff 0%);
+}
+
+            </style>
+            
+
+
         <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const sliders = document.querySelectorAll(".slider");
+
+    sliders.forEach(slider => {
+        function updateSliderBackground() {
+            let value = slider.value;
+            let min = slider.min;
+            let max = slider.max;
+            let percentage = ((value - min) / (max - min)) * 100; // 0% - 100%
+
+            slider.style.background = `linear-gradient(to right, #1bdbf8 ${percentage}%, #12bbd4 ${percentage}%, #fff ${percentage}%)`;
+        }
+
+        // 初期値設定
+        updateSliderBackground();
+
+        // スライダーの値が変更されたら背景を更新
+        slider.addEventListener("input", updateSliderBackground);
+    });
+});
+
+
+
+
            function toggleSlider(toggleId, sliderId, valueId, defaultValue) {
     const toggle = document.getElementById(toggleId);
     const slider = document.getElementById(sliderId);
@@ -260,10 +339,15 @@
     
     // 人数スライダー
     const slider1 = document.getElementById('slider1');
-    const slider1Value = document.getElementById('slider1Value');
-    slider1.addEventListener('input', () => {
-        slider1Value.textContent = slider1.value + '人';
-    });
+const slider1Value = document.getElementById('slider1Value');
+
+slider1.addEventListener('input', () => {
+    if (slider1.value == 300) {
+        slider1Value.textContent = "300人以上";
+    } else {
+        slider1Value.textContent = slider1.value + "人";
+    }
+});
 
     // 活動頻度スライダー
     const activityFrequency = ['不定期', '年一回', '半年に一回', '３か月に一回', '２か月に一回', '月一', '月２', '週一', 'ほぼ毎日'];
@@ -298,19 +382,24 @@
     slider3.dispatchEvent(new Event('input'));
      </script>
 
+
+
+
+
        <!-- フォーム -->
-    
+       <div class="p-6 mb-6 border-t border-gray-300">
+
+        <h2 class="text-lg font-bold my-10">タグ選択</h2>
         <div>
 
             
-            <h3 class="text-lg font-bold mb-6 mt-6">公認・登録団体の場合はチェック</h3>
+            <h3 class="text-lg font-bold my-8">公認・登録団体の場合はチェック</h3>
             <ul class="ks-cboxtags flex flex-wrap gap-4">
               
              <li>
                 <div>  
                     <input type="checkbox" id="officialCircle" name="tag" value="公認" class="hidden peer">
-                    <label for="officialCircle"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="officialCircle"class="shadow-md">
                         公認
                     </label>
                 </div>
@@ -319,18 +408,17 @@
              <li>
 <div>
                     <input type="checkbox" id="certifiedCircle" name="tag" value="登録団体" class="hidden peer">
-                    <label for="certifiedCircle"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="certifiedCircle"class="shadow-md">
                         登録団体
                     </label>
                 </div>
 </li>
-                <h3 class="text-lg font-bold mb-4 mt-4">サークルの雰囲気・規模</h3><span></span>
+                <h3 class="text-lg font-bold my-7 mt-4">サークルの雰囲気・規模</h3><span></span>
              <li>
 <div>
                     <input type="checkbox" id="smallFriendly" name="tag" value="少人数で仲良し" class="hidden peer">
-                    <label for="smallFriendly"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="smallFriendly"class="shadow-md 
+                   ">
                         少人数で仲良し
                     </label>
                 </div>
@@ -338,8 +426,8 @@
              <li>
 <div>
                     <input type="checkbox" id="largeFun" name="tag" value="大人数でわいわい" class="hidden peer">
-                    <label for="largeFun"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="largeFun"class="shadow-md 
+                   ">
                         大人数でわいわい
                     </label>
                 </div>
@@ -347,8 +435,8 @@
              <li>
 <div>
                     <input type="checkbox" id="hasCamps" name="tag" value="合宿あり" class="hidden peer">
-                    <label for="hasCamps"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="hasCamps"class="shadow-md 
+                   ">
                         合宿あり
                     </label>
                 </div>
@@ -356,8 +444,8 @@
              <li>
 <div>
                     <input type="checkbox" id="richMeetup" name="tag" value="出会い豊富" class="hidden peer">
-                    <label for="richMeetup"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="richMeetup"class="shadow-md 
+                   ">
                         出会い豊富
                     </label>
                 </div>
@@ -365,8 +453,8 @@
              <li>
 <div>
                     <input type="checkbox" id="manyEvents" name="tag" value="イベント多い" class="hidden peer">
-                    <label for="manyEvents"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="manyEvents"class="shadow-md 
+                   ">
                         イベント多い
                     </label>
                 </div>
@@ -374,8 +462,8 @@
              <li>
 <div>
                     <input type="checkbox" id="calmCircle" name="tag" value="穏やかサークル" class="hidden peer">
-                    <label for="calmCircle"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="calmCircle"class="shadow-md 
+                   ">
                         穏やかサークル
                     </label>
                 </div>
@@ -383,8 +471,8 @@
              <li>
 <div>
                     <input type="checkbox" id="livelyCircle" name="tag" value="ノリがいい" class="hidden peer">
-                    <label for="livelyCircle"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="livelyCircle"class="shadow-md 
+                   ">
                         ノリがいい
                     </label>
                 </div>
@@ -392,8 +480,8 @@
              <li>
 <div>
                     <input type="checkbox" id="smallHomey" name="tag" value="少なめの人数でアットホーム" class="hidden peer">
-                    <label for="smallHomey"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="smallHomey"class="shadow-md 
+                   ">
                         少なめの人数でアットホーム
                     </label>
                 </div>
@@ -401,8 +489,8 @@
              <li>
 <div>
                     <input type="checkbox" id="livelyBig" name="tag" value="わいわい賑やかサークル" class="hidden peer">
-                    <label for="livelyBig"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="livelyBig"class="shadow-md 
+                   ">
                         わいわい賑やかサークル
                     </label>
                 </div>
@@ -414,8 +502,8 @@
              <li>
 <div>
                     <input type="checkbox" id="moreBoys" name="tag" value="男子多め" class="hidden peer">
-                    <label for="moreBoys"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="moreBoys"class="shadow-md 
+                   ">
                         男子多め
                     </label>
                 </div>
@@ -423,8 +511,8 @@
              <li>
 <div>
                     <input type="checkbox" id="moreGirls" name="tag" value="女子多め" class="hidden peer">
-                    <label for="moreGirls"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="moreGirls"class="shadow-md 
+                   ">
                         女子多め
                     </label>
                 </div>
@@ -432,8 +520,8 @@
              <li>
 <div>
                     <input type="checkbox" id="balancedGender" name="tag" value="男女のバランスがいい" class="hidden peer">
-                    <label for="balancedGender"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="balancedGender"class="shadow-md 
+                   ">
                         男女のバランスがいい
                     </label>
                 </div>
@@ -441,8 +529,8 @@
              <li>
 <div>
                     <input type="checkbox" id="handsomeGuys" name="tag" value="イケメンが多い" class="hidden peer">
-                    <label for="handsomeGuys"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="handsomeGuys"class="shadow-md 
+                   ">
                         イケメンが多い
                     </label>
                 </div>
@@ -450,8 +538,8 @@
              <li>
 <div>
                     <input type="checkbox" id="prettyGirls" name="tag" value="美女が多い" class="hidden peer">
-                    <label for="prettyGirls"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="prettyGirls"class="shadow-md 
+                   ">
                         美女が多い
                     </label>
                 </div>
@@ -459,8 +547,8 @@
              <li>
 <div>
                     <input type="checkbox" id="indoor" name="tag" value="インドア向き" class="hidden peer">
-                    <label for="indoor"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="indoor"class="shadow-md 
+                   ">
                         インドア向き
                     </label>
                 </div>
@@ -468,8 +556,8 @@
              <li>
 <div>
                     <input type="checkbox" id="outdoor" name="tag" value="アウトドア向き" class="hidden peer">
-                    <label for="outdoor"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="outdoor"class="shadow-md 
+                   ">
                         アウトドア向き
                     </label>
                 </div>
@@ -477,8 +565,8 @@
              <li>
 <div>
                     <input type="checkbox" id="drinksOk" name="tag" value="ソフドリ全然OK!" class="hidden peer">
-                    <label for="drinksOk"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="drinksOk"class="shadow-md 
+                   ">
                         ソフドリ全然OK!
                     </label>
                 </div>
@@ -486,8 +574,8 @@
              <li>
 <div>
                     <input type="checkbox" id="drinkingParty" name="tag" value="飲み会で盛り上がる" class="hidden peer">
-                    <label for="drinkingParty"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="drinkingParty"class="shadow-md 
+                   ">
                         飲み会で盛り上がる
                     </label>
                 </div>
@@ -495,8 +583,8 @@
              <li>
 <div>
                     <input type="checkbox" id="experienced" name="tag" value="経験者・ガチ勢多め" class="hidden peer">
-                    <label for="experienced"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="experienced"class="shadow-md 
+                   ">
                         経験者・ガチ勢多め
                     </label>
                 </div>
@@ -504,8 +592,8 @@
              <li>
 <div>
                     <input type="checkbox" id="beginnersWelcome" name="tag" value="初心者大歓迎" class="hidden peer">
-                    <label for="beginnersWelcome"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="beginnersWelcome"class="shadow-md 
+                   ">
                         初心者大歓迎
                     </label>
                 </div>
@@ -513,8 +601,8 @@
              <li>
 <div>
                     <input type="checkbox" id="sportsBackground" name="tag" value="運動部出身多め" class="hidden peer">
-                    <label for="sportsBackground"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="sportsBackground"class="shadow-md 
+                   ">
                         運動部出身多め
                     </label>
                 </div>
@@ -522,8 +610,8 @@
              <li>
 <div>
                     <input type="checkbox" id="cultureBackground" name="tag" value="文化部出身多め" class="hidden peer">
-                    <label for="cultureBackground"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="cultureBackground"class="shadow-md 
+                   ">
                         文化部出身多め
                     </label>
                 </div>
@@ -535,8 +623,8 @@
              <li>
 <div>
                     <input type="checkbox" id="seriousCircle" name="tag" value="結構ガチです" class="hidden peer">
-                    <label for="seriousCircle"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="seriousCircle"class="shadow-md 
+                   ">
                         結構ガチです
                     </label>
                 </div>
@@ -544,8 +632,8 @@
              <li>
 <div>
                     <input type="checkbox" id="enjoyable" name="tag" value="楽しめればOK" class="hidden peer">
-                    <label for="enjoyable"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="enjoyable"class="shadow-md 
+                   ">
                         楽しめればOK
                     </label>
                 </div>
@@ -553,8 +641,8 @@
              <li>
 <div>
                     <input type="checkbox" id="careerBenefit" name="tag" value="就活にも役立つ" class="hidden peer">
-                    <label for="careerBenefit"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="careerBenefit"class="shadow-md 
+                   ">
                         就活にも役立つ
                     </label>
                 </div>
@@ -563,8 +651,8 @@
              <li>
 <div>
                     <input type="checkbox" id="globalExchange" name="tag" value="国際交流できる" class="hidden peer">
-                    <label for="globalExchange"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="globalExchange"class="shadow-md 
+                   ">
                         国際交流できる
                     </label>
                 </div>
@@ -572,8 +660,8 @@
              <li>
 <div>
                     <input type="checkbox" id="freeMembership" name="tag" value="入会費・年会費無料" class="hidden peer">
-                    <label for="freeMembership"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="freeMembership"class="shadow-md 
+                   ">
                         入会費・年会費無料
                     </label>
                 </div>
@@ -581,8 +669,8 @@
              <li>
 <div>
                     <input type="checkbox" id="languageLearning" name="tag" value="言語を学べる" class="hidden peer">
-                    <label for="languageLearning"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="languageLearning"class="shadow-md 
+                   ">
                         言語を学べる
                     </label>
                 </div>
@@ -590,8 +678,8 @@
              <li>
 <div>
                     <input type="checkbox" id="achievements" name="tag" value="ガクチカ作れる" class="hidden peer">
-                    <label for="achievements"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="achievements"class="shadow-md 
+                   ">
                         ガクチカ作れる
                     </label>
                 </div>
@@ -599,40 +687,40 @@
              <li>
 <div>
                     <input type="checkbox" id="senpaiFriendly" name="tag" value="先輩とも仲良し" class="hidden peer">
-                    <label for="senpaiFriendly"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="senpaiFriendly"class="shadow-md 
+                   ">
                         先輩とも仲良し
                     </label>
                 </div>
              <li>
 <div>
                     <input type="checkbox" id="volunteer" name="tag" value="ボランティア" class="hidden peer">
-                    <label for="volunteer"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="volunteer"class="shadow-md 
+                   ">
                         ボランティア
                     </label>
                 </div>
              <li>
 <div>
                     <input type="checkbox" id="awardWinning" name="tag" value="表彰経験あり" class="hidden peer">
-                    <label for="awardWinning"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="awardWinning"class="shadow-md 
+                   ">
                         表彰経験あり
                     </label>
                 </div>
              <li>
 <div>
                     <input type="checkbox" id="studySupport" name="tag" value="過去問もらえる" class="hidden peer">
-                    <label for="studySupport"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="studySupport"class="shadow-md 
+                   ">
                         過去問もらえる
                     </label>
                 </div>
              <li>
 <div>
                     <input type="checkbox" id="internationalStudents" name="tag" value="留学生多め" class="hidden peer">
-                    <label for="internationalStudents"class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                    <label for="internationalStudents"class="shadow-md 
+                   ">
                         留学生多め
                     </label>
                 </div>
@@ -640,7 +728,53 @@
             </div>
         </ul>
         </div>
+       </div>
 
+       <script>
+
+   // 🔹 公認と登録団体のチェックボックス
+   const officialCircle = document.getElementById("officialCircle");
+    const certifiedCircle = document.getElementById("certifiedCircle");
+
+    // 🔹 「公認」と「登録団体」はどちらか一方のみ選択可能にする
+    function toggleExclusiveSelection(selected, other) {
+        if (selected.checked) {
+            other.checked = false; // もう一方を解除
+        }
+    }
+
+    officialCircle.addEventListener("change", function () {
+        toggleExclusiveSelection(this, certifiedCircle);
+    });
+
+    certifiedCircle.addEventListener("change", function () {
+        toggleExclusiveSelection(this, officialCircle);
+    });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const maxTags = 25; // 🔹 選択できるタグの最大数
+            const checkboxes = document.querySelectorAll('input[name="tag"]');
+        
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", function () {
+                    const checkedBoxes = document.querySelectorAll('input[name="tag"]:checked');
+                    const checkedCount = checkedBoxes.length;
+        
+                    if (checkedCount > maxTags) {
+                        alert(`タグは最大２５個までしか選択できません！`);
+                        this.checked = false; // 🔹 これ以上選べないようにする
+                        return;
+                    }
+        
+                   
+                });
+            });
+        });
+        </script>
+        
+        
+        
 
         <style>
 /* 必要なカスタムスタイル */
@@ -700,19 +834,25 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
 
     </style>
         
-
+ <div class="p-6 border-t border-gray-300">
        
    <!-- 一言 -->
    <div class="mt-6">
-    <label for="comment" class="block text-gray-700 font-bold mb-2">一言メッセージ　トップ画面に表示される紹介文です（７５字以内）</label>
-    <input type="text" id="comment" name="comment" placeholder="例: みんな仲良しのイベントサークルです！" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <label for="comment" class="block text-gray-700 font-bold mb-4">
+        一言メッセージ 
+     
+    </label>
+    <h3 class="mb-4 text-sm opacity-70">トップ画面に表示される紹介文です（70字以内）</h3>
+    <textarea id="comment" name="comment" maxlength="70" placeholder="例: みんな仲良しのイベントサークルです！" 
+        rows="2"
+        class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"></textarea>
 </div>
 
    <!-- 紹介文 -->
 <div class="mb-6 mt-6">
-    <label for="description" class="block text-gray-700 font-bold mb-2">紹介文</label>
-    <textarea id="description" name="description" placeholder="サークルの特徴や活動内容を入力してください..." rows="5" 
-              class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400"></textarea>
+    <label for="description" class="block text-gray-700 font-bold mb-4">紹介文</label>
+    <textarea id="description" name="description" maxlength="1000" placeholder="サークルの特徴や活動内容を入力してください..." rows="10" 
+              class="w-full border  rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-400"></textarea>
 </div>
 
 
@@ -720,7 +860,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
         <!-- 新歓カレンダー画像 -->
    
 <div class="mb-6">
-    <label for="calendarPhotos" class="block text-gray-700 font-bold mb-2">新歓カレンダー画像（最大3枚）</label>
+    <label for="calendarPhotos" class="block text-gray-700 font-bold mb-4">新歓カレンダー画像（最大3枚）</label>
     <div id="calendarPhotoUpload" class="flex gap-2 flex-wrap">
         <div id="addCalendarPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
             <span class="text-2xl text-gray-400">+</span>
@@ -733,13 +873,18 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
 </div>
 
 
+</div>
 
-
-
+<div class="p-6 mb-6 border-t border-gray-300">
+    <h2 class="text-lg font-bold my-10">詳細情報</h2>
     <!-- 活動場所 -->
-    <div class="mb-4">
-        <label for="location" class="block text-gray-700 font-bold mb-2">主な活動場所・推奨所属キャンパスを選択</label>
-        <select id="location" name="location" class="appearance-none w-full border border-gray-300 rounded-lg p-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+    <div class="my-7">
+        <label for="location" class="block text-gray-700 font-bold mb-4">主な活動場所・推奨所属キャンパスを選択</label>
+        <select id="location" name="location"  class="w-full p-3 border-1 border-transparent rounded-lg bg-white 
+        shadow-[0px_0px_0px_1px_transparent,0px_0px_0px_1px_rgba(49,196,190,0.75)] 
+        focus:shadow-none focus:border-blue-300 focus:ring-2 focus:ring-blue-300 
+        appearance-none pr-10 bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'black\'><path d=\'M5.5 7l4.5 4 4.5-4\'/></svg>')] 
+        bg-no-repeat bg-right bg-[length:12px] transition duration-300">
             <option value="今出川">今出川</option>
             <option value="京田辺">京田辺</option>
             <option value="今出川・京田辺">今出川・京田辺</option>
@@ -749,33 +894,69 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
 
   <!-- 入会金と年会費 -->
   <div class="mt-4">
-    <label for="admissionFee" class="block text-gray-700 font-bold mb-2">入会金　(無料の場合は未入力)</label>
-    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 5000" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <label for="admissionFee" class="block text-gray-700 font-bold mb-4">入会金　(無料の場合は０を入力)</label>
+    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 5000" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
 </div>
 
 <div class="mt-6">
-    <label for="annualFee" class="block text-gray-700 font-bold mb-2">年会費　(無料の場合は未入力)</label>
-    <input type="number" id="annualFee" name="annualFee" placeholder="例: 10000" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <label for="annualFee" class="block text-gray-700 font-bold mb-4">年会費　(無料の場合は０を入力)</label>
+    <input type="number" id="annualFee" name="annualFee" placeholder="例: 10000" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
 </div>
 <!-- instagramlink -->
 <div class="mt-6">
-    <label for="instagram" class="block text-gray-700 font-bold mb-2">Instagram リンク</label>
-    <input type="text" id="instagram" name="instagram" placeholder="インスタリンク" class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <label for="instagram" class="block text-gray-700 font-bold mb-4">Instagram リンク</label>
+    <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300">
 </div>
+
+</div>
+
+
+<div class="p-6 border-t border-gray-300">
   <!-- パスワード入力欄 -->
 <div class="mt-6 mb-6">
    
-    <label for="password" class="block text-gray-700 font-bold mb-2">パスワード　<span class="text-red-500 opacity-80">＊必須</span></label>
-    <h3 class="mb-2 text-sm opacity-70">管理者用パスワードを設定してください。<br>サークルページの編集、削除時に必要になります。</h3>
-    <input type="password" id="password" name="password" placeholder="管理者用パスワードを設定" required
-           class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400">
+    <label for="password" class="block text-gray-700 font-bold mb-4">パスワード　<span class="text-red-500 opacity-80">＊必須</span></label>
+    <h3 class="mb-4 text-sm opacity-70">管理者用パスワードを設定してください(６文字以上)。<br>サークルページの編集、削除時に必要です。</h3>
+    <input type="password" id="password" name="password" placeholder="管理者用パスワードを設定" required minlength="6"
+           class="w-full border border-blue-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-400">
 </div>
 
             <!-- サブミットボタン -->
-            <input type="submit" value="サークルを掲載する"
-                   class="w-full bg-blue-400 text-white py-2 rounded-lg hover:bg-blue-500 transition duration-300">
-        
+            <input type="submit" value="サークルを掲載する" 
+                   class="submitbutton w-full bg-blue-300 shadow-lg text-white my-6 py-2 rounded-full hover:bg-blue-500 duration-300">
+ </div>
     </form>
+    <style>
+        .submitbutton {
+            background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+            box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+}
+
+
+input:not(.slider), select, textarea {
+    border: 1px solid transparent;
+    padding: 10px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    background-clip: padding-box;
+    background-color: #fff;
+
+    /* ✅ border の代わりに box-shadow を使ってグラデーションを適用 */
+    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 1px rgba(49, 196, 190, 0.75);
+}
+
+
+
+/* ✅ フォーカス時にボーダーのグラデーションを適用 */
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 2px linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+}
+
+
+
+
+
+    </style>
  <script>
  
 
