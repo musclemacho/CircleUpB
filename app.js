@@ -320,14 +320,14 @@ app.post('/circles/edit/:id', upload.fields([
 
 // 検索処理
 app.get("/search", (req, res) => {
-  const { name, searchGenre, bigTag, id} = req.query;
+  const { name, searchGenre, bigTag} = req.query;
 
   let query = `SELECT * FROM Circles WHERE 1=1`;
   const params = [];
   console.log("name:", name);
   console.log("searchGenre:", searchGenre);
   console.log("bigTag:", bigTag);
-  console.log("id:", id);
+
 
   if (name) {
     query += ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ?)`;
@@ -355,25 +355,9 @@ app.get("/search", (req, res) => {
     tags.forEach(tag => params.push(tag));
 }
 
-// お気に入りサークルを取得
- 
- if (id && id.length > 0) {
-  const ids = Array.isArray(id) ? id : [id]; // `id` が単一の場合の対応
-  query += ` AND id IN (${ids.map(() => '?').join(',')})`;
-  ids.forEach(i => params.push(i));
-}
 
 
 
-//  if (bigTag && bigTag.length > 0) {
-//     const tags = Array.isArray(bigTag) ? bigTag : [bigTag];
-    
-//     // `tag` に 1つでも該当する場合を `CASE` 文で優先表示
-//     const caseStatements = tags.map(() => `WHEN tag LIKE ? THEN 0`).join(' ');
-//     query += ` ORDER BY CASE ${caseStatements} ELSE 1 END`;
-    
-//     tags.forEach(tag => params.push(`%${tag}%`));
-//   }
 
   db.query(query, params, (err, rows) => {
     if (err) {
@@ -382,6 +366,33 @@ app.get("/search", (req, res) => {
     res.render("index", { circles: rows });
   });
 });
+
+
+
+// お気に入りサークルを取得
+
+app.get("/searchFav", (req, res) => {
+  const {id} = req.query;
+  console.log("id:", id);
+
+  let query = `SELECT * FROM Circles WHERE 1=1`;
+  const params = [];
+
+ 
+if (id && id.length > 0) {
+  const ids = Array.isArray(id) ? id : [id]; // `id` が単一の場合の対応
+  query += ` AND id IN (${ids.map(() => '?').join(',')})`;
+  ids.forEach(i => params.push(i));
+}
+
+db.query(query, params, (err, rows) => {
+  if (err) {
+    return res.status(500).send("エラーが発生しました: " + err.message);
+  }
+  res.render("index", { circles: rows });
+});
+});
+
 
 // 各ページのルート
 app.get('/newCircle', (req, res) => {

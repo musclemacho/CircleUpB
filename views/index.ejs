@@ -167,7 +167,7 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
                 </div>
             <% } else if (circle.tag.includes("登録団体")) { %>
                 <div class="icon-container">
-                    <i class="fas fa-bookmark  bg-gradient-to-r from-[#40b8b4] via-[#66ffe8] to-[#25aae1] bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(49,196,190,0.75)]"></i>
+                    <i class="fas fa-bookmark  bg-gradient-to-r from-[#66ffe8]  to-[#40b8b4] bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(49,196,190,0.75)]"></i>
                     <span class="icon-text text-white">登録</span>
                 </div>
             <% } %>
@@ -193,11 +193,13 @@ id="favoriteButton" onclick="handleFavoriteButtonClick()">
                     <h5 class="text-xl font-bold"><%= circle.circleName %></h5>
                                     
                     <!-- ジャンル -->
-                    <p class="mt-2 text-base text-bold text-gray-800">
+                    <p class="mt-2 text-base border w-max border-gray-300 rounded px-1 text-bold text-gray-800">
                         <% if (["テニス", "軽音", "ボランティア", "国際交流", "イベント"].includes(circle.mainGenre)) { %>
                             <%= circle.mainGenre %>
                         <% } else if (circle.subGenre === "その他" && circle.other && circle.other.trim() !== "") { %>
                             <%= circle.other %>
+                        <% } else if (circle.subGenre === "選択しない") { %>
+                            <%= circle.mainGenre %>
                         <% } else { %>
                             <%= circle.subGenre || '' %>
                         <% } %>
@@ -266,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function updateFavoriteButton() {
     const button = document.getElementById("favoriteButtonInner");
 
-    if (window.location.pathname === "/search") {
+    if (window.location.pathname === "/searchFav") {
         // お気に入り一覧ページの場合、ボタンの色を濃くする
         button.classList.add("bg-yellow-500", "text-white");
         button.classList.remove("bg-yellow-100", "text-yellow-600");
@@ -280,8 +282,8 @@ function updateFavoriteButton() {
 function handleFavoriteButtonClick() {
     let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-    if (window.location.pathname === "/search") {
-        // 現在のページが /search の場合、ホームに戻る
+    if (window.location.pathname === "/searchFav") {
+        // 現在のページが /searchFav の場合、ホームに戻る
         window.location.href = "/";
         return;
     }
@@ -296,7 +298,7 @@ function handleFavoriteButtonClick() {
     let params = new URLSearchParams();
     favorites.forEach(id => params.append('id', id));
 
-    window.location.href = `/search?${params.toString()}`;
+    window.location.href = `/searchFav?${params.toString()}`;
 }
 
 
@@ -627,7 +629,7 @@ function handleFavoriteButtonClick() {
 
 
 .btn-hover.color-1 {
-    background-image: linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
+    background-image: linear-gradient(to right, #f5ce62, hsl(17, 100%, 82%), #eba789);
     box-shadow: 0 4px 15px 0 rgba(239, 194, 81, 0.75);
 }
 

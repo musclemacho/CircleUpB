@@ -18,7 +18,7 @@
 <header class="bg-white text-black py-2 px-4 flex justify-between items-center  sticky top-0 z-50">
    <!-- 戻るボタン -->
 <div class="z-50">
-    <button onclick="redirectToHome()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
+    <button onclick="history.back()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
         <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
     </button>
 </div>
@@ -387,7 +387,7 @@
             <button onclick="closePasswordModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
                 キャンセル
             </button>
-            <button onclick="submitPassword()" class="px-4 py-2 text-white rounded-lg hover:bg-blue-600">
+            <button onclick="submitPassword()" class="px-4 py-2 text-white rounded-lg bg-blue-500 hover:bg-blue-600">
                 確認
             </button>
         </div>
