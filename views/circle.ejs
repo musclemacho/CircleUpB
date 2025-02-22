@@ -10,7 +10,7 @@
 <!-- SwiperのJS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <title>サークル詳細</title>
+    <title>サークル詳細ページ</title>
     <div class="w-full max-w-[500px] bg-white shadow-lg min-h-screen">
     
 </head>
@@ -183,7 +183,7 @@
     <div>
         <div class="flex justify-between text-sm text-gray-500 mb-2">
             <span>人数</span>
-            <span class="font-bold text-gray-700">
+            <span class="font-bold text-gray-700 absolute left-1/2 transform -translate-x-1/2">
                 <% if (circle.tag && circle.tag.includes("null1")) { %>
                     未登録
                 <% } else if (circle.parsedSlider1 >= 300) { %>
@@ -193,7 +193,6 @@
                 <% } %>
             </span>
             <span>300人以上</span>
-            
         </div>
         <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
@@ -201,12 +200,13 @@
         </div>
         </div>
     </div>
+    
 
     <!-- 男女比 -->
     <div>
         <div class="flex justify-between text-sm text-gray-500 mb-2">
             <span>男</span>
-            <span class="font-bold text-gray-700">
+            <span class="font-bold text-gray-700 absolute left-1/2 transform -translate-x-1/2">
                 <% if (circle.tag && circle.tag.includes("null2")) { %>
                     未登録
                 <% } else { %>
@@ -219,6 +219,7 @@
             </span>
             <span>女</span>
         </div>
+        
         <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null2')) ? '0%' : ((circle.parsedSlider2 || 0) * 10) + '%' %>;">
@@ -230,7 +231,7 @@
     <div>
         <div class="flex justify-between text-sm text-gray-500 mb-2">
             <span>活動頻度</span>
-            <span class="font-bold text-gray-700">
+            <span class="font-bold text-gray-700 absolute left-1/2 transform -translate-x-1/2">
                 <% if (circle.tag && circle.tag.includes("null3")) { %>
                     未登録
                 <% } else { %>
@@ -243,6 +244,7 @@
             </span>
             <span>多い</span>
         </div>
+        
         <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null3')) ? '0%' : ((circle.parsedSlider3 || 0)) + '%' %>;">
@@ -254,15 +256,16 @@
     <div>
         <div class="flex justify-between text-sm text-gray-500 mb-2">
             <span>雰囲気</span>
-            <span class="font-bold text-gray-700">
+            <span class="font-bold text-gray-700 absolute left-1/2 transform -translate-x-1/2">
                 <% if (circle.tag && circle.tag.includes("null4")) { %>
                     未登録
                 <% } else { %>
-                <%= circle.parsedSlider4 || 0 %>%
+                <%= circle.parsedSlider4 || 0 %>% 
                 <% } %>
             </span>
             <span>全力エンジョイ</span>
         </div>
+        
         <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null4')) ? '0%' : ((circle.parsedSlider4 || 0)) + '%' %>;">
@@ -363,9 +366,9 @@
 
         </div>
         <div class="px-8 pt-3 pb-6">
-            <button onclick="history.back()" class="w-full block my-5 text-white text-center py-2 rounded-lg hover:bg-orange-800 transition duration-300" style=" background: linear-gradient(to right, #f5ce62, hsl(60, 100%, 62%));
+            <button onclick="history.back()" class="w-full block my-5 text-white text-center py-2 rounded-lg hover:bg-orange-800 transition duration-300" style=" background: linear-gradient(to right, #fcd569, hsl(50, 100%, 69%));
 ">
-                ← 戻る
+                戻る
             </button>
             <a href="#" class="block mt-5 mb-14 bg-blue-400 text-white text-center py-2 px-6 rounded-lg hover:bg-blue-500 transition duration-300"style=" background: linear-gradient(to right, #25aae1, #40b8b4);"
             onclick="openPasswordModal(<%= circle.id %>)">

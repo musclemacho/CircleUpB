@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>サークル管理ページ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body class="bg-gray-100 font-sans">
     
@@ -20,14 +22,54 @@
             <div class="grid grid-cols-2 gap-6">
                 <div class="p-4 bg-blue-100 rounded-lg shadow">
                     <p class="text-gray-700">投稿されたサークル数</p>
-                    <p class="text-2xl font-bold text-blue-600"><%= totalCircles %> 件</p>
                 </div>
                 <div class="p-4 bg-green-100 rounded-lg shadow">
                     <p class="text-gray-700">総アクセス数</p>
-                    <p class="text-2xl font-bold text-green-600"><%= totalViews %> 回</p>
+                    <p class="text-2xl font-bold text-green-600">
+                    </p>
                 </div>
             </div>
         </div>
+<!-- 
+         グラフ 
+        <div class="mb-8">
+            <h2 class="text-lg font-bold mb-4">日別アクセス数の推移</h2>
+            <canvas id="viewsChart"></canvas>
+        </div>
+    </div> -->
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById("viewsChart").getContext("2d");
+
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "日別アクセス数",
+                        data: data,
+                        borderColor: "rgba(75, 192, 192, 1)",
+                        backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        borderWidth: 2,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: { display: true, text: "日付" }
+                        },
+                        y: {
+                            title: { display: true, text: "アクセス数" },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script> -->
 
         <!-- サークル一覧 -->
         <div>
@@ -47,7 +89,7 @@
                         <tr class="border-t">
                             <td class="py-2 px-4 border"><%= circle.circleName %></td>
                             <td class="py-2 px-4 border"><%= circle.mainGenre %></td>
-                            <td class="py-2 px-4 border"><%= circle.views %></td>
+                            <td class="py-2 px-4 border"></td>
                             <td class="py-2 px-4 border text-center">
                                 <a href="/circle/edit/<%= circle.id %>" class="text-blue-500 hover:underline">編集</a> |
                                 <button onclick="deleteCircle('<%= circle.id %>')" class="text-red-500 hover:underline">削除</button>
