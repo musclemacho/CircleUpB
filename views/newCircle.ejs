@@ -41,7 +41,7 @@
                 <img id="topPhotoPreview" src="#" alt="プレビュー画像" class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
                 <button id="removeTopPhoto" class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1 hidden">×</button>
             </div>
-            <input type="file" id="topPhoto" name="topPhoto" accept="image/*" class="hidden">
+            <input type="file" id="topPhoto" name="topPhoto" accept="image/*" class="hidden" required>
         </div>
 
         <!-- サブ画像 -->
@@ -92,7 +92,7 @@
        <!-- メインジャンル -->
        <div class="my-7">
         <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
-        <select id="mainGenre" name="mainGenre"                     class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+        <select id="mainGenre" name="mainGenre"       required              class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
 
 
             <option value="">選択してください</option>
@@ -246,7 +246,7 @@
           <!-- スライダー: 雰囲気 -->
         <div>
             <div class="flex items-center justify-between">
-                <label for="slider4" class="block text-gray-700 text-lg font-bold mb-4">活動頻度</label>
+                <label for="slider4" class="block text-gray-700 text-lg font-bold mb-4">雰囲気</label>
                 <div class="flex items-center">
                     <li>
                         <input type="checkbox" id="toggle4" name="tag" value="null4" class="hidden peer" onchange="toggleSlider('toggle4', 'slider4', 'slider4Value', '50%')">
@@ -829,7 +829,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     </label>
     <h3 class="mb-4 text-sm opacity-70">トップ画面に表示される紹介文です（70字以内）</h3>
     <textarea id="comment" name="comment" maxlength="70" placeholder="例: みんな仲良しのイベントサークルです！" 
-        rows="2"
+        rows="2"　wrap="hard"
         class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
     </textarea>
 </div>
@@ -839,6 +839,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <label for="description" class="block text-gray-700 font-bold mb-4">紹介文</label>
     <textarea id="description" name="description" maxlength="1000" placeholder="サークルの特徴や活動内容を入力してください..." rows="10" 
     class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+    
 </textarea>
 </div>
 
@@ -904,9 +905,32 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
    
     <label for="password" class="block text-gray-700 font-bold mb-4">パスワード　<span class="text-red-500 opacity-80">＊必須</span></label>
     <h3 class="mb-4 text-sm opacity-70">管理者用パスワードを設定してください(６文字以上)。<br>サークルページの編集、削除時に必要です。</h3>
-    <input type="password" id="password" name="password" placeholder="管理者用パスワードを設定" required minlength="6"
-    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
-</div>
+    <div class="relative">
+        <input type="password" id="password" name="password" placeholder="管理者用パスワードを設定" required minlength="6"
+            class="w-full border border-[#eba789] rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-300">
+        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-3 flex items-center">
+            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+            </svg>
+        </button>
+    </div>
+    
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const eyeIcon = document.getElementById("eye-icon");
+    
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.setAttribute("d", "M12 19c4.418 0 8-7 8-7s-3.582-7-8-7-8 7-8 7 3.582 7 8 7z");
+            } else {
+                passwordField.type = "password";
+                eyeIcon.setAttribute("d", "M15 12a3 3 0 11-6 0 3 3 0 016 0z");
+            }
+        }
+    </script>
+    
 
             <!-- サブミットボタン -->
             <input type="submit" value="サークルを掲載する" 
@@ -1228,7 +1252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => {
             console.error("エラー:", error);
-            alert(`登録中に問題が発生しました: ${error.message}`);
+            alert(`写真の枚数を確認してください。`);
         });
     });
 });

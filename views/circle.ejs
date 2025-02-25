@@ -11,11 +11,11 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <title>サークル詳細ページ</title>
-    <div class="w-full max-w-[500px] bg-white shadow-lg min-h-screen">
+    <div class="w-full max-w-[500px] bg-white shadow-2xl min-h-screen">
     
 </head>
 <!-- ヘッダー -->
-<header class="bg-white text-black py-2 px-4 flex justify-between items-center  sticky top-0 z-50">
+<header class="bg-white text-black py-2 px-4 flex justify-between items-center  sticky top-0 z-50 shadow-[0px_10px_30px_rgba(0,0,0,0.25)]">
    <!-- 戻るボタン -->
 <div class="z-50">
     <button onclick="history.back()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
@@ -41,28 +41,28 @@
  
 
 
-    <div class=" mx-auto bg-white shadow-md overflow-hidden">
+    <div class="mx-auto bg-white overflow-hidden">
         <!-- 写真セクション -->
-        <div class="p-6 pb-12 text-center" style="background-image: linear-gradient(135deg, #f7e498 10%, #af48fe 100%);">
+        <div class="p-6 pb-12 text-center" style="background-image: linear-gradient(135deg, hsl(36, 82%, 94%) 10%, #bbf8f1 100%);">
             <% if (circle.topPhoto || circle.photo) { %>
                 <div class="w-full mx-auto relative" style="aspect-ratio: 1 / 1;"> <!-- スマホ幅の80%で正方形 -->
 
                     <img id="mainPhoto" 
                          src="/uploads/<%= circle.topPhoto || circle.photo.split(',')[0].trim() %>" 
                          alt="メイン写真" 
-                         class="absolute inset-0 w-full h-full border-2 border-[#ddc4ff] shadow-lg object-cover transition-transform duration-300 rounded-3xl" >
+                         class="absolute inset-0 w-full h-full outline outline-1 outline-gray-300 border-[5px] border-white shadow-2xl object-cover transition-transform duration-300 rounded-3xl" >
                 </div>
                 <div class="flex overflow-x-auto space-x-4 py-2 mt-2 scrollbar-hide justify-center md:justify-start">
                     <% if (circle.topPhoto) { %>
                         <img src="/uploads/<%= circle.topPhoto %>" 
                              alt="トップ写真" 
-                             class="w-16 h-16 object-cover cursor-pointer border border-[#ddc4ff] shadow-lg transition-transform duration-300 hover:scale-110 thumbnail-photo rounded-xl flex-shrink-0">
+                             class="w-16 h-16 object-cover cursor-pointer outline outline-1 outline-gray-300 border-2 border-white shadow-lg transition-transform duration-300 hover:scale-110 thumbnail-photo rounded-xl flex-shrink-0">
                     <% } %>
                     <% if (circle.subPhotos) { %>
                         <% circle.subPhotos.split(',').forEach(subPhotos => { %>
                             <img src="/uploads/<%= subPhotos.trim() %>" 
                                  alt="サブ写真" 
-                                 class="w-16 h-16 object-cover rounded-md border border-[#ddc4ff] shadow-lg cursor-pointer transition-transform duration-300 hover:scale-110 thumbnail-photo flex-shrink-0">
+                                 class="w-16 h-16 object-cover rounded-xl outline outline-1 outline-gray-300 border-2 border-white shadow-lg cursor-pointer transition-transform duration-300 hover:scale-110 thumbnail-photo flex-shrink-0">
                         <% }) %>
                     <% } %>
                 </div>
@@ -81,18 +81,24 @@
     scrollbar-width: none;
 }
 
+
+
+
         </style>
+
+
+
 <!-- コンテンツセクション (少し上にずらす) -->
 
-<div class="text-center rounded-2xl bg-white content-section">
+<div class="text-center rounded-2xl border-t border-2 norder-gray-200 bg-white shadow-[0px_-10px_30px_rgba(0,0,0,0.25)] content-section">
     <div class="p-5 border-gray-300 border-b">
-    <h1 class="text-2xl font-bold text-orange-600 flex justify-between items-start pt-2">
+    <h1 class="text-2xl font-bold text-gray-800 flex justify-between items-start pt-2">
         <%= circle.circleName %>
         
         <% if (circle.instagram) { %>
             <a href="<%= circle.instagram %>" target="_blank" class="flex flex-col items-center gap-1">
-                <i class="fa-brands fa-instagram text-3xl text-pink-400 transition-transform duration-300 hover:scale-110"></i>
-                <p class="text-gray-600 text-[10px] leading-none">Instagram</p>
+                <i class="fa-brands fa-instagram ml-2 text-3xl text-pink-400 transition-transform duration-300 hover:scale-110"></i>
+                <p class="text-gray-600 ml-2 text-[10px] leading-none">Instagram</p>
             </a>
         <% } %>
     </h1>
@@ -194,7 +200,7 @@
             </span>
             <span>300人以上</span>
         </div>
-        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300 shadow-lg">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null1')) ? '0%' : ((circle.parsedSlider1 || 0) / 3) + '%' %>;">
         </div>
@@ -220,7 +226,7 @@
             <span>女</span>
         </div>
         
-        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300  shadow-lg">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null2')) ? '0%' : ((circle.parsedSlider2 || 0) * 10) + '%' %>;">
         </div>
@@ -245,7 +251,7 @@
             <span>多い</span>
         </div>
         
-        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300 shadow-lg">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null3')) ? '0%' : ((circle.parsedSlider3 || 0)) + '%' %>;">
         </div>
@@ -266,7 +272,7 @@
             <span>全力エンジョイ</span>
         </div>
         
-        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300">
+        <div class="relative h-4 rounded-full overflow-hidden bg-gray-300 shadow-lg">
             <div class="absolute top-0 bottom-0 left-0 rounded-full bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#eba789]" 
             style="width:<%= (circle.tag && circle.tag.includes('null4')) ? '0%' : ((circle.parsedSlider4 || 0)) + '%' %>;">
         </div>
@@ -277,7 +283,8 @@
             <!-- 紹介文 -->
             <div class=" mt-5 w-full  py-2">
                 <h2 class="text-left mb-2 font-bold text-lg">紹介文</h2>
-                <p class="text-gray-800 my-6"><%= circle.description %></p>
+                <p class="text-gray-800 my-6"><%- nl2br(circle.description) %></p>
+
             </div>
         </div>
         <!-- タグ -->
@@ -322,7 +329,7 @@
         <% } %>
         
     
-</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         new Swiper(".calendar-swiper", {
@@ -397,7 +404,7 @@
     </div>
 </div>
 </div>
-   
+</div>
 </body>
 </html>
 

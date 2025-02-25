@@ -8,12 +8,18 @@ const { getBuiltinModule } = require("process");
 const nodemailer = require("nodemailer");
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const nl2br = (str) => {
+  if (!str) return "";
+  return str.replace(/\n/g, "<br>");
+};
+
+app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
 
 app.use(session({
     secret: 'your_secret_key',  // セッションを保護するキー
     resave: false,  // セッションが変更されない場合は保存しない
-    saveUninitialized: false,  // 未初期化のセッションを保存しない
+    saveUninitialized: true,  // 未初期化のセッションを保存
     cookie: {
         secure: false,  // HTTPS なら true
         httpOnly: true, // JavaScript からクッキーを読めないようにする（XSS対策）
@@ -60,7 +66,7 @@ const upload = multer({ storage: storage });
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Hide_Nakai_2003",
+  password: "aaaa",
   // 俺のはaaaa、Hide_Nakai_2003
 });
 
@@ -328,11 +334,11 @@ app.get("/search", (req, res) => {
   console.log("searchGenre:", searchGenre);
   console.log("bigTag:", bigTag);
 
-
   if (name) {
-    query += ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ?)`;
-    params.push(`%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`);
-  }
+    query += ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ? OR location LIKE ?)`;
+    params.push(`%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`);
+}
+
 
   if (searchGenre && searchGenre.length > 0) {
     const genres = Array.isArray(searchGenre) ? searchGenre : [searchGenre];
@@ -399,18 +405,6 @@ app.get('/newCircle', (req, res) => {
   res.render('newCircle', { title: '新しいサークル掲載' });
 });
 
-app.get("/starnightmuscle", (req, res) => {
-  const query = "SELECT * FROM Circles";
-
-  db.query(query, (err, results) => {
-      if (err) {
-          console.error("データ取得エラー:", err.message);
-          return res.status(500).send("エラーが発生しました");
-      }
-
-      res.render("ourpage", { circles: results });
-  });
-});
 
 
 app.get("/", (req, res) => {
@@ -519,23 +513,34 @@ app.get("/circle/:id", (req, res) => {
   });
 });
 
+
 const requireAuth = (req, res, next) => {
-  console.log("セッション情報:", req.session);  // ✅ デバッグ用ログ
+  console.log("セッション情報:", req.session);
   console.log("リクエストID:", req.params.id);
   console.log("保存された admin ID:", req.session.admin);
 
-  if (!req.session.admin || req.session.admin != req.params.id) {
-      return res.status(403).json({ error: "認証が必要です。" });
+  if (req.session.fromOurPage) {
+    console.log("🔹 ourpage からのアクセス -> 認証スキップ");
+    next();
+  } else if (!req.session.admin || req.session.admin != req.params.id) {
+    return res.status(403).json({ error: "認証が必要です。" });
+  } else {
+    next();
   }
-  next();
 };
 
+
+// 管理者ページのルート
 app.get("/circle/admin/:id", requireAuth, (req, res) => {
   const circleId = parseInt(req.params.id, 10);
-
   if (isNaN(circleId)) {
-      return res.status(400).json({ error: "無効な ID です" });
+    return res.status(400).json({ error: "無効な ID です" });
   }
+
+  // 認証スキップ後、フラグを削除
+  req.session.fromOurPage = false;
+  req.session.admin = circleId; // ✅ 管理者としてログインしたことを保存
+  req.session.save();
 
   const query = `
       SELECT c.id, c.circleName, c.description, c.tag, c.instagram, 
@@ -547,60 +552,59 @@ app.get("/circle/admin/:id", requireAuth, (req, res) => {
   `;
 
   db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error("データ取得エラー:", err);
-          return res.status(500).json({ error: "データ取得に失敗しました。" });
-      }
+    if (err) {
+      console.error("データ取得エラー:", err);
+      return res.status(500).json({ error: "データ取得に失敗しました。" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "サークルが見つかりません。" });
+    }
 
-      if (results.length === 0) {
-          return res.status(404).json({ error: "サークルが見つかりません。" });
-      }
+    const circle = {
+      id: results[0].id,
+      circleName: results[0].circleName,
+      description: results[0].description,
+      tag: results[0].tag,
+      instagram: results[0].instagram,
+    };
 
-      const circle = {
-          id: results[0].id,
-          circleName: results[0].circleName,
-          description: results[0].description,
-          tag: results[0].tag,
-          instagram: results[0].instagram,
-      };
+    const stats = results.map(row => ({
+      date: row.viewDate,
+      count: row.viewCount
+    }));
 
-      const stats = results.map(row => ({
-          date: row.viewDate,
-          count: row.viewCount
-      }));
-
-      res.render("admin", { circle, stats });
+    res.render("admin", { circle, stats });
   });
 });
 
-
-
-// 編集ページのルート
-app.get("/circle/edit/:id", requireAuth, (req, res) => {
-
+// 編集ページのルート (adminページ経由のみ)
+app.get("/circle/edit/:id", (req, res) => {
   const circleId = parseInt(req.params.id, 10);
-
   if (isNaN(circleId)) {
-      return res.status(400).json({ error: "無効な ID です" });
+    return res.status(400).json({ error: "無効な ID です" });
+  }
+
+  console.log("🔹 セッション情報:", req.session);
+
+  // ✅ adminページから来た場合のみアクセス許可
+  if (req.session.admin !== circleId) {
+    return res.status(403).json({ error: "アクセス権限がありません。" });
   }
 
   const query = `SELECT * FROM Circles WHERE id = ?`;
   db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error("エラー:", err.message);
-          return res.status(500).send("エラーが発生しました");
-      }
+    if (err) {
+      console.error("エラー:", err.message);
+      return res.status(500).send("エラーが発生しました");
+    }
+    if (results.length === 0) {
+      return res.status(404).send("サークルが見つかりません");
+    }
 
-      if (results.length === 0) {
-          return res.status(404).send("サークルが見つかりません");
-      }
-
-      const circle = results[0];
-      res.render("editCircle", { circle }); // `editCircle.ejs` をレンダリング
+    const circle = results[0];
+    res.render("editCircle", { circle });
   });
 });
-
-
 
 
 
@@ -626,57 +630,69 @@ app.delete("/circle/delete/:id", requireAuth, (req, res) => {
 
 
 
-app.get("/api/getCircles", (req, res) => {
-  const ids = req.query.id;
-  if (!ids || ids.length === 0) {
-      return res.json([]);
+
+
+
+app.get("/starnightmuscle", (req, res) => {
+  // ✅ 最初のアクセス時のみ `fromOurPage` を設定
+  if (!req.session.fromOurPage) {
+      req.session.fromOurPage = true;
   }
 
-  const query = "SELECT * FROM Circles WHERE id IN (?)";
-  db.query(query, [ids], (err, rows) => {
+  const getCircleCountQuery = "SELECT COUNT(*) AS totalCircles FROM Circles";
+  const getDailyViewsQuery = `
+      SELECT viewDate, SUM(viewCount) AS totalViews
+      FROM dailyViews
+      GROUP BY viewDate
+      ORDER BY viewDate ASC
+  `;
+  const getTotalViewsQuery = "SELECT SUM(viewCount) AS totalViews FROM dailyViews";
+
+  // 🔹 各サークルの総閲覧数を取得するクエリ
+  const getCirclesWithViewsQuery = `
+      SELECT c.id, c.circleName, c.mainGenre, COALESCE(SUM(d.viewCount), 0) AS totalViews
+      FROM Circles c
+      LEFT JOIN dailyViews d ON c.id = d.circleId
+      GROUP BY c.id, c.circleName, c.mainGenre
+      ORDER BY totalViews DESC;
+  `;
+
+  db.query(getCircleCountQuery, (err, circleResults) => {
       if (err) {
-          console.error("エラー:", err);
-          return res.status(500).json({ error: "データ取得に失敗しました。" });
+          console.error("❌ エラー: サークル数の取得に失敗", err);
+          return res.status(500).send("サークル数データ取得エラー");
       }
-      res.json(rows);
+
+      const totalCircles = circleResults.length > 0 ? circleResults[0].totalCircles : 0;
+
+      db.query(getDailyViewsQuery, (err, dailyViewsResults) => {
+          if (err) {
+              console.error("❌ エラー: 日別アクセス数の取得に失敗", err);
+              return res.status(500).send("日別アクセス数データ取得エラー");
+          }
+
+          db.query(getTotalViewsQuery, (err, totalViewsResult) => {
+              if (err) {
+                  console.error("❌ エラー: 総アクセス数の取得に失敗", err);
+                  return res.status(500).send("総アクセス数データ取得エラー");
+              }
+
+              const totalViews = totalViewsResult.length > 0 ? totalViewsResult[0].totalViews || 0 : 0;
+
+              db.query(getCirclesWithViewsQuery, (err, circlesResults) => {
+                  if (err) {
+                      console.error("❌ エラー: サークルデータの取得に失敗", err);
+                      return res.status(500).send("サークルデータ取得エラー");
+                  }
+
+                  res.render("ourpage", {
+                      totalCircles: totalCircles,
+                      dailyViews: dailyViewsResults || [],
+                      totalViews: totalViews,
+                      circles: circlesResults || []
+                  });
+              });
+          });
+      });
   });
 });
-
-
-
-// 総アクセス数
-// app.get("/starnightmuscle", (req, res) => {
-//   const getCircleCountQuery = "SELECT COUNT(*) AS totalCircles FROM Circles";
-//   const getDailyViewsQuery = `
-//       SELECT viewDate, SUM(viewCount) AS totalViews
-//       FROM dailyViews
-//       GROUP BY viewDate
-//       ORDER BY viewDate ASC
-//   `;
-
-//   db.query(getCircleCountQuery, (err, circleResults) => {
-//       if (err) {
-//           console.error("❌ エラー: サークル数の取得に失敗", err);
-//           return res.status(500).send("サークル数データ取得エラー");
-//       }
-
-//       console.log("✅ 取得した circleResults:", circleResults); // デバッグ用
-
-//       const totalCircles = circleResults.length > 0 ? circleResults[0].totalCircles : 0;
-
-//       db.query(getDailyViewsQuery, (err, viewsResults) => {
-//           if (err) {
-//               console.error("❌ エラー: 日別アクセス数の取得に失敗", err);
-//               return res.status(500).send("アクセス数データ取得エラー");
-//           }
-
-//           console.log("✅ 取得した dailyViews:", viewsResults); // デバッグ用
-
-//           // `dailyViews` が `undefined` にならないようにデフォルト値をセット
-//           res.render("ourpage", {
-//               totalCircles: totalCircles,
-//               dailyViews: viewsResults || []  // **ここで [] をセット**
-//           });
-//       });
-//   });
-// });

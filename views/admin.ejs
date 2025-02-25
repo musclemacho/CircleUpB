@@ -10,141 +10,141 @@
 </head>
 <body class="bg-blue-50 font-sans text-gray-800">
 
-    <!-- 戻るボタン -->
-    <div class="fixed top-4 left-4 z-50">
-        <button onclick="history.back()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full flex items-center">
-            <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
-        </button>
-    </div>
-
-    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-md p-6">
-        <h1 class="text-2xl font-bold text-center text-blue-500">サークル管理者ページ</h1>
-
-<h1 class="text-center mt-10 text-xl font-bold"><%= circle.circleName %></h1>
-        <!-- Chart.js 読み込み -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- グラフのキャンバス -->
-<canvas id="viewChart"></canvas>
-<h2 class="text-lg font-bold mb-4">過去15日間の閲覧数</h2>
-<table class="w-full border-collapse border border-gray-300">
-    <thead>
-        <tr class="bg-gray-100">
-            <th class="border border-gray-300 px-4 py-2">日付</th>
-            <th class="border border-gray-300 px-4 py-2">閲覧数</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% stats.forEach(stat => { %>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">
-                    <%= new Date(stat.date).getMonth() + 1 %>/<%= new Date(stat.date).getDate() %>
-                </td>
-                <td class="border border-gray-300 px-4 py-2 text-center"><%= stat.count %></td>
-            </tr>
-        <% }) %>
-    </tbody>
-    
-</table>
-
-<h2 class="text-lg font-bold mb-4">過去15日間の閲覧数</h2>
-<!-- グラフのキャンバス -->
-<div class="relative w-full h-[300px]">
-    <canvas id="viewsChart"></canvas>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // サーバーから渡された `stats` を JavaScript で扱えるようにする
-        const stats = <%- JSON.stringify(stats) %>;
-
-        // 日付を "MM/DD" 形式にフォーマットする関数
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const month = date.getMonth() + 1;  // JavaScriptの `getMonth()` は 0 から始まるので +1
-            const day = date.getDate();
-            return `${month}/${day}`;
-        }
-
-        // 日付と閲覧数のデータを配列化
-        const labels = stats.map(stat => formatDate(stat.date));  // MM/DD のみの表示
-        const data = stats.map(stat => stat.count);
-
-        // Chart.js でグラフを描画
-        const ctx = document.getElementById("viewsChart").getContext("2d");
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "閲覧数",
-                    data: data,
-                    borderColor: "rgba(54, 162, 235, 1)",
-                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    pointBackgroundColor: "rgba(54, 162, 235, 1)"
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    x: { 
-                        title: { display: true, text: "日付" },
-                        ticks: { maxTicksLimit: 15 } 
-                    },
-                    y: { 
-                        title: { display: true, text: "閲覧数" },
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    });
-</script>
-
-
-
-
-
-        <!-- 編集ボタン -->
-        <div class="mt-6">
-            <a href="/circle/edit/<%= circle.id %>" class="block bg-blue-500 text-white text-center py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-                サークルを編集する
-            </a>
-        </div>
-
-        <!-- 削除ボタン -->
-        <div class="mt-4">
-            <button onclick="deleteCircle(<%= circle.id %>)"
-                    class="w-full bg-red-500 text-white text-center py-3 rounded-lg hover:bg-red-600 transition duration-300">
-                サークルを削除する
+        <!-- 戻るボタン -->
+        <div class="fixed top-4 left-4 z-50">
+            <button onclick="history.back()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full flex items-center">
+                <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
             </button>
         </div>
+
+        <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-md p-6">
+            <h1 class="text-2xl font-bold text-center text-blue-500">サークル管理者ページ</h1>
+
+    <h1 class="text-center mt-10 text-xl font-bold"><%= circle.circleName %></h1>
+            <!-- Chart.js 読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- グラフのキャンバス -->
+    <canvas id="viewChart"></canvas>
+    <h2 class="text-lg font-bold mb-4">過去15日間の閲覧数</h2>
+    <table class="w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border border-gray-300 px-4 py-2">日付</th>
+                <th class="border border-gray-300 px-4 py-2">閲覧数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% stats.forEach(stat => { %>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">
+                        <%= new Date(stat.date).getMonth() + 1 %>/<%= new Date(stat.date).getDate() %>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-2 text-center"><%= stat.count %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+        
+    </table>
+
+    <h2 class="text-lg font-bold mb-4">過去15日間の閲覧数</h2>
+    <!-- グラフのキャンバス -->
+    <div class="relative w-full h-[300px]">
+        <canvas id="viewsChart"></canvas>
     </div>
-
-    <!-- サークル削除用スクリプト -->
     <script>
-        function deleteCircle(circleId) {
-            if (!confirm("本当にこのサークルを削除しますか？")) return;
+        document.addEventListener("DOMContentLoaded", function () {
+            // サーバーから渡された `stats` を JavaScript で扱えるようにする
+            const stats = <%- JSON.stringify(stats) %>;
 
-            fetch(`/circle/delete/${circleId}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" }
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert("サークルが削除されました");
-                    window.location.href = "/";
-                } else {
-                    return response.json().then(data => { throw new Error(data.error || "削除に失敗しました"); });
+            // 日付を "MM/DD" 形式にフォーマットする関数
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                const month = date.getMonth() + 1;  // JavaScriptの `getMonth()` は 0 から始まるので +1
+                const day = date.getDate();
+                return `${month}/${day}`;
+            }
+
+            // 日付と閲覧数のデータを配列化
+            const labels = stats.map(stat => formatDate(stat.date));  // MM/DD のみの表示
+            const data = stats.map(stat => stat.count);
+
+            // Chart.js でグラフを描画
+            const ctx = document.getElementById("viewsChart").getContext("2d");
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "閲覧数",
+                        data: data,
+                        borderColor: "rgba(54, 162, 235, 1)",
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: "rgba(54, 162, 235, 1)"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        x: { 
+                            title: { display: true, text: "日付" },
+                            ticks: { maxTicksLimit: 15 } 
+                        },
+                        y: { 
+                            title: { display: true, text: "閲覧数" },
+                            beginAtZero: true
+                        }
+                    }
                 }
-            })
-            .catch(error => {
-                alert(error.message);
             });
-        }
+        });
     </script>
+
+
+
+
+
+            <!-- 編集ボタン -->
+            <div class="mt-6">
+                <a href="/circle/edit/<%= circle.id %>" class="block bg-blue-500 text-white text-center py-3 rounded-lg hover:bg-blue-600 transition duration-300">
+                    サークルを編集する
+                </a>
+            </div>
+
+            <!-- 削除ボタン -->
+            <div class="mt-4">
+                <button onclick="deleteCircle(<%= circle.id %>)"
+                        class="w-full bg-red-500 text-white text-center py-3 rounded-lg hover:bg-red-600 transition duration-300">
+                    サークルを削除する
+                </button>
+            </div>
+        </div>
+
+        <!-- サークル削除用スクリプト -->
+        <script>
+            function deleteCircle(circleId) {
+                if (!confirm("本当にこのサークルを削除しますか？")) return;
+
+                fetch(`/circle/delete/${circleId}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("サークルが削除されました");
+                        window.location.href = "/";
+                    } else {
+                        return response.json().then(data => { throw new Error(data.error || "削除に失敗しました"); });
+                    }
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+            }
+        </script>
 
 </body>
 </html>
