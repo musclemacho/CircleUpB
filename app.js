@@ -16,15 +16,16 @@ const nl2br = (str) => {
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
 
+
 app.use(session({
-    secret: 'your_secret_key',  // セッションを保護するキー
-    resave: false,  // セッションが変更されない場合は保存しない
-    saveUninitialized: true,  // 未初期化のセッションを保存
+    secret: "your_secret_key",  // 任意のシークレットキー
+    resave: false,  // セッションが変更されたときのみ保存
+    saveUninitialized: false,  // 未初期化のセッションは保存しない
     cookie: {
-        secure: false,  // HTTPS なら true
-        httpOnly: true, // JavaScript からクッキーを読めないようにする（XSS対策）
-        sameSite: 'lax',  // CSRF対策'strict'
-        maxAge: 1000 * 60 * 60 // 1時間（セッションの有効期限）
+        secure: false,  // HTTPS 環境なら true
+        httpOnly: true, // JavaScript からアクセス不可（XSS対策）
+        sameSite: "lax",  // CSRF対策
+        maxAge: 30 * 60 * 1000 // セッションの有効期限: 30分
     }
 }));
 
@@ -60,7 +61,12 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+// ✅ アップロードサイズ制限: 5MB
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
 
 // MySQL 接続設定
 const db = mysql.createConnection({
@@ -69,6 +75,22 @@ const db = mysql.createConnection({
   password: "aaaa",
   // 俺のはaaaa、Hide_Nakai_2003
 });
+
+
+
+// ✅ 画像のみ許可する `fileFilter`
+function fileFilter(req, file, cb) {
+  const allowedExtensions = [".png", ".jpg", ".jpeg", ".gif", ".webp"];
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (allowedExtensions.includes(ext)) {
+      cb(null, true); // ✅ 許可
+  } else {
+      cb(new Error("❌ 許可されていないファイル形式です (.png, .jpg, .jpeg, .gif, .webp のみ許可)"), false);
+  }
+}
+
+
 
 db.connect((err) => {
   if (err) {
@@ -416,45 +438,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// パスワード認証（編集ページ）
-app.post("/circle/admin/:id/auth", (req, res) => {
-  const circleId = parseInt(req.params.id, 10);
-  const { password } = req.body;
-
-  if (!circleId) {
-      return res.status(400).json({ error: "サークルIDが不正です" });
-  }
-
-  const query = `SELECT * FROM Circles WHERE id = ?`;
-  db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error("エラー:", err.message);
-          return res.status(500).json({ error: "エラーが発生しました" });
-      }
-
-      if (results.length === 0) {
-          return res.status(404).json({ error: "サークルが見つかりません" });
-      }
-
-      const circle = results[0];
-
-      if (circle.password !== password) {
-          console.log("パスワードが一致しません！");
-          return res.status(403).json({ error: "パスワードが正しくありません" });
-      }
-
-      // ✅ 認証成功したらセッションに保存
-      req.session.admin = circleId;
-
-req.session.save(() => {
-    res.json({ success: true, redirect: `/circle/admin/${circle.id}` });
-});
-
-  
-    
-  });
-});
-
 
 
 
@@ -513,34 +496,112 @@ app.get("/circle/:id", (req, res) => {
   });
 });
 
+// パスワード認証（管理ページへのアクセス）
+app.post("/circle/admin/:id/auth", (req, res) => {
+  const circleId = parseInt(req.params.id, 10);
+  const { password } = req.body;
 
-const requireAuth = (req, res, next) => {
-  console.log("セッション情報:", req.session);
-  console.log("リクエストID:", req.params.id);
-  console.log("保存された admin ID:", req.session.admin);
+  console.log("🛠 [DEBUG] 受け取った circleId:", req.params.id, " | parseInt 変換後:", circleId);
 
-  if (req.session.fromOurPage) {
-    console.log("🔹 ourpage からのアクセス -> 認証スキップ");
-    next();
-  } else if (!req.session.admin || req.session.admin != req.params.id) {
-    return res.status(403).json({ error: "認証が必要です。" });
-  } else {
-    next();
+  if (isNaN(circleId) || !password) {
+      return res.status(400).json({ error: "無効なリクエストです" });
   }
+
+  const query = `SELECT * FROM Circles WHERE id = ?`;
+  db.query(query, [circleId], (err, results) => {
+      if (err) {
+          console.error("エラー:", err.message);
+          return res.status(500).json({ error: "エラーが発生しました" });
+      }
+
+      if (results.length === 0) {
+          return res.status(404).json({ error: "サークルが見つかりません。" });
+      }
+
+      const circle = results[0];
+
+      if (circle.password !== password) {
+          console.log("❌ パスワードが一致しません");
+          return res.status(403).json({ error: "パスワードが正しくありません。" });
+      }
+
+      // ✅ `authenticatedCircles` を初期化（未定義の場合）
+      if (!req.session.authenticatedCircles) {
+          req.session.authenticatedCircles = {};
+      }
+
+      // ✅ 認証済みのサークルIDを記録
+      req.session.authenticatedCircles[circleId] = true;
+
+      console.log("✅ 認証成功 - 認証済みサークル一覧:", req.session.authenticatedCircles);
+
+      // 30分後に認証を削除
+      setTimeout(() => {
+          if (req.session.authenticatedCircles) {
+              delete req.session.authenticatedCircles[circleId];
+              console.log("⏳ 認証期限切れ:", circleId);
+          }
+      }, 30 * 60 * 1000); // 30分
+
+      req.session.save((err) => {
+          if (err) {
+              console.error("❌ セッション保存エラー:", err);
+              return res.status(500).json({ error: "セッション保存に失敗しました" });
+          }
+          res.json({ success: true, redirect: `/circle/admin/${circleId}` });
+      });
+  });
+});
+
+// 管理者ページの認証チェックミドルウェア
+const requireAuth = (req, res, next) => {
+  const circleId = parseInt(req.params.id, 10);
+
+  console.log("セッション情報:", req.session);
+  console.log("リクエストID:", circleId);
+
+  // ✅ `authenticatedCircles` が未定義の場合は初期化
+  if (!req.session.authenticatedCircles) {
+      req.session.authenticatedCircles = {};
+  }
+
+  console.log("認証済みサークル:", req.session.authenticatedCircles);
+
+  // ✅ ourpage からのアクセスの場合は認証スキップ
+  if (req.session.fromOurPage) {
+      console.log("🔹 ourpage からのアクセス -> 認証スキップ");
+      req.session.fromOurPage = false; // フラグを削除
+      req.session.save();
+      return next();
+  }
+
+  // ✅ 通常の認証チェック
+  if (!req.session.authenticatedCircles[circleId]) {
+      console.log("❌ 認証されていないためアクセス拒否:", circleId);
+      return res.status(403).json({ error: "認証が必要です。" });
+  }
+
+  console.log("✅ 認証成功 - アクセス許可:", circleId);
+  next();
 };
-
-
 // 管理者ページのルート
 app.get("/circle/admin/:id", requireAuth, (req, res) => {
   const circleId = parseInt(req.params.id, 10);
   if (isNaN(circleId)) {
-    return res.status(400).json({ error: "無効な ID です" });
+      return res.status(400).json({ error: "無効な ID です" });
   }
 
-  // 認証スキップ後、フラグを削除
-  req.session.fromOurPage = false;
-  req.session.admin = circleId; // ✅ 管理者としてログインしたことを保存
-  req.session.save();
+  // ✅ 認証済みのサークルを記録
+  if (!req.session.authenticatedCircles) {
+      req.session.authenticatedCircles = {};
+  }
+
+  
+//  パスワード認証→circleid取得、セッションに登録→requireAuthでadminページととID照合→入る→editページとセッションID照合
+// ourpageからはrequireAuthをスキップ→adminページに入ってcircleidをセッションに保存
+  req.session.authenticatedCircles[circleId] = true;
+
+  console.log("✅ 認証成功 - 認証済みサークル:", req.session.authenticatedCircles);
 
   const query = `
       SELECT c.id, c.circleName, c.description, c.tag, c.instagram, 
@@ -552,57 +613,64 @@ app.get("/circle/admin/:id", requireAuth, (req, res) => {
   `;
 
   db.query(query, [circleId], (err, results) => {
-    if (err) {
-      console.error("データ取得エラー:", err);
-      return res.status(500).json({ error: "データ取得に失敗しました。" });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ error: "サークルが見つかりません。" });
-    }
+      if (err) {
+          console.error("データ取得エラー:", err);
+          return res.status(500).json({ error: "データ取得に失敗しました。" });
+      }
+      if (results.length === 0) {
+          return res.status(404).json({ error: "サークルが見つかりません。" });
+      }
 
-    const circle = {
-      id: results[0].id,
-      circleName: results[0].circleName,
-      description: results[0].description,
-      tag: results[0].tag,
-      instagram: results[0].instagram,
-    };
+      const circle = {
+          id: results[0].id,
+          circleName: results[0].circleName,
+          description: results[0].description,
+          tag: results[0].tag,
+          instagram: results[0].instagram,
+      };
 
-    const stats = results.map(row => ({
-      date: row.viewDate,
-      count: row.viewCount
-    }));
+      const stats = results.map(row => ({
+          date: row.viewDate,
+          count: row.viewCount
+      }));
 
-    res.render("admin", { circle, stats });
+      res.render("admin", { circle, stats });
   });
 });
 
-// 編集ページのルート (adminページ経由のみ)
+// 編集ページのルート (adminページ経由 or 認証済みサークルのみ)
 app.get("/circle/edit/:id", (req, res) => {
   const circleId = parseInt(req.params.id, 10);
   if (isNaN(circleId)) {
-    return res.status(400).json({ error: "無効な ID です" });
+      return res.status(400).json({ error: "無効な ID です" });
   }
 
   console.log("🔹 セッション情報:", req.session);
 
-  // ✅ adminページから来た場合のみアクセス許可
-  if (req.session.admin !== circleId) {
-    return res.status(403).json({ error: "アクセス権限がありません。" });
+  // ✅ `authenticatedCircles` が未定義の場合は初期化
+  if (!req.session.authenticatedCircles) {
+      req.session.authenticatedCircles = {};
   }
+
+  // ✅ adminページからのアクセス or 既に認証済みのサークルのみ許可
+  if (!req.session.authenticatedCircles[circleId]) {
+      return res.status(403).json({ error: "アクセス権限がありません。" });
+  }
+
+  console.log("✅ 認証成功 - 編集ページへのアクセス許可:", circleId);
 
   const query = `SELECT * FROM Circles WHERE id = ?`;
   db.query(query, [circleId], (err, results) => {
-    if (err) {
-      console.error("エラー:", err.message);
-      return res.status(500).send("エラーが発生しました");
-    }
-    if (results.length === 0) {
-      return res.status(404).send("サークルが見つかりません");
-    }
+      if (err) {
+          console.error("エラー:", err.message);
+          return res.status(500).send("エラーが発生しました");
+      }
+      if (results.length === 0) {
+          return res.status(404).send("サークルが見つかりません");
+      }
 
-    const circle = results[0];
-    res.render("editCircle", { circle });
+      const circle = results[0];
+      res.render("editCircle", { circle });
   });
 });
 

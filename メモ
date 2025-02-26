@@ -304,6 +304,34 @@ pc対応
 管理者ページのデザイン
 nodemailer outlookで試して
 パスワードのハッシュ化、再発行
+
+
+DELETE リクエスト (サークル削除) や POST リクエスト (サークル登録) に CSRFトークンがない ため、CSRF攻撃の対象になりうる。
+
+2.5 クエリのパフォーマンス問題
+問題点:
+SELECT * FROM Circles ORDER BY RAND() (app.js の / ルート) は 大規模データで遅くなる。
+対策:
+ORDER BY RAND() の代わりに OFFSET を使う (LIMIT 10 OFFSET FLOOR(RAND() * (SELECT COUNT(*) FROM Circles)))。
+
+2.1 画像アップロードの問題
+問題点:
+multer を使用して画像をアップロードしているが、ファイルの拡張子チェックがない (app.js の upload 設定)。
+対策:
+multer の fileFilter を設定し、画像のみ受け付ける (.png, .jpg, .jpeg など)。
+アップロードファイルのサイズ制限 (limits: { fileSize: 5 * 1024 * 1024 } など) を追加。
+
+app.js の requireAuth に console.log() だけでなく、アクセスログ (fs や winston) を保存。
+
+uploads/ に保存する方式はスケーラビリティに欠けるため、AWS S3 や Cloudinary などの CDN を利用すると良い。
+
+3.3 スマホ対応の最適化
+問題点:
+circle.ejs や index.ejs の画像サムネイルが 100% 指定になっており、画面サイズによってはレイアウト崩れが発生。
+対策:
+object-fit: cover; を適用し、比率を維持したままトリミング。
+
+
 ; アプデ案ーーーーーーーーーーーーー
 
 ログインといいね
@@ -340,76 +368,8 @@ app.use(session({
     }
 }));
 
+secret キーは環境変数から取得する (process.env.SESSION_SECRET)。
+本番環境では cookie.secure: true に設定する。
 
-; ２行の登録団体
-
-   <style>
-             .icon-container {
-                position: absolute;
-                top: 0px;
-                left: 20px;
-                z-index: 5;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 55px; /* アイコンのサイズと同じ */
-                height: 55px; /* アイコンのサイズと同じ */
-                font-size: 55px;
-                
-                color: rgb(255, 255, 126);
-            }
-
-            .icon {
-                position: absolute;
-                inset: 0; /* アイコンを `icon-container` にぴったり重ねる */
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                
-            }
-
-            .icon-text {
-                writing-mode: vertical-rl; /* 縦書き */
-                text-orientation: upright; /* 文字を正しく表示 */
-                white-space: nowrap; /* 折り返しを防ぐ */
-                letter-spacing: 4px; /* 文字の間隔を広げる */
-                position: absolute;
-                font-size: 18px;
-                color: rgb(0, 0, 0);
-                font-weight: bold;
-                text-align: center;
-                top: 40%;
-                transform: translateY(-50%);
-            }
-            .icon-text2 {
-                position: absolute;
-                font-size: 15px;
-                color: rgb(0, 0, 0);
-                font-weight: bold;
-                line-height: 1.2;
-                text-align: center;
-                display: block;
-                white-space: normal;
-                width: 100%;
-                top: 40%;
-                transform: translateY(-50%);
-            }
-
-            </style>
-            
-            <% if (circle.tag.includes("公認")) { %>
-                <div class="icon-container">
-                    <i class="fas fa-bookmark"></i>
-                    <span class="icon-text">公認</span>
-                </div>
-            <% } else if (circle.tag.includes("登録団体")) { %>
-                <div class="icon-container">
-                    <i class="fas fa-bookmark"> </i>
-                    <span class="icon-text2">登録<br>団体</span>
-                </div>
-            <% } %>
-            
             
 
