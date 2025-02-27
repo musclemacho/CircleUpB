@@ -7,7 +7,6 @@ const mysql = require("mysql2");
 const { getBuiltinModule } = require("process");
 const nodemailer = require("nodemailer");
 const session = require('express-session');
-const bcrypt = require('bcrypt');
 const nl2br = (str) => {
   if (!str) return "";
   return str.replace(/\n/g, "<br>");
