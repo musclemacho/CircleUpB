@@ -11,7 +11,7 @@ module.exports = {
   entry: "./app.js",
   output: {
     filename: "app.min.js",
-    path: path.resolve(__dirname, "public/js"),
+    path: path.resolve(__dirname, "public/css"), // ✅ CSSの出力先
   },
   resolve: {
     fallback: {
