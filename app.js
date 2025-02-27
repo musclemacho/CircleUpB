@@ -15,14 +15,11 @@ const helmet = require("helmet");
 
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"], // ✅ `unsafe-inline` を許可
-      },
-    },
+    contentSecurityPolicy: false, // ✅ 完全に無効化
   })
 );
+
+
 
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
