@@ -81,7 +81,7 @@ const upload = multer({
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Hide_Nakai_2003",
+  password: "aaaa",
   // 俺のはaaaa、Hide_Nakai_2003
 });
 
