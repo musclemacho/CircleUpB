@@ -11,6 +11,18 @@ const nl2br = (str) => {
   if (!str) return "";
   return str.replace(/\n/g, "<br>");
 };
+const helmet = require("helmet");
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"], // ✅ `unsafe-inline` を許可
+      },
+    },
+  })
+);
 
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
