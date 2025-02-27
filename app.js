@@ -15,6 +15,7 @@ const nl2br = (str) => {
 
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 
 app.use(session({
