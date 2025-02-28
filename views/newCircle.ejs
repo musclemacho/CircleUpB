@@ -1271,6 +1271,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // **サーバーへ送信（fetch を1回だけ実行）**
         fetch("/circles", {
             method: "POST",
+            mode: "cors",
             body: formData,
         })
         .then(response => {
