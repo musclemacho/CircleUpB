@@ -391,6 +391,17 @@ xcopy /E /I /Y node_modules\@fortawesome\fontawesome-free\webfonts public\fontaw
 
 
 
+NginXのcontentsecuritypolicyを消すと、正常に表示されるーーーーーーーーーーーーーー
+これは
+
+--------
+
+今日やること
+swiper
+chartjs
+CDNの判明
+アイコン、バー確認
+パスワード強く
 
 
 /CirclePark

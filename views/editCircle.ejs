@@ -901,8 +901,11 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
 <!-- instagramlink -->
 <div class="mt-6">
     <label for="instagram" class="block text-gray-700 font-bold mb-4">Instagram リンク</label>
+    <h3 class="mb-4 text-sm opacity-70">
+        サークルの公式Instagramのリンクを張り付けてください。
+        </h3>
     <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." value="<%= circle.instagram || '' %>" class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
-
+    
 </div>
 
 </div>
@@ -912,11 +915,46 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
   <!-- パスワード入力欄 -->
 <div class="mt-6 mb-6">
    
-    <label for="password" class="block text-gray-700 font-bold mb-4">パスワード　<span class="text-red-500 opacity-80">＊必須</span></label>
-    <p class="text-sm text-gray-500 mb-2">※パスワードを変更する場合のみ入力してください（６文字以上）</p>
-    <input type="password" id="password" name="password" placeholder="管理者用パスワードを設定" required minlength="6" value="<%= circle.password %>"
-    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
-</div>
+  
+    <label for="password" class="block text-gray-700 font-bold mb-4">
+        パスワード <span class="text-red-500 opacity-80">＊必須</span>
+    </label>
+    <h3 class="mb-4 text-sm opacity-70">
+        管理者用パスワードを設定してください（**大文字・小文字・数字を含み10文字以上**）。<br>
+        サークルページの編集、削除時に必要です。必ずメモを残しておいてください。
+    </h3>
+    
+    <!-- パスワード入力欄 -->
+    <div class="relative">
+        <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="管理者用パスワードを設定" 
+            required 
+            value="<%= circle.password %>"
+            minlength="10"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{10,}$"
+            title="大文字・小文字・数字を含む10文字以上のパスワードを入力してください"
+            class="w-full border border-[#eba789] rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-300">
+    </div>
+    
+    <!-- パスワード確認用表示欄（テキスト表示） -->
+    <div class="mt-3">
+        <label class="block text-gray-700 font-bold">パスワードの確認</label>
+        <div class="w-full border border-gray-400 rounded-lg p-3 pr-10 bg-gray-100 text-gray-700">
+            <span id="passwordconfirm">（ここにパスワードが表示されます）</span>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+    document.getElementById("password").addEventListener("input", function () {
+        const password = this.value;
+        document.getElementById("passwordconfirm").textContent = password;  // 入力内容をリアルタイムで表示
+    });
+    </script>
+    
 
             <!-- サブミットボタン -->
             <input type="submit" value="サークルを掲載する" 

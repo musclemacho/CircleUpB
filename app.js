@@ -437,6 +437,9 @@ app.get('/newCircle', (req, res) => {
 });
 
 
+app.get(`/contact`, (req, res) => {
+    res.render(`contact`)
+})
 
 app.get("/", (req, res) => {
   db.query("SELECT * FROM Circles ORDER BY RAND()", [], (err, rows) => { 
