@@ -19,7 +19,17 @@ app.use(
   })
 );
 
+const cors = require("cors");
+app.use(cors({
+    origin: "*",  // すべてのオリジンを許可
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type, Authorization"
+}));
 
+// `OPTIONS` リクエストに対応（Preflight Request の処理）
+app.options("*", (req, res) => {
+    res.sendStatus(200);
+});
 
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 

@@ -1272,6 +1272,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("/circles", {
             method: "POST",
             mode: "cors",
+            cache: "no-cache", // キャッシュを無効化
             body: formData,
         })
         .then(response => {
