@@ -1287,8 +1287,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => {
             console.error("エラー:", error);
-            alert(`エラーが発生しまた。写真の枚数を確認するか、もう一度やり直してください。`);
-
+            alert(`エラーが発生しました。\n${error.message}`);
 
               // エラー発生時にボタンを再び有効化
               submitButton.disabled = false;
