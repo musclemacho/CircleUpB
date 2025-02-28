@@ -167,7 +167,7 @@
         <!-- その他 -->
         <div class="my-4">
             <label for="other" class="block text-gray-700 font-bold mb-4">その他 （その他を選択した場合のみ入力）</label>
-            <input type="text" id="other" name="other" placeholder="例: ラクロス" 
+            <input type="text" id="other" name="other" placeholder="例: ラクロス" maxlength="20"
             class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
         </div>
 
@@ -887,13 +887,13 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
   <!-- 入会金と年会費 -->
   <div class="mt-4">
     <label for="admissionFee" class="block text-gray-700 font-bold mb-4">入会金　(無料の場合は０を入力)</label>
-    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 500"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 500"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
 
 </div>
 
 <div class="mt-6">
     <label for="annualFee" class="block text-gray-700 font-bold mb-4">年会費　(無料の場合は０を入力)</label>
-    <input type="number" id="annualFee" name="annualFee" placeholder="例: 3000"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+    <input type="number" id="annualFee" name="annualFee" placeholder="例: 3000"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
 
 </div>
 <!-- instagramlink -->
@@ -902,7 +902,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <h3 class="mb-4 text-sm opacity-70">
         サークルの公式Instagramのリンクを張り付けてください。
         </h3>
-    <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+    <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="100">
 
 </div>
 
@@ -924,6 +924,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <!-- パスワード入力欄 -->
     <div class="relative">
         <input 
+        maxlength="30"
             type="password" 
             id="password" 
             name="password" 

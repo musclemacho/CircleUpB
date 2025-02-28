@@ -5,7 +5,6 @@ const path = require("path");
 const multer = require('multer');
 const mysql = require("mysql2");
 const { getBuiltinModule } = require("process");
-const nodemailer = require("nodemailer");
 const session = require('express-session');
 const nl2br = (str) => {
   if (!str) return "";
