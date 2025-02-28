@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "deploy": "git add . && git commit -m \"test\" && git push origin main",
     "build": "webpack --mode production",
     "watch": "webpack --watch",
     "build:css": "npx tailwindcss -i ./src/input.css -o ./public/output.css --minify",
