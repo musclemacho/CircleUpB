@@ -373,7 +373,10 @@ secret キーは環境変数から取得する (process.env.SESSION_SECRET)。
 
             
 
- tailwind　ビルドーーーーーーーーーーーーーーーーーーーーーーーーーーーー           
+ tailwind　ビルドーーーーーーーーーーーーーーーーーーーーーーーーーーーー  
+
+ webpackは使わずに、nmpでインストールしたtailwindのmoduleファイルをputlic/outputに出力したんかな？
+
 output.cssに使われているtaileindのCSSがいっぱい書かれたら成功
 
 Remove-Item -Recurse -Force node_modules, package-lock.json
@@ -383,6 +386,10 @@ npm run build:css
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 fontawesome
 
+ビルドは全部npmでダウンロードして、参照ファイルを全部publicの中に作ってリンクをつなげた。
+
+ーーーーーーーーーーーーーーーーーーーーーーーーーー
+packagejsonは、npmでダウンロードしたものを管理してくれるもので、scriptのとこに書いてるコマンドはただのショートカットとして動作する。
 
 public/fontawesomeの/cssと/webfontsを作って、そこにいろいろコピーしてくる
 xcopy /E /I /Y node_modules\@fortawesome\fontawesome-free\webfonts public\fontawesome\webfonts\

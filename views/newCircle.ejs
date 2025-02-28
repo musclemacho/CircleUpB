@@ -952,38 +952,18 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     </script>
     
 
-<!-- JavaScript -->
-        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-3 flex items-center">
-            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
-            </svg>
-        </button>
     </div>
     
-    <script>
-        function togglePassword() {
-            const passwordField = document.getElementById("password");
-            const eyeIcon = document.getElementById("eye-icon");
-    
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                eyeIcon.setAttribute("d", "M12 19c4.418 0 8-7 8-7s-3.582-7-8-7-8 7-8 7 3.582 7 8 7z");
-            } else {
-                passwordField.type = "password";
-                eyeIcon.setAttribute("d", "M15 12a3 3 0 11-6 0 3 3 0 016 0z");
-            }
-        }
-    </script>
+
     
 
             <!-- サブミットボタン -->
-            <input type="submit" value="サークルを掲載する" 
-                   class="submitbutton w-full bg-blue-300 shadow-lg text-white my-6 py-2 rounded-full hover:bg-blue-500 duration-300">
+            <input type="submit" value="サークルを掲載する" id="submitButton"
+                   class="submitButton w-full bg-blue-300 shadow-lg text-white my-6 py-2 rounded-full hover:bg-blue-500 duration-300">
  </div>
     </form>
     <style>
-        .submitbutton {
+        .submitButton {
             background-image: linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
             box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
 }
@@ -1278,6 +1258,15 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(pair[0], pair[1]);
         }
 
+
+        const submitButton = document.getElementById("submitButton");
+
+        submitButton.disabled = true;
+        submitButton.value = "送信中...";
+        submitButton.classList.add("opacity-50", "cursor-not-allowed");
+
+
+
         // **サーバーへ送信（fetch を1回だけ実行）**
         fetch("/circles", {
             method: "POST",
@@ -1297,7 +1286,13 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => {
             console.error("エラー:", error);
-            alert(`写真の枚数を確認してください。`);
+            alert(`エラーが発生しまた。写真の枚数を確認するか、もう一度やり直してください。`);
+
+
+              // エラー発生時にボタンを再び有効化
+              submitButton.disabled = false;
+            submitButton.value = "サークルを掲載する";
+            submitButton.classList.remove("opacity-50", "cursor-not-allowed");
         });
     });
 });
