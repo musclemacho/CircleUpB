@@ -1097,6 +1097,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.stopPropagation(); 
         cropModal.classList.add("hidden");
         subPhotoInput.value = "";
+        calendarPhotoInput.value = "";
     });
 
 
@@ -1191,8 +1192,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
                 reader.readAsDataURL(croppedFile);
 
-                // 次のサブ画像を選択できるようにリセット
-                calendarPhotos.value = "";
+                // 次のカレンダー画像を選択できるようにリセット
+                calendarPhotoInput.value = "";
             }
 
             cropModal.classList.add("hidden");
@@ -1297,6 +1298,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function updateSubPhotoIndexes() {
+    const subPhotoContainers = document.querySelectorAll("#subPhotoPreviewContainer .relative");
+    subPhotoContainers.forEach((container, index) => {
+        container.dataset.index = index; // 各コンテナにインデックスを付与
+    });
+}
 
     </script>
 </body>
