@@ -193,8 +193,30 @@ body {
             </tbody>
         </table>
     </div>
+<!-- 🔹 画像キャッシュ削除ボタン -->
+<div class="mt-5 text-center">
+    <button id="clearCacheBtn" class="btn btn-danger">画像キャッシュ削除</button>
+    <p id="cacheClearMessage" class="text-success mt-2" style="display: none;">キャッシュが削除されました！</p>
+</div>
 
-    <script>
+<script>
+    document.getElementById("clearCacheBtn").addEventListener("click", function () {
+      
+
+        fetch("/delete-cache", { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("cacheClearMessage").style.display = "block";
+                } else {
+                    alert("エラーが発生しました: " + data.error);
+                }
+            })
+            .catch(error => {
+                alert("通信エラー: " + error);
+            });
+    });
+
         document.addEventListener("DOMContentLoaded", function () {
             const ctx = document.getElementById("viewsChart").getContext("2d");
     

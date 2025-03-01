@@ -4,6 +4,8 @@ const app = express();
 const path = require("path");
 const multer = require('multer');
 const mysql = require("mysql2");
+const sharp = require("sharp");
+const fs = require("fs");
 const { getBuiltinModule } = require("process");
 const session = require('express-session');
 const nl2br = (str) => {
@@ -91,7 +93,7 @@ const upload = multer({
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Hide_Nakai_2003",
+  password: "aaaa",
   // 俺のはaaaa、Hide_Nakai_2003
 });
 
@@ -191,177 +193,299 @@ db.connect((err) => {
       });
   });
 });
+// 🔹 sharp のキャッシュを無効化（Windows のファイルロック回避）
+sharp.cache(false);
+
+// 🔹 ファイルを安全に削除する関数
+function deleteFileWithUnlock(filePath) {
+    fs.chmod(filePath, 0o666, (err) => {
+        if (err) {
+            console.warn(`⚠️ パーミッション変更失敗（削除予定）: ${filePath}`, err);
+        } else {
+            console.log(`🔓 パーミッション変更成功: ${filePath}`);
+        }
+
+        setTimeout(() => {
+            fs.unlink(filePath, unlinkErr => {
+                if (unlinkErr) {
+                    console.error(`❌ ファイル削除エラー: ${filePath}`, unlinkErr);
+                } else {
+                    console.log(`🗑️ 削除成功: ${filePath}`);
+                }
+            });
+        }, 1000); // 1秒待って削除（Windows のロック回避）
+    });
+}
+
+// 🔹 `uploads/` 内の未圧縮画像を削除する関数
+function deleteUncompressedFiles() {
+    const uploadsDir = path.join(__dirname, "uploads");
+
+    fs.readdir(uploadsDir, (err, files) => {
+        if (err) {
+            console.error("❌ ディレクトリの読み込みエラー:", err);
+            return;
+        }
+
+        let filesToDelete = files.filter(file =>
+            file.startsWith("topPhoto-") || file.startsWith("subPhotos-") || file.startsWith("calendarPhotos-")
+        );
+
+        if (filesToDelete.length === 0) {
+            console.log("✅ 削除対象のファイルがありません");
+            return;
+        }
+
+        console.log(`🔹 削除対象のファイル数: ${filesToDelete.length}`);
+
+        filesToDelete.forEach(file => {
+            const filePath = path.join(uploadsDir, file);
+            deleteFileWithUnlock(filePath);
+        });
+    });
+}
 
 
-// サークルの登録処理
+// 🔹 画像を圧縮する関数
+
+
+async function compressImage(inputPath, filename) {
+    let outputPath = path.join("uploads", `compressed-${filename}`);
+    
+    try {
+        console.log(`🔹 圧縮処理開始: ${inputPath} → ${outputPath}`);
+
+        await sharp(inputPath)
+            .resize({ width: 800 })  // 最大幅800pxにリサイズ
+            .jpeg({ quality: 70 })   // 画質70%に圧縮
+            .toFile(outputPath);
+
+        console.log(`✅ 圧縮成功: ${outputPath}`);
+
+        // 🔹 ファイル名のみを返す（uploads/ を除外）
+        return `compressed-${filename}`;  
+    } catch (error) {
+        console.error("❌ 画像圧縮エラー:", error);
+        return null;
+    }
+}
+
+
+// 🔹 サークルの登録処理
 app.post('/circles', upload.fields([
   { name: 'topPhoto', maxCount: 1 },
   { name: 'subPhotos', maxCount: 5 },
   { name: 'calendarPhotos', maxCount: 3 }
-]), (req, res) => {
-  console.log("=== Request Body ===");
-  console.log(req.body);
-    console.log("=== Request Headers ===");
-  console.log(req.headers);
-  console.log("=== Uploaded Files ===");
-  console.log(req.files);
-  const {
-      circleName, mainGenre, subGenre, comment, other, tag, description, password,
-      admissionFee, annualFee, location, instagram, slider1, slider2, slider3, slider4
-  } = req.body;
+]), async (req, res) => {
+    console.log("=== Request Body ===", req.body);
+    console.log("=== Request Headers ===", req.headers);
+    console.log("=== Uploaded Files ===", req.files);
 
-  if (!circleName || !mainGenre || !password) {
-      return res.status(400).json({ error: '必須フィールドが不足しています。' });
-  }
+    const {
+        circleName, mainGenre, subGenre, comment, other, tag, description, password,
+        admissionFee, annualFee, location, instagram, slider1, slider2, slider3, slider4
+    } = req.body;
 
-  const parsedAdmissionFee = parseInt(admissionFee, 10) || null;
-  const parsedAnnualFee = parseInt(annualFee, 10) || null;
-  const parsedSlider1 = parseInt(slider1, 10) || 0;
-  const parsedSlider2 = parseInt(slider2, 10) || 0;
-  const parsedSlider3 = parseInt(slider3, 10) || 0;
-  const parsedSlider4 = parseInt(slider4, 10) || 0;
-
-  const topPhoto = req.files?.topPhoto?.[0]?.filename || null;
-  const subPhotos = req.files?.subPhotos?.map(file => file.filename).join(',') || null;
-  const calendarPhotos = req.files?.calendarPhotos?.map(file => file.filename).join(',') || null;
-
-  const tagString = typeof tag === "string" ? tag : Array.isArray(tag) ? tag.join(",") : "";
-
-
-  const query = `
-      INSERT INTO Circles (
-          circleName, mainGenre, subGenre, comment, other, tag, description, password,
-          admissionFee, annualFee, location, instagram,
-          parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
-          topPhoto, subPhotos, calendarPhotos
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  db.query(
-    query,
-    [
-      circleName, mainGenre, subGenre, comment, other, tagString,
-      description, password,
-      parsedAdmissionFee, parsedAnnualFee, location, instagram,
-      parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
-      topPhoto, subPhotos, calendarPhotos
-    ],
-    (err, result) => {
-      if (err) {
-          console.error('SQLエラー:', err.message);
-          return res.status(500).json({ error: 'データベースへの保存に失敗しました。' });
-      }
-      res.status(201).json({ id: result.insertId });
+    if (!circleName || !mainGenre || !password) {
+        return res.status(400).json({ error: '必須フィールドが不足しています。' });
     }
-  
-  );
+
+    const parsedAdmissionFee = parseInt(admissionFee, 10) || null;
+    const parsedAnnualFee = parseInt(annualFee, 10) || null;
+    const parsedSlider1 = parseInt(slider1, 10) || 0;
+    const parsedSlider2 = parseInt(slider2, 10) || 0;
+    const parsedSlider3 = parseInt(slider3, 10) || 0;
+    const parsedSlider4 = parseInt(slider4, 10) || 0;
+
+    // 🔹 アップロードされた画像を圧縮
+    let compressedTopPhoto = null;
+    if (req.files.topPhoto && req.files.topPhoto[0]) {
+        compressedTopPhoto = await compressImage(req.files.topPhoto[0].path, req.files.topPhoto[0].filename);
+    }
+
+    let compressedSubPhotos = [];
+    if (req.files.subPhotos) {
+        for (const file of req.files.subPhotos) {
+            const compressedPath = await compressImage(file.path, file.filename);
+            if (compressedPath) compressedSubPhotos.push(compressedPath);
+        }
+    }
+
+    let compressedCalendarPhotos = [];
+    if (req.files.calendarPhotos) {
+        for (const file of req.files.calendarPhotos) {
+            const compressedPath = await compressImage(file.path, file.filename);
+            if (compressedPath) compressedCalendarPhotos.push(compressedPath);
+        }
+    }
+
+    const tagString = typeof tag === "string" ? tag : Array.isArray(tag) ? tag.join(",") : "";
+console.log(compressedTopPhoto);
+    // 🔹 データベースへ保存
+    const query = `
+        INSERT INTO Circles (
+            circleName, mainGenre, subGenre, comment, other, tag, description, password,
+            admissionFee, annualFee, location, instagram,
+            parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
+            topPhoto, subPhotos, calendarPhotos
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(
+        query,
+        [
+            circleName, mainGenre, subGenre, comment, other, tagString,
+            description, password,
+            parsedAdmissionFee, parsedAnnualFee, location, instagram,
+            parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
+            compressedTopPhoto, compressedSubPhotos.join(','), compressedCalendarPhotos.join(',')
+        ],
+        (err, result) => {
+            if (err) {
+                console.error('SQLエラー:', err.message);
+                return res.status(500).json({ error: 'データベースへの保存に失敗しました。' });
+            }
+             
+            console.log(`✅ サークル投稿成功: ID = ${result.insertId}`);
+
+           deleteUncompressedFiles();
+            res.status(201).json({ id: result.insertId });
+        }
+    );
 });
 
 // 編集データ
+// 🔹 サークルの編集処理
 app.post('/circles/edit/:id', upload.fields([
-  { name: 'topPhoto', maxCount: 1 },
-  { name: 'subPhotos', maxCount: 5 },
-  { name: 'calendarPhotos', maxCount: 3 }
-
-]), (req, res) => {
-  let circleId = req.body.circleId; // `FormData` から取得
-
-  console.log("=== [DEBUG] Circle ID ===");
-  console.log(circleId);
-
-  // `circleId` を数値に変換
-  if (Array.isArray(circleId)) {
-      circleId = circleId[0]; // 配列の場合、最初の要素を使用
-  }
-  circleId = parseInt(circleId, 10);
+    { name: 'topPhoto', maxCount: 1 },
+    { name: 'subPhotos', maxCount: 5 },
+    { name: 'calendarPhotos', maxCount: 3 }
+  ]), async (req, res) => {
+      let circleId = req.body.circleId; // `FormData` から取得
   
-  if (isNaN(circleId)) {
-      console.error("🛑 IDがNaNです。リクエストの `id` が適切か確認してください。");
-      return res.status(400).json({ error: "無効な ID です。" });
-  }
-
-  const {
-      circleName, mainGenre, subGenre, comment, other, tag, description, password,
-      admissionFee, annualFee, location, instagram, slider1, slider2, slider3, slider4
-  } = req.body;
-
-  const parsedAdmissionFee = admissionFee ? parseInt(admissionFee, 10) : null;
-  const parsedAnnualFee = annualFee ? parseInt(annualFee, 10) : null;
-  const parsedSlider1 = slider1 ? parseInt(slider1, 10) : 0;
-  const parsedSlider2 = slider2 ? parseInt(slider2, 10) : 0;
-  const parsedSlider3 = slider3 ? parseInt(slider3, 10) : 0;
-  const parsedSlider4 = slider4 ? parseInt(slider4, 10) : 0;
-
-  const topPhoto = req.files?.topPhoto?.[0]?.filename || null;
-  const subPhotos = req.files?.subPhotos?.map(file => file.filename).join(',') || null;
-  const calendarPhotos = req.files?.calendarPhotos?.map(file => file.filename).join(',') || null;
-
-
-  const tagString = Array.isArray(tag) ? tag.join(",") : (tag || "");
-
-  // `UPDATE` クエリを作成（不要なカンマ削除）
-  let updateQuery = `
-      UPDATE Circles SET
-          circleName = ?, mainGenre = ?, subGenre = ?, comment = ?, other = ?, tag = ?, 
-          description = ?, admissionFee = ?, annualFee = ?, location = ?, instagram = ?, 
-          parsedSlider1 = ?, parsedSlider2 = ?, parsedSlider3 = ?, parsedSlider4 = ?
-  `;
-
-  let updateParams = [
-      circleName, mainGenre, subGenre, comment, other, tagString, description,
-      parsedAdmissionFee, parsedAnnualFee, location, instagram,
-      parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4
-  ];
-
-  // トップ画像がアップロードされた場合のみ更新
-  if (topPhoto) {
-      updateQuery += `, topPhoto = ?`;
-      updateParams.push(topPhoto);
-  }
-
-  // サブ画像がアップロードされた場合のみ更新
-  if (subPhotos) {
-      updateQuery += `, subPhotos = ?`;
-      updateParams.push(subPhotos);
-  }
-
+      console.log("=== [DEBUG] Circle ID ===");
+      console.log(circleId);
   
-  // サブ画像がアップロードされた場合のみ更新
-  if (calendarPhotos) {
-    updateQuery += `, calendarPhotos = ?`;
-    updateParams.push(calendarPhotos);
-}
-
-  // パスワードが入力された場合のみ更新
-  if (password) {
-      updateQuery += `, password = ?`;
-      updateParams.push(password);
-  }
-
-  // `WHERE id = ?` を適切に追加
-  updateQuery += ` WHERE id = ?`;
-  updateParams.push(circleId);
-
-  console.log("=== [DEBUG] UPDATE Query ===");
-  console.log(updateQuery);
-  console.log("=== [DEBUG] Parameters ===");
-  console.log(updateParams);
-
-  // クエリを実行
-  db.query(updateQuery, updateParams, (err, result) => {
-      if (err) {
-          console.error("🛑 SQLエラー:", err.message);
-          return res.status(500).json({ 
-              error: "データベースの更新に失敗しました。",
-              details: err.sqlMessage // **詳細エラーメッセージをフロントエンドに送信**
-          });
+      // `circleId` を数値に変換
+      if (Array.isArray(circleId)) {
+          circleId = circleId[0]; // 配列の場合、最初の要素を使用
       }
-      console.log("✅ データベース更新成功:", result);
-      res.json({ success: true, message: "データベース更新成功", id: circleId });
+      circleId = parseInt(circleId, 10);
+    
+      if (isNaN(circleId)) {
+          console.error("🛑 IDがNaNです。リクエストの `id` が適切か確認してください。");
+          return res.status(400).json({ error: "無効な ID です。" });
+      }
+  
+      const {
+          circleName, mainGenre, subGenre, comment, other, tag, description, password,
+          admissionFee, annualFee, location, instagram, slider1, slider2, slider3, slider4
+      } = req.body;
+  
+      const parsedAdmissionFee = admissionFee ? parseInt(admissionFee, 10) : null;
+      const parsedAnnualFee = annualFee ? parseInt(annualFee, 10) : null;
+      const parsedSlider1 = slider1 ? parseInt(slider1, 10) : 0;
+      const parsedSlider2 = slider2 ? parseInt(slider2, 10) : 0;
+      const parsedSlider3 = slider3 ? parseInt(slider3, 10) : 0;
+      const parsedSlider4 = slider4 ? parseInt(slider4, 10) : 0;
+  
+      // 🔹 圧縮した画像パスを格納する変数
+      let compressedTopPhoto = null;
+      let compressedSubPhotos = [];
+      let compressedCalendarPhotos = [];
+  
+      // 🔹 画像の圧縮処理
+      if (req.files && req.files.topPhoto && req.files.topPhoto[0]) {
+          console.log(`📸 トップ画像あり: ${req.files.topPhoto[0].path}`);
+          compressedTopPhoto = await compressImage(req.files.topPhoto[0].path, req.files.topPhoto[0].filename);
+          console.log(`📸 圧縮後のトップ画像: ${compressedTopPhoto}`);
+      }
+  
+      if (req.files && req.files.subPhotos) {
+          for (const file of req.files.subPhotos) {
+              console.log(`📸 サブ画像: ${file.path}`);
+              const compressedPath = await compressImage(file.path, file.filename);
+              if (compressedPath) compressedSubPhotos.push(compressedPath);
+          }
+      }
+  
+      if (req.files && req.files.calendarPhotos) {
+          for (const file of req.files.calendarPhotos) {
+              console.log(`📸 カレンダー画像: ${file.path}`);
+              const compressedPath = await compressImage(file.path, file.filename);
+              if (compressedPath) compressedCalendarPhotos.push(compressedPath);
+          }
+      }
+  
+      // 🔹 データベースに保存するための文字列変換
+      const subPhotosString = compressedSubPhotos.length > 0 ? compressedSubPhotos.join(',') : null;
+      const calendarPhotosString = compressedCalendarPhotos.length > 0 ? compressedCalendarPhotos.join(',') : null;
+      const tagString = Array.isArray(tag) ? tag.join(",") : (tag || "");
+  
+      console.log(`📸 最終的なトップ画像: ${compressedTopPhoto}`);
+      console.log(`📸 最終的なサブ画像: ${subPhotosString}`);
+      console.log(`📸 最終的なカレンダー画像: ${calendarPhotosString}`);
+  
+      // 🔹 `UPDATE` クエリを作成
+      let updateQuery = `
+          UPDATE Circles SET
+              circleName = ?, mainGenre = ?, subGenre = ?, comment = ?, other = ?, tag = ?, 
+              description = ?, admissionFee = ?, annualFee = ?, location = ?, instagram = ?, 
+              parsedSlider1 = ?, parsedSlider2 = ?, parsedSlider3 = ?, parsedSlider4 = ?
+      `;
+  
+      let updateParams = [
+          circleName, mainGenre, subGenre, comment, other, tagString, description,
+          parsedAdmissionFee, parsedAnnualFee, location, instagram,
+          parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4
+      ];
+  
+      // 🔹 画像がアップロードされた場合のみ更新
+      if (compressedTopPhoto) {
+          updateQuery += `, topPhoto = ?`;
+          updateParams.push(compressedTopPhoto);
+      }
+  
+      if (subPhotosString) {
+          updateQuery += `, subPhotos = ?`;
+          updateParams.push(subPhotosString);
+      }
+  
+      if (calendarPhotosString) {
+          updateQuery += `, calendarPhotos = ?`;
+          updateParams.push(calendarPhotosString);
+      }
+  
+      // 🔹 パスワードが入力された場合のみ更新
+      if (password) {
+          updateQuery += `, password = ?`;
+          updateParams.push(password);
+      }
+  
+      // 🔹 `WHERE id = ?` を適切に追加
+      updateQuery += ` WHERE id = ?`;
+      updateParams.push(circleId);
+  
+      console.log("=== [DEBUG] UPDATE Query ===");
+      console.log(updateQuery);
+      console.log("=== [DEBUG] Parameters ===");
+      console.log(updateParams);
+  
+      // 🔹 クエリを実行
+      db.query(updateQuery, updateParams, (err, result) => {
+          if (err) {
+              console.error("🛑 SQLエラー:", err.message);
+              return res.status(500).json({ 
+                  error: "データベースの更新に失敗しました。",
+                  details: err.sqlMessage // **詳細エラーメッセージをフロントエンドに送信**
+              });
+          }
+          console.log("✅ データベース更新成功:", result);
+          deleteUncompressedFiles();
+
+          res.json({ success: true, message: "データベース更新成功", id: circleId });
+      });
   });
-});
-
-
 
 
 
