@@ -401,14 +401,26 @@ xcopy /E /I /Y node_modules\@fortawesome\fontawesome-free\webfonts public\fontaw
 NginXのcontentsecuritypolicyを消すと、正常に表示されるーーーーーーーーーーーーーー
 これは
 
---------
+--------バグーーーーーーーーーーーーー
+starnightmuscleから編集ページに行く時、そのページの閲覧回数が０回だとサークルが見つかりませんとなる。
+つまり、認証は成功しているが、getできていない。
 
-今日やること
-swiper
-chartjs
-CDNの判明
-アイコン、バー確認
-パスワード強く
+stringss dosent much
+
+
+
+
+推測ーーーーーーーーーーーー
+
+helmet のせいでリクエストが制限？主にhttp
+cookieの        sameSite: "lax",  // CSRF対策
+
+解決ーーーーーーーーーーー
+
+loadfailed　→　画像のサイズが大きすぎてNginXではじかれている
+サイズ上限をあげた。
+画像圧縮して送信する
+
 
 
 /CirclePark

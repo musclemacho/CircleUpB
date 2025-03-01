@@ -30,6 +30,7 @@ app.options("*", (req, res) => {
     res.sendStatus(200);
 });
 
+// 改行コード<br>
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
@@ -200,7 +201,8 @@ app.post('/circles', upload.fields([
 ]), (req, res) => {
   console.log("=== Request Body ===");
   console.log(req.body);
-  
+    console.log("=== Request Headers ===");
+  console.log(req.headers);
   console.log("=== Uploaded Files ===");
   console.log(req.files);
   const {

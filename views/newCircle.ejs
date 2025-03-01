@@ -1105,101 +1105,119 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // **トリミング画像を保存**
-    document.getElementById("cropSave").addEventListener("click", function () {
-        event.preventDefault(); 
-        event.stopPropagation(); 
-        const canvas = cropper.getCroppedCanvas();
-        canvas.toBlob(function (blob) {
-            const croppedFile = new File([blob], "cropped.jpg", { type: "image/jpeg" });
+    document.getElementById("cropSave").addEventListener("click", function (event) {
+    event.preventDefault(); 
+    event.stopPropagation(); 
 
-            if (cropTarget === "top") {
-                // トップ画像の保存＆プレビュー
-                croppedTopFile = croppedFile;
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    topPhotoPreview.src = e.target.result;
-                    topPhotoPreview.classList.remove("hidden");
-                   
-                    removeTopPhoto.classList.remove("hidden"); // **削除ボタンを確実に表示**
-                };
-                reader.readAsDataURL(croppedFile);
-            }else  if (cropTarget === "sub") {
-                // サブ画像の保存＆プレビュー
-                croppedSubFiles.push(croppedFile);
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const container = document.createElement("div");
-                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden", "shadow-lg");
+    const canvas = cropper.getCroppedCanvas();
+    canvas.toBlob(function (blob) {
+        const croppedFile = new File([blob], "cropped.jpg", { type: "image/jpeg" });
 
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.alt = "サブ画像プレビュー";
-                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-[#ddc4ff]");
-                    container.appendChild(img);
+        // 圧縮処理の関数
+        function compressAndSaveImage(file, target) {
+            new Compressor(file, {
+                quality: 0.6, // 圧縮率 (0.1 ～ 1.0)（0.6 = 60%品質）
+                maxWidth: 800, // 幅800pxにリサイズ
+                maxHeight: 800, // 高さ800pxにリサイズ
+                success(result) {
+                    const compressedFile = new File([result], "compressed.jpg", { type: "image/jpeg" });
 
-                    // 🔹 削除ボタン
-                    const removeBtn = document.createElement("button");
-                    removeBtn.innerHTML = "×";
-                    removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
-                    container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
-                    subPhotoPreviewContainer.appendChild(container);
+                    if (target === "top") {
+                        // 🔹 トップ画像の保存＆プレビュー
+                        croppedTopFile = compressedFile;
 
-                     // 🔹 削除ボタンのクリックイベント
-                     removeBtn.addEventListener("click", function () {
-                        event.preventDefault(); 
-                        event.stopPropagation(); 
-                        const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
-                        croppedSubFiles.splice(containerIndex, 1); // 🔹 `croppedSubFiles` から削除
-                        container.remove(); // 🔹 HTML上の要素を削除
-                        updateSubPhotoIndexes(); // 🔹 インデックスを更新
-                    });
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            topPhotoPreview.src = e.target.result;
+                            topPhotoPreview.classList.remove("hidden");
+                            removeTopPhoto.classList.remove("hidden"); // **削除ボタンを確実に表示**
+                        };
+                        reader.readAsDataURL(result);
+                    } else if (target === "sub") {
+                        // 🔹 サブ画像の保存＆プレビュー
+                        croppedSubFiles.push(compressedFile);
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const container = document.createElement("div");
+                            container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden", "shadow-lg");
 
-                };
-                reader.readAsDataURL(croppedFile);
+                            const img = document.createElement("img");
+                            img.src = e.target.result;
+                            img.alt = "サブ画像プレビュー";
+                            img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-[#ddc4ff]");
+                            container.appendChild(img);
 
-                // 次のサブ画像を選択できるようにリセット
-                subPhotoInput.value = "";
-            }else if (cropTarget === "calendar") {
-                // サブ画像の保存＆プレビュー
-                croppedCalendarFiles.push(croppedFile);
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const container = document.createElement("div");
-                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
+                            // 🔹 削除ボタン
+                            const removeBtn = document.createElement("button");
+                            removeBtn.innerHTML = "×";
+                            removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
+                            container.appendChild(removeBtn);
+                            subPhotoPreviewContainer.appendChild(container);
 
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.alt = "サブ画像プレビュー";
-                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
-                    container.appendChild(img);
+                            // 🔹 削除ボタンのクリックイベント
+                            removeBtn.addEventListener("click", function () {
+                                event.preventDefault(); 
+                                event.stopPropagation(); 
+                                const containerIndex = parseInt(container.dataset.index, 10);
+                                croppedSubFiles.splice(containerIndex, 1);
+                                container.remove();
+                                updateSubPhotoIndexes();
+                            });
+                        };
+                        reader.readAsDataURL(result);
 
-                    // 🔹 削除ボタン
-                    const removeBtn = document.createElement("button");
-                    removeBtn.innerHTML = "×";
-                    removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
-                    container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
-                    calendarPhotoPreviewContainer.appendChild(container);
+                        // 次のサブ画像を選択できるようにリセット
+                        subPhotoInput.value = "";
+                    } else if (target === "calendar") {
+                        // 🔹 カレンダー画像の保存＆プレビュー
+                        croppedCalendarFiles.push(compressedFile);
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const container = document.createElement("div");
+                            container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
 
-                     // 🔹 削除ボタンのクリックイベント
-                     removeBtn.addEventListener("click", function () {
-                        event.preventDefault(); 
-                        event.stopPropagation(); 
-                        const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
-                        croppedCalendarFiles.splice(containerIndex, 1); // 🔹 `croppedCalendarFiles` から削除
-                        container.remove(); // 🔹 HTML上の要素を削除
-                        updateCalendarIndexes(); // 🔹 インデックスを更新
-                    });
+                            const img = document.createElement("img");
+                            img.src = e.target.result;
+                            img.alt = "カレンダー画像プレビュー";
+                            img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
+                            container.appendChild(img);
 
-                };
-                reader.readAsDataURL(croppedFile);
+                            // 🔹 削除ボタン
+                            const removeBtn = document.createElement("button");
+                            removeBtn.innerHTML = "×";
+                            removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
+                            container.appendChild(removeBtn);
+                            calendarPhotoPreviewContainer.appendChild(container);
 
-                // 次のカレンダー画像を選択できるようにリセット
-                calendarPhotoInput.value = "";
-            }
+                            // 🔹 削除ボタンのクリックイベント
+                            removeBtn.addEventListener("click", function () {
+                                event.preventDefault(); 
+                                event.stopPropagation(); 
+                                const containerIndex = parseInt(container.dataset.index, 10);
+                                croppedCalendarFiles.splice(containerIndex, 1);
+                                container.remove();
+                                updateCalendarIndexes();
+                            });
+                        };
+                        reader.readAsDataURL(result);
 
-            cropModal.classList.add("hidden");
-        }, "image/jpeg");
-    });
+                        // 次のカレンダー画像を選択できるようにリセット
+                        calendarPhotoInput.value = "";
+                    }
+
+                    // モーダルを閉じる
+                    cropModal.classList.add("hidden");
+                },
+                error(err) {
+                    console.error("画像圧縮エラー:", err.message);
+                },
+            });
+        }
+
+        // トリミング後の画像を圧縮
+        compressAndSaveImage(croppedFile, cropTarget);
+    }, "image/jpeg");
+});
 
 
     // トップ画像の削除処理
@@ -1261,11 +1279,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // const submitButton = document.getElementById("submitButton");
+        const submitButton = document.getElementById("submitButton");
 
-        // submitButton.disabled = true;
-        // submitButton.value = "送信中...";
-        // submitButton.classList.add("opacity-50", "cursor-not-allowed");
+        submitButton.disabled = true;
+        submitButton.value = "送信中...";
+        submitButton.classList.add("opacity-50", "cursor-not-allowed");
 
 
 
