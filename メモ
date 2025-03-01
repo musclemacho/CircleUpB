@@ -405,7 +405,7 @@ NginXのcontentsecuritypolicyを消すと、正常に表示されるーーーー
 starnightmuscleから編集ページに行く時、そのページの閲覧回数が０回だとサークルが見つかりませんとなる。
 つまり、認証は成功しているが、getできていない。
 
-stringss dosent much
+stringss dosent much→uploadsファイルがなかった
 
 
 
@@ -420,6 +420,9 @@ cookieの        sameSite: "lax",  // CSRF対策
 loadfailed　→　画像のサイズが大きすぎてNginXではじかれている
 サイズ上限をあげた。
 画像圧縮して送信する
+
+stringss dosent much→uploadsファイルがなかった
+uploadsファイルを作る
 
 
 

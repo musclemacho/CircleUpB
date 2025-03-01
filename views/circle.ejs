@@ -358,11 +358,14 @@
                         <span class="w-1/2 pl-10"><%= circle.mainGenre %></span>
                     </p>
                     <p class="flex my-2">                    <span class="font-bold w-1/4">入会費</span>
-                        <span class="w-1/2 pl-10"><%= circle.admissionFee ? circle.admissionFee + '円' : '未登録' %></span>
-                    </p>
+                        <span class="w-1/2 pl-10">
+                            <%= (circle.admissionFee !== null && circle.admissionFee !== undefined) ? circle.admissionFee + '円' : '未登録' %>
+                          </span>                    </p>
                     <p class="flex my-2">                    <span class="font-bold w-1/4">年会費</span>
-                        <span class="w-1/2 pl-10"><%= circle.annualFee ? circle.annualFee + '円' : '未登録' %></span>
-                    </p>
+                        <span class="w-1/2 pl-10">
+                            <%= (circle.annualFee !== null && circle.annualFee !== undefined) ? circle.annualFee + '円' : '未登録' %>
+                          </span>
+                                              </p>
                     <p class="flex my-2">                    <span class="font-bold w-1/4">活動地</span>
                         <span class="w-1/2 pl-10"><%= circle.location %></span>
                     </p>

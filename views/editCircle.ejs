@@ -184,7 +184,7 @@
                     <!-- 🔹 チェックボックス -->
                     <div class="flex items-center">
                        <li>
-                        <input type="checkbox" id="toggle1" name="tag" value="null1" class="hidden peer" onchange="toggleSlider('toggle1', 'slider1', 'slider1Value', '150人')">
+                        <input type="checkbox" id="toggle1" name="tag" value="null1" class="hidden peer" onchange="toggleSlider('toggle1', 'slider1', 'slider1Value', '150人')" <%= circle.tag.includes("null1") ? "checked" : "" %>>
                         <label for="toggle1"class="shadow-md">
                             未選択
                         </label>
@@ -193,7 +193,7 @@
                 </div>
                 <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>1人</span> 
-                     <span id="slider1Value"class="text-lg text-[#eba789] font-bold"><%= circle.parsedSlider1 || 150 %></span>
+                     <span id="slider1Value"class="text-lg text-[#eba789] font-bold"><%= circle.parsedSlider1 || 150 %>人</span>
                     <span>300人以上</span>
                 </div>
                 <input type="range" id="slider1" class="w-full slider" min="0" max="300" step="10" value="<%= circle.parsedSlider1 || 150 %>">
@@ -209,7 +209,7 @@
                     <label for="slider2" class="block text-gray-700 text-lg font-bold mb-4">男女比</label>
                     <div class="flex items-center">
                         <li>
-                            <input type="checkbox" id="toggle2" name="tag" value="null2" class="hidden peer" onchange="toggleSlider('toggle2', 'slider2', 'slider2Value', '5:5')">
+                            <input type="checkbox" id="toggle2" name="tag" value="null2" class="hidden peer" onchange="toggleSlider('toggle2', 'slider2', 'slider2Value', '5:5')" <%= circle.tag.includes("null2") ? "checked" : "" %>>
                             <label for="toggle2"class="shadow-md">
                                 未選択
                             </label>
@@ -232,7 +232,7 @@
                     <label for="slider3" class="block text-gray-700 text-lg font-bold mb-4">活動頻度</label>
                     <div class="flex items-center">
                         <li>
-                            <input type="checkbox" id="toggle3" name="tag" value="null3" class="hidden peer" onchange="toggleSlider('toggle3', 'slider3', 'slider3Value', '２か月に一回')">
+                            <input type="checkbox" id="toggle3" name="tag" value="null3" class="hidden peer" onchange="toggleSlider('toggle3', 'slider3', 'slider3Value', '２か月に一回')" <%= circle.tag.includes("null3") ? "checked" : "" %>>
                             <label for="toggle3"class="shadow-md">
                                 未選択
                             </label>
@@ -241,7 +241,7 @@
                 </div>
                 <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                     <span>年数回</span>
-                    <span id="slider3Value"class="text-lg text-[#eba789] font-bold"><%= circle.parsedSlider3 || 50 %></span>
+                    <span id="slider3Value"class="text-lg text-[#eba789] font-bold"><%= circle.parsedSlider3 || 50 %>%</span>
                     <span>ほぼ毎日</span>
                 </div>
                 <input type="range" id="slider3" class="w-full slider" min="0" max="100"  value="<%= circle.parsedSlider3 || 50 %>" >
@@ -264,10 +264,10 @@
             </div>
             <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
                 <span>真面目</span>
-                <span id="slider4Value" class="text-lg text-[#eba789] font-bold"><%= circle.parsedSlider4 || 50 %></span>
+                <span id="slider4Value" class="text-lg text-[#eba789] font-bold"><%= circle.parsedSlider4 || 50 %>%</span>
                 <span>全力エンジョイ</span>
             </div>
-            <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="<%= circle.parsedSlider4 || 50 %>">
+            <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="<%= circle.parsedSlider4 || 50 %>" <%= circle.tag.includes("null4") ? "checked" : "" %>>
         </div>
 </div>
 </ul>
@@ -889,13 +889,13 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
   <!-- 入会金と年会費 -->
   <div class="mt-4">
     <label for="admissionFee" class="block text-gray-700 font-bold mb-4">入会金　(無料の場合は０を入力)</label>
-    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 5000" value="<%= circle.admissionFee || '' %>"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
+    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 5000" value="<%= circle.admissionFee ?? '' %>"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
 
 </div>
 
 <div class="mt-6">
     <label for="annualFee" class="block text-gray-700 font-bold mb-4">年会費　(無料の場合は０を入力)</label>
-    <input type="number" id="annualFee" name="annualFee" placeholder="例: 10000" value="<%= circle.annualFee || '' %>"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
+    <input type="number" id="annualFee" name="annualFee" placeholder="例: 10000" value="<%= circle.annualFee ?? '' %>"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
 
 </div>
 <!-- instagramlink -->
@@ -956,7 +956,9 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     });
     </script>
     
-
+    <h3 class="m-4 text-sm opacity-70">
+        ＊ジャンルの選択を確認してください。
+    </h3>
             <!-- サブミットボタン -->
             <input type="submit" value="サークルを掲載する" 
                    class="submitbutton w-full bg-blue-300 shadow-lg text-white my-6 py-2 rounded-full hover:bg-blue-500 duration-300">

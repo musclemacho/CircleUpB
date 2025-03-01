@@ -93,7 +93,7 @@ const upload = multer({
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Hide_Nakai_2003",
+  password: "aaaa",
   // 俺のはaaaa、Hide_Nakai_2003
 });
 
@@ -290,8 +290,8 @@ app.post('/circles', upload.fields([
         return res.status(400).json({ error: '必須フィールドが不足しています。' });
     }
 
-    const parsedAdmissionFee = parseInt(admissionFee, 10) || null;
-    const parsedAnnualFee = parseInt(annualFee, 10) || null;
+    const parsedAdmissionFee = admissionFee !== "" ? parseInt(admissionFee, 10) : null;
+    const parsedAnnualFee = annualFee !== "" ? parseInt(annualFee, 10) : null;
     const parsedSlider1 = parseInt(slider1, 10) || 0;
     const parsedSlider2 = parseInt(slider2, 10) || 0;
     const parsedSlider3 = parseInt(slider3, 10) || 0;
@@ -536,6 +536,7 @@ app.get("/search", (req, res) => {
       return res.status(500).send("エラーが発生しました: " + err.message);
     }
     res.render("index", { circles: rows });
+    
   });
 });
 
