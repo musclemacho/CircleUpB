@@ -43,7 +43,7 @@ app.use(session({
     resave: false,  // セッションが変更されたときのみ保存
     saveUninitialized: false,  // 未初期化のセッションは保存しない
     cookie: {
-        secure: false,  // HTTPS 環境なら true
+        secure: true,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
         sameSite: "lax",  // CSRF対策
         maxAge: 30 * 60 * 1000 // セッションの有効期限: 30分
