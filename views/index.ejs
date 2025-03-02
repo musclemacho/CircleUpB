@@ -188,7 +188,12 @@
                         <% } %>
                         
                         <!-- 人数 -->
-                        <p class="mt-1 text-sm text-gray-800">人数: <%= circle.parsedSlider1 || '不明' %>人</p>
+                        <p class="mt-1 text-sm text-gray-800">人数: <% if (circle.tag && circle.tag.includes("null1")) { %>
+                            未登録
+                        <% } else { %>
+                            <%= circle.parsedSlider1 %>人
+                        <% } %>
+                        </p>
 
                         <!-- 活動地 -->
                         <p class="mt-1 text-sm text-gray-800"> 活動地：<%= circle.location %></p>

@@ -41,7 +41,7 @@
     <!-- トップ画像 -->
     <div class="p-6 border-t border-gray-300">
         <div class="mb-6 flex justify-center relative flex-col">
-            <label for="topPhoto" class="block text-gray-700 font-bold my-4">トップ画像　<span class="text-red-600">＊変更する場合のみ全て再選択</span></label>
+            <label for="topPhoto" class="block text-gray-700 font-bold my-4">トップ画像　<span class="text-red-600">＊変更する場合のみ全て登録（変更しない場合はそのまま）</span></label>
             <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl border border-[#ddc4ff] shadow-lg  relative cursor-pointer" id="topPhotoUpload" style="padding-top: 100%;">
                 <span class="absolute inset-0 flex items-center justify-center text-4xl text-gray-400">+</span>
                 <img id="topPhotoPreview" src="#" alt="プレビュー画像" class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
@@ -52,7 +52,7 @@
 
         <!-- サブ画像 -->
         <div class="mb-12">
-            <label for="subPhotos" class="block text-gray-700 font-bold my-5">サブ画像（最大5枚）<span class="text-red-600">＊変更する場合のみ全て再選択</span></label>
+            <label for="subPhotos" class="block text-gray-700 font-bold my-5">サブ画像（最大5枚）<span class="text-red-600">＊変更する場合のみ全て登録（変更しない場合はそのまま）</span></label>
             <div id="subPhotoUpload" class="flex gap-2 flex-wrap">
                 <div id="addSubPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg border border-[#ddc4ff] shadow-lg  flex items-center justify-center cursor-pointer">
                     <span class="text-2xl text-gray-400">+</span>
@@ -87,7 +87,7 @@
 <div class="p-6 border-t border-gray-300">
         <!-- サークル名 -->
         <div class="form-group my-5">
-            <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊必須</span></label>
+            <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊再登録必須</span></label>
             <input type="text" id="circleName" name="circleName" placeholder="例: Green" required value="<%= circle.circleName %>"
                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
         </div>
@@ -97,7 +97,7 @@
 
        <!-- メインジャンル -->
        <div class="my-7">
-        <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
+        <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span class="text-red-500 opacity-80">＊再登録必須</span></label>
         <select id="mainGenre" name="mainGenre"            required         class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
 
 
@@ -854,7 +854,7 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
         <!-- 新歓カレンダー画像 -->
    
 <div class="mb-6">
-    <label for="calendarPhotos" class="block text-gray-700 font-bold mb-4">新歓カレンダー画像（最大3枚）<span class="text-red-600">＊変更する場合のみ全て再選択</span></label>
+    <label for="calendarPhotos" class="block text-gray-700 font-bold mb-4">新歓カレンダー画像（最大3枚）<span class="text-red-600">＊変更する場合のみ全て登録（変更しない場合はそのまま）</span></label>
     <div id="calendarPhotoUpload" class="flex gap-2 flex-wrap">
         <div id="addCalendarPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
             <span class="text-2xl text-gray-400">+</span>
