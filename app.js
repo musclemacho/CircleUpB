@@ -9,15 +9,17 @@ const fs = require("fs");
 const { getBuiltinModule } = require("process");
 const session = require('express-session');
 const nl2br = (str) => {
-  if (!str) return "";
-  return str.replace(/\n/g, "<br>");
+    if (!str) return "";
+    return str.replace(/\n/g, "<br>");
 };
 const helmet = require("helmet");
+// 環境変数ファイルの読み込み
+const config = require("./config");
 
 app.use(
-  helmet({
-    contentSecurityPolicy: false, // ✅ 完全に無効化
-  })
+    helmet({
+        contentSecurityPolicy: false, // ✅ 完全に無効化
+    })
 );
 
 const cors = require("cors");
@@ -53,8 +55,8 @@ app.use(session({
 
 // リクエストをログに記録するミドルウェア
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
+    console.log(`${req.method} ${req.url}`);
+    next();
 });
 
 // 静的ファイルの提供
@@ -64,7 +66,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json()); // JSONリクエストを解析
 app.use(express.urlencoded({ extended: true })); // URLエンコードされたデータも解析
 
-const PORT = 3000;
+const PORT = config.port;
 
 // set ejs
 app.set('view engine', 'ejs');
@@ -84,59 +86,58 @@ const storage = multer.diskStorage({
 
 // ✅ アップロードサイズ制限: 5MB
 const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 
 // MySQL 接続設定
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Hide_Nakai_2003",
-  // 俺のはaaaa、Hide_Nakai_2003
+    host: config.db.host,
+    user: config.db.user,
+    password: config.db.password
 });
 
 
 
 // ✅ 画像のみ許可する `fileFilter`
 function fileFilter(req, file, cb) {
-  const allowedExtensions = [".png", ".jpg", ".jpeg", ".gif", ".webp"];
-  const ext = path.extname(file.originalname).toLowerCase();
+    const allowedExtensions = [".png", ".jpg", ".jpeg", ".gif", ".webp"];
+    const ext = path.extname(file.originalname).toLowerCase();
 
-  if (allowedExtensions.includes(ext)) {
-      cb(null, true); // ✅ 許可
-  } else {
-      cb(new Error("❌ 許可されていないファイル形式です (.png, .jpg, .jpeg, .gif, .webp のみ許可)"), false);
-  }
+    if (allowedExtensions.includes(ext)) {
+        cb(null, true); // ✅ 許可
+    } else {
+        cb(new Error("❌ 許可されていないファイル形式です (.png, .jpg, .jpeg, .gif, .webp のみ許可)"), false);
+    }
 }
 
 
 
 db.connect((err) => {
-  if (err) {
-      console.error("❌ データベース接続エラー:", err.message);
-      process.exit(1);
-  }
-  console.log("✅ MySQL に接続しました。");
+    if (err) {
+        console.error("❌ データベース接続エラー:", err.message);
+        process.exit(1);
+    }
+    console.log("✅ MySQL に接続しました。");
 
-  db.query("CREATE DATABASE IF NOT EXISTS Circles", (err) => {
-      if (err) {
-          console.error("❌ データベース作成エラー:", err.message);
-          process.exit(1);
-      }
-      console.log("✅ データベース 'Circles' が確認されました。");
+    db.query("CREATE DATABASE IF NOT EXISTS Circles", (err) => {
+        if (err) {
+            console.error("❌ データベース作成エラー:", err.message);
+            process.exit(1);
+        }
+        console.log("✅ データベース 'Circles' が確認されました。");
 
-      // 📌 データベースを選択してからテーブル作成
-      db.changeUser({ database: "Circles" }, (err) => {
-          if (err) {
-              console.error("❌ データベース選択エラー:", err.message);
-              process.exit(1);
-          }
-          console.log("✅ データベース 'Circles' を使用しています。");
+        // 📌 データベースを選択してからテーブル作成
+        db.changeUser({ database: "Circles" }, (err) => {
+            if (err) {
+                console.error("❌ データベース選択エラー:", err.message);
+                process.exit(1);
+            }
+            console.log("✅ データベース 'Circles' を使用しています。");
 
-          // 🔹 Circles テーブル作成
-          db.query(`
+            // 🔹 Circles テーブル作成
+            db.query(`
               CREATE TABLE IF NOT EXISTS Circles (
                   id INT AUTO_INCREMENT PRIMARY KEY,
                   circleName VARCHAR(255) NOT NULL,
@@ -160,15 +161,15 @@ db.connect((err) => {
                   password VARCHAR(255) NOT NULL
               );
           `, (err) => {
-              if (err) {
-                  console.error("❌ Circles テーブル作成エラー:", err);
-                  process.exit(1);
-              }
-              console.log("✅ Circles テーブルが確認されました（または作成されました）");
+                if (err) {
+                    console.error("❌ Circles テーブル作成エラー:", err);
+                    process.exit(1);
+                }
+                console.log("✅ Circles テーブルが確認されました（または作成されました）");
 
-              // 🔹 monthlyViews テーブル作成（ここで実行！）
-              console.log("📌 monthlyViews テーブル作成クエリを実行します");
-              db.query(`
+                // 🔹 monthlyViews テーブル作成（ここで実行！）
+                console.log("📌 monthlyViews テーブル作成クエリを実行します");
+                db.query(`
                  CREATE TABLE IF NOT EXISTS dailyViews (
                       id INT AUTO_INCREMENT PRIMARY KEY,
                       circleId INT NOT NULL,
@@ -178,20 +179,20 @@ db.connect((err) => {
                       FOREIGN KEY (circleId) REFERENCES Circles(id) ON DELETE CASCADE
                   );
               `, (err) => {
-                  if (err) {
-                      console.error("❌ monthlyViews テーブル作成エラー:", err);
-                      process.exit(1);
-                  }
-                  console.log("✅ monthlyViews テーブルが確認されました（または作成されました）");
+                    if (err) {
+                        console.error("❌ monthlyViews テーブル作成エラー:", err);
+                        process.exit(1);
+                    }
+                    console.log("✅ monthlyViews テーブルが確認されました（または作成されました）");
 
-                  // 🔹 サーバー起動はテーブル作成後
-                  app.listen(3000, () => {
-                      console.log('✅ Server is running on http://localhost:3000');
-                  });
-              });
-          });
-      });
-  });
+                    // 🔹 サーバー起動はテーブル作成後
+                    app.listen(3000, () => {
+                        console.log('✅ Server is running on http://localhost:3000');
+                    });
+                });
+            });
+        });
+    });
 });
 // 🔹 sharp のキャッシュを無効化（Windows のファイルロック回避）
 sharp.cache(false);
@@ -251,7 +252,7 @@ function deleteUncompressedFiles() {
 
 async function compressImage(inputPath, filename) {
     let outputPath = path.join("uploads", `compressed-${filename}`);
-    
+
     try {
         console.log(`🔹 圧縮処理開始: ${inputPath} → ${outputPath}`);
 
@@ -263,7 +264,7 @@ async function compressImage(inputPath, filename) {
         console.log(`✅ 圧縮成功: ${outputPath}`);
 
         // 🔹 ファイル名のみを返す（uploads/ を除外）
-        return `compressed-${filename}`;  
+        return `compressed-${filename}`;
     } catch (error) {
         console.error("❌ 画像圧縮エラー:", error);
         return null;
@@ -273,9 +274,9 @@ async function compressImage(inputPath, filename) {
 
 // 🔹 サークルの登録処理
 app.post('/circles', upload.fields([
-  { name: 'topPhoto', maxCount: 1 },
-  { name: 'subPhotos', maxCount: 5 },
-  { name: 'calendarPhotos', maxCount: 3 }
+    { name: 'topPhoto', maxCount: 1 },
+    { name: 'subPhotos', maxCount: 5 },
+    { name: 'calendarPhotos', maxCount: 3 }
 ]), async (req, res) => {
     console.log("=== Request Body ===", req.body);
     console.log("=== Request Headers ===", req.headers);
@@ -320,7 +321,7 @@ app.post('/circles', upload.fields([
     }
 
     const tagString = typeof tag === "string" ? tag : Array.isArray(tag) ? tag.join(",") : "";
-console.log(compressedTopPhoto);
+    console.log(compressedTopPhoto);
     // 🔹 データベースへ保存
     const query = `
         INSERT INTO Circles (
@@ -345,10 +346,10 @@ console.log(compressedTopPhoto);
                 console.error('SQLエラー:', err.message);
                 return res.status(500).json({ error: 'データベースへの保存に失敗しました。' });
             }
-             
+
             console.log(`✅ サークル投稿成功: ID = ${result.insertId}`);
 
-           deleteUncompressedFiles();
+            deleteUncompressedFiles();
             res.status(201).json({ id: result.insertId });
         }
     );
@@ -360,134 +361,134 @@ app.post('/circles/edit/:id', upload.fields([
     { name: 'topPhoto', maxCount: 1 },
     { name: 'subPhotos', maxCount: 5 },
     { name: 'calendarPhotos', maxCount: 3 }
-  ]), async (req, res) => {
-      let circleId = req.body.circleId; // `FormData` から取得
-  
-      console.log("=== [DEBUG] Circle ID ===");
-      console.log(circleId);
-  
-      // `circleId` を数値に変換
-      if (Array.isArray(circleId)) {
-          circleId = circleId[0]; // 配列の場合、最初の要素を使用
-      }
-      circleId = parseInt(circleId, 10);
-    
-      if (isNaN(circleId)) {
-          console.error("🛑 IDがNaNです。リクエストの `id` が適切か確認してください。");
-          return res.status(400).json({ error: "無効な ID です。" });
-      }
-  
-      const {
-          circleName, mainGenre, subGenre, comment, other, tag, description, password,
-          admissionFee, annualFee, location, instagram, slider1, slider2, slider3, slider4
-      } = req.body;
-  
-      const parsedAdmissionFee = admissionFee ? parseInt(admissionFee, 10) : null;
-      const parsedAnnualFee = annualFee ? parseInt(annualFee, 10) : null;
-      const parsedSlider1 = slider1 ? parseInt(slider1, 10) : 0;
-      const parsedSlider2 = slider2 ? parseInt(slider2, 10) : 0;
-      const parsedSlider3 = slider3 ? parseInt(slider3, 10) : 0;
-      const parsedSlider4 = slider4 ? parseInt(slider4, 10) : 0;
-  
-      // 🔹 圧縮した画像パスを格納する変数
-      let compressedTopPhoto = null;
-      let compressedSubPhotos = [];
-      let compressedCalendarPhotos = [];
-  
-      // 🔹 画像の圧縮処理
-      if (req.files && req.files.topPhoto && req.files.topPhoto[0]) {
-          console.log(`📸 トップ画像あり: ${req.files.topPhoto[0].path}`);
-          compressedTopPhoto = await compressImage(req.files.topPhoto[0].path, req.files.topPhoto[0].filename);
-          console.log(`📸 圧縮後のトップ画像: ${compressedTopPhoto}`);
-      }
-  
-      if (req.files && req.files.subPhotos) {
-          for (const file of req.files.subPhotos) {
-              console.log(`📸 サブ画像: ${file.path}`);
-              const compressedPath = await compressImage(file.path, file.filename);
-              if (compressedPath) compressedSubPhotos.push(compressedPath);
-          }
-      }
-  
-      if (req.files && req.files.calendarPhotos) {
-          for (const file of req.files.calendarPhotos) {
-              console.log(`📸 カレンダー画像: ${file.path}`);
-              const compressedPath = await compressImage(file.path, file.filename);
-              if (compressedPath) compressedCalendarPhotos.push(compressedPath);
-          }
-      }
-  
-      // 🔹 データベースに保存するための文字列変換
-      const subPhotosString = compressedSubPhotos.length > 0 ? compressedSubPhotos.join(',') : null;
-      const calendarPhotosString = compressedCalendarPhotos.length > 0 ? compressedCalendarPhotos.join(',') : null;
-      const tagString = Array.isArray(tag) ? tag.join(",") : (tag || "");
-  
-      console.log(`📸 最終的なトップ画像: ${compressedTopPhoto}`);
-      console.log(`📸 最終的なサブ画像: ${subPhotosString}`);
-      console.log(`📸 最終的なカレンダー画像: ${calendarPhotosString}`);
-  
-      // 🔹 `UPDATE` クエリを作成
-      let updateQuery = `
+]), async (req, res) => {
+    let circleId = req.body.circleId; // `FormData` から取得
+
+    console.log("=== [DEBUG] Circle ID ===");
+    console.log(circleId);
+
+    // `circleId` を数値に変換
+    if (Array.isArray(circleId)) {
+        circleId = circleId[0]; // 配列の場合、最初の要素を使用
+    }
+    circleId = parseInt(circleId, 10);
+
+    if (isNaN(circleId)) {
+        console.error("🛑 IDがNaNです。リクエストの `id` が適切か確認してください。");
+        return res.status(400).json({ error: "無効な ID です。" });
+    }
+
+    const {
+        circleName, mainGenre, subGenre, comment, other, tag, description, password,
+        admissionFee, annualFee, location, instagram, slider1, slider2, slider3, slider4
+    } = req.body;
+
+    const parsedAdmissionFee = admissionFee ? parseInt(admissionFee, 10) : null;
+    const parsedAnnualFee = annualFee ? parseInt(annualFee, 10) : null;
+    const parsedSlider1 = slider1 ? parseInt(slider1, 10) : 0;
+    const parsedSlider2 = slider2 ? parseInt(slider2, 10) : 0;
+    const parsedSlider3 = slider3 ? parseInt(slider3, 10) : 0;
+    const parsedSlider4 = slider4 ? parseInt(slider4, 10) : 0;
+
+    // 🔹 圧縮した画像パスを格納する変数
+    let compressedTopPhoto = null;
+    let compressedSubPhotos = [];
+    let compressedCalendarPhotos = [];
+
+    // 🔹 画像の圧縮処理
+    if (req.files && req.files.topPhoto && req.files.topPhoto[0]) {
+        console.log(`📸 トップ画像あり: ${req.files.topPhoto[0].path}`);
+        compressedTopPhoto = await compressImage(req.files.topPhoto[0].path, req.files.topPhoto[0].filename);
+        console.log(`📸 圧縮後のトップ画像: ${compressedTopPhoto}`);
+    }
+
+    if (req.files && req.files.subPhotos) {
+        for (const file of req.files.subPhotos) {
+            console.log(`📸 サブ画像: ${file.path}`);
+            const compressedPath = await compressImage(file.path, file.filename);
+            if (compressedPath) compressedSubPhotos.push(compressedPath);
+        }
+    }
+
+    if (req.files && req.files.calendarPhotos) {
+        for (const file of req.files.calendarPhotos) {
+            console.log(`📸 カレンダー画像: ${file.path}`);
+            const compressedPath = await compressImage(file.path, file.filename);
+            if (compressedPath) compressedCalendarPhotos.push(compressedPath);
+        }
+    }
+
+    // 🔹 データベースに保存するための文字列変換
+    const subPhotosString = compressedSubPhotos.length > 0 ? compressedSubPhotos.join(',') : null;
+    const calendarPhotosString = compressedCalendarPhotos.length > 0 ? compressedCalendarPhotos.join(',') : null;
+    const tagString = Array.isArray(tag) ? tag.join(",") : (tag || "");
+
+    console.log(`📸 最終的なトップ画像: ${compressedTopPhoto}`);
+    console.log(`📸 最終的なサブ画像: ${subPhotosString}`);
+    console.log(`📸 最終的なカレンダー画像: ${calendarPhotosString}`);
+
+    // 🔹 `UPDATE` クエリを作成
+    let updateQuery = `
           UPDATE Circles SET
               circleName = ?, mainGenre = ?, subGenre = ?, comment = ?, other = ?, tag = ?, 
               description = ?, admissionFee = ?, annualFee = ?, location = ?, instagram = ?, 
               parsedSlider1 = ?, parsedSlider2 = ?, parsedSlider3 = ?, parsedSlider4 = ?
       `;
-  
-      let updateParams = [
-          circleName, mainGenre, subGenre, comment, other, tagString, description,
-          parsedAdmissionFee, parsedAnnualFee, location, instagram,
-          parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4
-      ];
-  
-      // 🔹 画像がアップロードされた場合のみ更新
-      if (compressedTopPhoto) {
-          updateQuery += `, topPhoto = ?`;
-          updateParams.push(compressedTopPhoto);
-      }
-  
-      if (subPhotosString) {
-          updateQuery += `, subPhotos = ?`;
-          updateParams.push(subPhotosString);
-      }
-  
-      if (calendarPhotosString) {
-          updateQuery += `, calendarPhotos = ?`;
-          updateParams.push(calendarPhotosString);
-      }
-  
-      // 🔹 パスワードが入力された場合のみ更新
-      if (password) {
-          updateQuery += `, password = ?`;
-          updateParams.push(password);
-      }
-  
-      // 🔹 `WHERE id = ?` を適切に追加
-      updateQuery += ` WHERE id = ?`;
-      updateParams.push(circleId);
-  
-      console.log("=== [DEBUG] UPDATE Query ===");
-      console.log(updateQuery);
-      console.log("=== [DEBUG] Parameters ===");
-      console.log(updateParams);
-  
-      // 🔹 クエリを実行
-      db.query(updateQuery, updateParams, (err, result) => {
-          if (err) {
-              console.error("🛑 SQLエラー:", err.message);
-              return res.status(500).json({ 
-                  error: "データベースの更新に失敗しました。",
-                  details: err.sqlMessage // **詳細エラーメッセージをフロントエンドに送信**
-              });
-          }
-          console.log("✅ データベース更新成功:", result);
-          deleteUncompressedFiles();
 
-          res.json({ success: true, message: "データベース更新成功", id: circleId });
-      });
-  });
+    let updateParams = [
+        circleName, mainGenre, subGenre, comment, other, tagString, description,
+        parsedAdmissionFee, parsedAnnualFee, location, instagram,
+        parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4
+    ];
 
-  app.get("/search", (req, res) => {
+    // 🔹 画像がアップロードされた場合のみ更新
+    if (compressedTopPhoto) {
+        updateQuery += `, topPhoto = ?`;
+        updateParams.push(compressedTopPhoto);
+    }
+
+    if (subPhotosString) {
+        updateQuery += `, subPhotos = ?`;
+        updateParams.push(subPhotosString);
+    }
+
+    if (calendarPhotosString) {
+        updateQuery += `, calendarPhotos = ?`;
+        updateParams.push(calendarPhotosString);
+    }
+
+    // 🔹 パスワードが入力された場合のみ更新
+    if (password) {
+        updateQuery += `, password = ?`;
+        updateParams.push(password);
+    }
+
+    // 🔹 `WHERE id = ?` を適切に追加
+    updateQuery += ` WHERE id = ?`;
+    updateParams.push(circleId);
+
+    console.log("=== [DEBUG] UPDATE Query ===");
+    console.log(updateQuery);
+    console.log("=== [DEBUG] Parameters ===");
+    console.log(updateParams);
+
+    // 🔹 クエリを実行
+    db.query(updateQuery, updateParams, (err, result) => {
+        if (err) {
+            console.error("🛑 SQLエラー:", err.message);
+            return res.status(500).json({
+                error: "データベースの更新に失敗しました。",
+                details: err.sqlMessage // **詳細エラーメッセージをフロントエンドに送信**
+            });
+        }
+        console.log("✅ データベース更新成功:", result);
+        deleteUncompressedFiles();
+
+        res.json({ success: true, message: "データベース更新成功", id: circleId });
+    });
+});
+
+app.get("/search", (req, res) => {
     const { name, searchGenre, bigTag, page } = req.query;
 
     let query = `SELECT * FROM Circles WHERE 1=1`;
@@ -555,7 +556,7 @@ app.get("/searchFav", (req, res) => {
 
 // 各ページのルート
 app.get('/newCircle', (req, res) => {
-  res.render('newCircle', { title: '新しいサークル掲載' });
+    res.render('newCircle', { title: '新しいサークル掲載' });
 });
 
 
@@ -579,7 +580,7 @@ app.get("/", (req, res) => {
             return res.status(500).json({ error: "データ取得エラー" });
         }
 
-        res.render("index", { circles, page, query: req.query || {} , isFavorite: false }); // ここで query を渡す
+        res.render("index", { circles, page, query: req.query || {}, isFavorite: false }); // ここで query を渡す
     });
 });
 
@@ -589,166 +590,166 @@ app.get("/", (req, res) => {
 
 // 📌 お問い合わせページを表示
 app.get("/contact", (req, res) => {
-  res.render("contact");
+    res.render("contact");
 });
 
 app.get("/policy", (req, res) => {
-  res.render("policy");
+    res.render("policy");
 });
 
 
 
 // 閲覧数
 app.get("/circle/:id", (req, res) => {
-  const circleId = parseInt(req.params.id, 10);
-  if (isNaN(circleId)) {
-      console.error("無効な circleId:", req.params.id);
-      return res.status(400).send("無効な ID です");
-  }
+    const circleId = parseInt(req.params.id, 10);
+    if (isNaN(circleId)) {
+        console.error("無効な circleId:", req.params.id);
+        return res.status(400).send("無効な ID です");
+    }
 
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  console.log(` [DEBUG] 閲覧数更新: circleId=${circleId}, date=${today}`);
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    console.log(` [DEBUG] 閲覧数更新: circleId=${circleId}, date=${today}`);
 
-  // 日別閲覧数を記録
-  const updateDailyViews = `
+    // 日別閲覧数を記録
+    const updateDailyViews = `
       INSERT INTO dailyViews (circleId, viewDate, viewCount)
       VALUES (?, ?, 1)
       ON DUPLICATE KEY UPDATE viewCount = viewCount + 1;
   `;
 
-  db.query(updateDailyViews, [circleId, today], (err, result) => {
-      if (err) {
-          console.error("[ERROR] dailyViews 更新エラー:", err);
-      } else {
-          console.log("[SUCCESS] 日別閲覧数データ更新:", result);
-      }
+    db.query(updateDailyViews, [circleId, today], (err, result) => {
+        if (err) {
+            console.error("[ERROR] dailyViews 更新エラー:", err);
+        } else {
+            console.log("[SUCCESS] 日別閲覧数データ更新:", result);
+        }
 
-      // サークル情報を取得
-      const query = `SELECT * FROM Circles WHERE id = ?`;
-      db.query(query, [circleId], (err, results) => {
-          if (err) {
-              console.error("エラー:", err.message);
-              return res.status(500).send("エラーが発生しました");
-          }
+        // サークル情報を取得
+        const query = `SELECT * FROM Circles WHERE id = ?`;
+        db.query(query, [circleId], (err, results) => {
+            if (err) {
+                console.error("エラー:", err.message);
+                return res.status(500).send("エラーが発生しました");
+            }
 
-          if (results.length === 0) {
-              return res.status(404).send("サークルが見つかりません");
-          }
+            if (results.length === 0) {
+                return res.status(404).send("サークルが見つかりません");
+            }
 
-          const circle = results[0];
-          res.render("circle", { circle });
-      });
-  });
+            const circle = results[0];
+            res.render("circle", { circle });
+        });
+    });
 });
 
 // パスワード認証（管理ページへのアクセス）
 app.post("/circle/admin/:id/auth", (req, res) => {
-  const circleId = parseInt(req.params.id, 10);
-  const { password } = req.body;
+    const circleId = parseInt(req.params.id, 10);
+    const { password } = req.body;
 
-  console.log("🛠 [DEBUG] 受け取った circleId:", req.params.id, " | parseInt 変換後:", circleId);
+    console.log("🛠 [DEBUG] 受け取った circleId:", req.params.id, " | parseInt 変換後:", circleId);
 
-  if (isNaN(circleId) || !password) {
-      return res.status(400).json({ error: "無効なリクエストです" });
-  }
+    if (isNaN(circleId) || !password) {
+        return res.status(400).json({ error: "無効なリクエストです" });
+    }
 
-  const query = `SELECT * FROM Circles WHERE id = ?`;
-  db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error("エラー:", err.message);
-          return res.status(500).json({ error: "エラーが発生しました" });
-      }
+    const query = `SELECT * FROM Circles WHERE id = ?`;
+    db.query(query, [circleId], (err, results) => {
+        if (err) {
+            console.error("エラー:", err.message);
+            return res.status(500).json({ error: "エラーが発生しました" });
+        }
 
-      if (results.length === 0) {
-          return res.status(404).json({ error: "サークルが見つかりません。" });
-      }
+        if (results.length === 0) {
+            return res.status(404).json({ error: "サークルが見つかりません。" });
+        }
 
-      const circle = results[0];
+        const circle = results[0];
 
-      if (circle.password !== password) {
-          console.log("❌ パスワードが一致しません");
-          return res.status(403).json({ error: "パスワードが正しくありません。" });
-      }
+        if (circle.password !== password) {
+            console.log("❌ パスワードが一致しません");
+            return res.status(403).json({ error: "パスワードが正しくありません。" });
+        }
 
-      // ✅ `authenticatedCircles` を初期化（未定義の場合）
-      if (!req.session.authenticatedCircles) {
-          req.session.authenticatedCircles = {};
-      }
+        // ✅ `authenticatedCircles` を初期化（未定義の場合）
+        if (!req.session.authenticatedCircles) {
+            req.session.authenticatedCircles = {};
+        }
 
-      // ✅ 認証済みのサークルIDを記録
-      req.session.authenticatedCircles[circleId] = true;
+        // ✅ 認証済みのサークルIDを記録
+        req.session.authenticatedCircles[circleId] = true;
 
-      console.log("✅ 認証成功 - 認証済みサークル一覧:", req.session.authenticatedCircles);
+        console.log("✅ 認証成功 - 認証済みサークル一覧:", req.session.authenticatedCircles);
 
-      // 30分後に認証を削除
-      setTimeout(() => {
-          if (req.session.authenticatedCircles) {
-              delete req.session.authenticatedCircles[circleId];
-              console.log("⏳ 認証期限切れ:", circleId);
-          }
-      }, 30 * 60 * 1000); // 30分
+        // 30分後に認証を削除
+        setTimeout(() => {
+            if (req.session.authenticatedCircles) {
+                delete req.session.authenticatedCircles[circleId];
+                console.log("⏳ 認証期限切れ:", circleId);
+            }
+        }, 30 * 60 * 1000); // 30分
 
-      req.session.save((err) => {
-          if (err) {
-              console.error("❌ セッション保存エラー:", err);
-              return res.status(500).json({ error: "セッション保存に失敗しました" });
-          }
-          res.json({ success: true, redirect: `/circle/admin/${circleId}` });
-      });
-  });
+        req.session.save((err) => {
+            if (err) {
+                console.error("❌ セッション保存エラー:", err);
+                return res.status(500).json({ error: "セッション保存に失敗しました" });
+            }
+            res.json({ success: true, redirect: `/circle/admin/${circleId}` });
+        });
+    });
 });
 
 // 管理者ページの認証チェックミドルウェア
 const requireAuth = (req, res, next) => {
-  const circleId = parseInt(req.params.id, 10);
+    const circleId = parseInt(req.params.id, 10);
 
-  console.log("セッション情報:", req.session);
-  console.log("リクエストID:", circleId);
+    console.log("セッション情報:", req.session);
+    console.log("リクエストID:", circleId);
 
-  // ✅ `authenticatedCircles` が未定義の場合は初期化
-  if (!req.session.authenticatedCircles) {
-      req.session.authenticatedCircles = {};
-  }
+    // ✅ `authenticatedCircles` が未定義の場合は初期化
+    if (!req.session.authenticatedCircles) {
+        req.session.authenticatedCircles = {};
+    }
 
-  console.log("認証済みサークル:", req.session.authenticatedCircles);
+    console.log("認証済みサークル:", req.session.authenticatedCircles);
 
-  // ✅ ourpage からのアクセスの場合は認証スキップ
-  if (req.session.fromOurPage) {
-      console.log("🔹 ourpage からのアクセス -> 認証スキップ");
-      req.session.fromOurPage = false; // フラグを削除
-      req.session.save();
-      return next();
-  }
+    // ✅ ourpage からのアクセスの場合は認証スキップ
+    if (req.session.fromOurPage) {
+        console.log("🔹 ourpage からのアクセス -> 認証スキップ");
+        req.session.fromOurPage = false; // フラグを削除
+        req.session.save();
+        return next();
+    }
 
-  // ✅ 通常の認証チェック
-  if (!req.session.authenticatedCircles[circleId]) {
-      console.log("❌ 認証されていないためアクセス拒否:", circleId);
-      return res.status(403).json({ error: "認証が必要です。" });
-  }
+    // ✅ 通常の認証チェック
+    if (!req.session.authenticatedCircles[circleId]) {
+        console.log("❌ 認証されていないためアクセス拒否:", circleId);
+        return res.status(403).json({ error: "認証が必要です。" });
+    }
 
-  console.log("✅ 認証成功 - アクセス許可:", circleId);
-  next();
+    console.log("✅ 認証成功 - アクセス許可:", circleId);
+    next();
 };
 // 管理者ページのルート
 app.get("/circle/admin/:id", requireAuth, (req, res) => {
-  const circleId = parseInt(req.params.id, 10);
-  if (isNaN(circleId)) {
-      return res.status(400).json({ error: "無効な ID です" });
-  }
+    const circleId = parseInt(req.params.id, 10);
+    if (isNaN(circleId)) {
+        return res.status(400).json({ error: "無効な ID です" });
+    }
 
-  // ✅ 認証済みのサークルを記録
-  if (!req.session.authenticatedCircles) {
-      req.session.authenticatedCircles = {};
-  }
+    // ✅ 認証済みのサークルを記録
+    if (!req.session.authenticatedCircles) {
+        req.session.authenticatedCircles = {};
+    }
 
-  
-//  パスワード認証→circleid取得、セッションに登録→requireAuthでadminページととID照合→入る→editページとセッションID照合
-// ourpageからはrequireAuthをスキップ→adminページに入ってcircleidをセッションに保存
-  req.session.authenticatedCircles[circleId] = true;
 
-  console.log("✅ 認証成功 - 認証済みサークル:", req.session.authenticatedCircles);
+    //  パスワード認証→circleid取得、セッションに登録→requireAuthでadminページととID照合→入る→editページとセッションID照合
+    // ourpageからはrequireAuthをスキップ→adminページに入ってcircleidをセッションに保存
+    req.session.authenticatedCircles[circleId] = true;
 
-  const query = `
+    console.log("✅ 認証成功 - 認証済みサークル:", req.session.authenticatedCircles);
+
+    const query = `
       SELECT c.id, c.circleName, c.description, c.tag, c.instagram, 
              dv.viewDate, dv.viewCount
       FROM Circles c
@@ -757,88 +758,88 @@ app.get("/circle/admin/:id", requireAuth, (req, res) => {
       ORDER BY dv.viewDate ASC;
   `;
 
-  db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error("データ取得エラー:", err);
-          return res.status(500).json({ error: "データ取得に失敗しました。" });
-      }
-      if (results.length === 0) {
-          return res.status(404).json({ error: "サークルが見つかりません。" });
-      }
+    db.query(query, [circleId], (err, results) => {
+        if (err) {
+            console.error("データ取得エラー:", err);
+            return res.status(500).json({ error: "データ取得に失敗しました。" });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: "サークルが見つかりません。" });
+        }
 
-      const circle = {
-          id: results[0].id,
-          circleName: results[0].circleName,
-          description: results[0].description,
-          tag: results[0].tag,
-          instagram: results[0].instagram,
-      };
+        const circle = {
+            id: results[0].id,
+            circleName: results[0].circleName,
+            description: results[0].description,
+            tag: results[0].tag,
+            instagram: results[0].instagram,
+        };
 
-      const stats = results.map(row => ({
-          date: row.viewDate,
-          count: row.viewCount
-      }));
+        const stats = results.map(row => ({
+            date: row.viewDate,
+            count: row.viewCount
+        }));
 
-      res.render("admin", { circle, stats });
-  });
+        res.render("admin", { circle, stats });
+    });
 });
 
 // 編集ページのルート (adminページ経由 or 認証済みサークルのみ)
 app.get("/circle/edit/:id", (req, res) => {
-  const circleId = parseInt(req.params.id, 10);
-  if (isNaN(circleId)) {
-      return res.status(400).json({ error: "無効な ID です" });
-  }
+    const circleId = parseInt(req.params.id, 10);
+    if (isNaN(circleId)) {
+        return res.status(400).json({ error: "無効な ID です" });
+    }
 
-  console.log("🔹 セッション情報:", req.session);
+    console.log("🔹 セッション情報:", req.session);
 
-  // ✅ `authenticatedCircles` が未定義の場合は初期化
-  if (!req.session.authenticatedCircles) {
-      req.session.authenticatedCircles = {};
-  }
+    // ✅ `authenticatedCircles` が未定義の場合は初期化
+    if (!req.session.authenticatedCircles) {
+        req.session.authenticatedCircles = {};
+    }
 
-  // ✅ adminページからのアクセス or 既に認証済みのサークルのみ許可
-  if (!req.session.authenticatedCircles[circleId]) {
-      return res.status(403).json({ error: "アクセス権限がありません。" });
-  }
+    // ✅ adminページからのアクセス or 既に認証済みのサークルのみ許可
+    if (!req.session.authenticatedCircles[circleId]) {
+        return res.status(403).json({ error: "アクセス権限がありません。" });
+    }
 
-  console.log("✅ 認証成功 - 編集ページへのアクセス許可:", circleId);
+    console.log("✅ 認証成功 - 編集ページへのアクセス許可:", circleId);
 
-  const query = `SELECT * FROM Circles WHERE id = ?`;
-  db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error("エラー:", err.message);
-          return res.status(500).send("エラーが発生しました");
-      }
-      if (results.length === 0) {
-          return res.status(404).send("サークルが見つかりません");
-      }
+    const query = `SELECT * FROM Circles WHERE id = ?`;
+    db.query(query, [circleId], (err, results) => {
+        if (err) {
+            console.error("エラー:", err.message);
+            return res.status(500).send("エラーが発生しました");
+        }
+        if (results.length === 0) {
+            return res.status(404).send("サークルが見つかりません");
+        }
 
-      const circle = results[0];
-      res.render("editCircle", { circle });
-  });
+        const circle = results[0];
+        res.render("editCircle", { circle });
+    });
 });
 
 
 
 // 削除
 app.delete("/circle/delete/:id", requireAuth, (req, res) => {
-  const circleId = parseInt(req.params.id, 10);
-  
-  if (isNaN(circleId)) {
-    return res.status(400).json({ error: "無効な ID です" });
-}
+    const circleId = parseInt(req.params.id, 10);
 
-  const deleteQuery = "DELETE FROM Circles WHERE id = ?";
-  
-  db.query(deleteQuery, [circleId], (err, result) => {
-      if (err) {
-          console.error("SQLエラー:", err.message);
-          return res.status(500).json({ error: "削除に失敗しました。" });
-      }
+    if (isNaN(circleId)) {
+        return res.status(400).json({ error: "無効な ID です" });
+    }
 
-      res.status(200).json({ message: "サークルが削除されました。" });
-  });
+    const deleteQuery = "DELETE FROM Circles WHERE id = ?";
+
+    db.query(deleteQuery, [circleId], (err, result) => {
+        if (err) {
+            console.error("SQLエラー:", err.message);
+            return res.status(500).json({ error: "削除に失敗しました。" });
+        }
+
+        res.status(200).json({ message: "サークルが削除されました。" });
+    });
 });
 
 
@@ -847,22 +848,22 @@ app.delete("/circle/delete/:id", requireAuth, (req, res) => {
 
 
 app.get("/starnightmuscle", (req, res) => {
-  // ✅ 最初のアクセス時のみ `fromOurPage` を設定
-  if (!req.session.fromOurPage) {
-      req.session.fromOurPage = true;
-  }
+    // ✅ 最初のアクセス時のみ `fromOurPage` を設定
+    if (!req.session.fromOurPage) {
+        req.session.fromOurPage = true;
+    }
 
-  const getCircleCountQuery = "SELECT COUNT(*) AS totalCircles FROM Circles";
-  const getDailyViewsQuery = `
+    const getCircleCountQuery = "SELECT COUNT(*) AS totalCircles FROM Circles";
+    const getDailyViewsQuery = `
       SELECT viewDate, SUM(viewCount) AS totalViews
       FROM dailyViews
       GROUP BY viewDate
       ORDER BY viewDate ASC
   `;
-  const getTotalViewsQuery = "SELECT SUM(viewCount) AS totalViews FROM dailyViews";
+    const getTotalViewsQuery = "SELECT SUM(viewCount) AS totalViews FROM dailyViews";
 
-  // 🔹 各サークルの総閲覧数を取得するクエリ
-  const getCirclesWithViewsQuery = `
+    // 🔹 各サークルの総閲覧数を取得するクエリ
+    const getCirclesWithViewsQuery = `
       SELECT c.id, c.circleName, c.mainGenre, COALESCE(SUM(d.viewCount), 0) AS totalViews
       FROM Circles c
       LEFT JOIN dailyViews d ON c.id = d.circleId
@@ -870,42 +871,42 @@ app.get("/starnightmuscle", (req, res) => {
       ORDER BY totalViews DESC;
   `;
 
-  db.query(getCircleCountQuery, (err, circleResults) => {
-      if (err) {
-          console.error("❌ エラー: サークル数の取得に失敗", err);
-          return res.status(500).send("サークル数データ取得エラー");
-      }
+    db.query(getCircleCountQuery, (err, circleResults) => {
+        if (err) {
+            console.error("❌ エラー: サークル数の取得に失敗", err);
+            return res.status(500).send("サークル数データ取得エラー");
+        }
 
-      const totalCircles = circleResults.length > 0 ? circleResults[0].totalCircles : 0;
+        const totalCircles = circleResults.length > 0 ? circleResults[0].totalCircles : 0;
 
-      db.query(getDailyViewsQuery, (err, dailyViewsResults) => {
-          if (err) {
-              console.error("❌ エラー: 日別アクセス数の取得に失敗", err);
-              return res.status(500).send("日別アクセス数データ取得エラー");
-          }
+        db.query(getDailyViewsQuery, (err, dailyViewsResults) => {
+            if (err) {
+                console.error("❌ エラー: 日別アクセス数の取得に失敗", err);
+                return res.status(500).send("日別アクセス数データ取得エラー");
+            }
 
-          db.query(getTotalViewsQuery, (err, totalViewsResult) => {
-              if (err) {
-                  console.error("❌ エラー: 総アクセス数の取得に失敗", err);
-                  return res.status(500).send("総アクセス数データ取得エラー");
-              }
+            db.query(getTotalViewsQuery, (err, totalViewsResult) => {
+                if (err) {
+                    console.error("❌ エラー: 総アクセス数の取得に失敗", err);
+                    return res.status(500).send("総アクセス数データ取得エラー");
+                }
 
-              const totalViews = totalViewsResult.length > 0 ? totalViewsResult[0].totalViews || 0 : 0;
+                const totalViews = totalViewsResult.length > 0 ? totalViewsResult[0].totalViews || 0 : 0;
 
-              db.query(getCirclesWithViewsQuery, (err, circlesResults) => {
-                  if (err) {
-                      console.error("❌ エラー: サークルデータの取得に失敗", err);
-                      return res.status(500).send("サークルデータ取得エラー");
-                  }
+                db.query(getCirclesWithViewsQuery, (err, circlesResults) => {
+                    if (err) {
+                        console.error("❌ エラー: サークルデータの取得に失敗", err);
+                        return res.status(500).send("サークルデータ取得エラー");
+                    }
 
-                  res.render("ourpage", {
-                      totalCircles: totalCircles,
-                      dailyViews: dailyViewsResults || [],
-                      totalViews: totalViews,
-                      circles: circlesResults || []
-                  });
-              });
-          });
-      });
-  });
+                    res.render("ourpage", {
+                        totalCircles: totalCircles,
+                        dailyViews: dailyViewsResults || [],
+                        totalViews: totalViews,
+                        circles: circlesResults || []
+                    });
+                });
+            });
+        });
+    });
 });
