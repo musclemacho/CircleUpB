@@ -93,7 +93,7 @@ const upload = multer({
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Hide_Nakai_2003",
+  password: "aaaa",
   // 俺のはaaaa、Hide_Nakai_2003
 });
 
@@ -487,83 +487,69 @@ app.post('/circles/edit/:id', upload.fields([
       });
   });
 
+  app.get("/search", (req, res) => {
+    const { name, searchGenre, bigTag, page } = req.query;
 
+    let query = `SELECT * FROM Circles WHERE 1=1`;
+    const params = [];
+    let limit = 25;
+    let offset = ((parseInt(page) || 1) - 1) * limit;
 
-
-// 検索処理
-app.get("/search", (req, res) => {
-  const { name, searchGenre, bigTag} = req.query;
-
-  let query = `SELECT * FROM Circles WHERE 1=1`;
-  const params = [];
-  console.log("name:", name);
-  console.log("searchGenre:", searchGenre);
-  console.log("bigTag:", bigTag);
-
-  if (name) {
-    query += ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ? OR location LIKE ?)`;
-    params.push(`%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`);
-}
-
-
-  if (searchGenre && searchGenre.length > 0) {
-    const genres = Array.isArray(searchGenre) ? searchGenre : [searchGenre];
-    const genreConditions = genres.map(() => `(mainGenre LIKE ? OR subGenre LIKE ?)`).join(' OR ');
-    query += ` AND (${genreConditions})`;
-    genres.forEach(g => {
-      params.push(`%${g}%`, `%${g}%`);
-    });
-  }
-  
-  if (bigTag && bigTag.length > 0) {
-    const tags = Array.isArray(bigTag) ? bigTag : [bigTag];
-
-    // `FIND_IN_SET()` を使って、該当するタグの数をカウント
-    const matchCountQuery = tags.map(() => `IF(FIND_IN_SET(?, tag) > 0, 1, 0)`).join(' + ');
-
-    query += ` ORDER BY (${matchCountQuery}) DESC, id ASC`;
-
-    // `bigTag` の値を SQL のプレースホルダーとして設定
-    tags.forEach(tag => params.push(tag));
-}
-
-
-
-
-
-  db.query(query, params, (err, rows) => {
-    if (err) {
-      return res.status(500).send("エラーが発生しました: " + err.message);
+    if (name) {
+        query += ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ? OR location LIKE ?)`;
+        params.push(`%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`);
     }
-    res.render("index", { circles: rows });
-    
-  });
+
+    if (searchGenre && searchGenre.length > 0) {
+        const genres = Array.isArray(searchGenre) ? searchGenre : [searchGenre];
+        const genreConditions = genres.map(() => `(mainGenre LIKE ? OR subGenre LIKE ?)`).join(' OR ');
+        query += ` AND (${genreConditions})`;
+        genres.forEach(g => params.push(`%${g}%`, `%${g}%`));
+    }
+
+    if (bigTag && bigTag.length > 0) {
+        const tags = Array.isArray(bigTag) ? bigTag : [bigTag];
+        const matchCountQuery = tags.map(() => `IF(FIND_IN_SET(?, tag) > 0, 1, 0)`).join(' + ');
+        query += ` ORDER BY (${matchCountQuery}) DESC, id ASC`;
+        tags.forEach(tag => params.push(tag));
+    } else {
+        query += ` ORDER BY id ASC`;
+    }
+
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
+
+    db.query(query, params, (err, rows) => {
+        if (err) {
+            return res.status(500).send("エラーが発生しました: " + err.message);
+        }
+        res.render("index", { circles: rows, page: parseInt(page) || 1, query: req.query || {}, isFavorite: false });
+    });
 });
 
 
-
-// お気に入りサークルを取得
 
 app.get("/searchFav", (req, res) => {
-  const {id} = req.query;
-  console.log("id:", id);
+    const { id } = req.query;
+    let query = `SELECT * FROM Circles WHERE 1=1`;
+    const params = [];
 
-  let query = `SELECT * FROM Circles WHERE 1=1`;
-  const params = [];
+    if (id && id.length > 0) {
+        const ids = Array.isArray(id) ? id : [id]; // `id` が単一の場合の対応
+        query += ` AND id IN (${ids.map(() => '?').join(',')})`;
+        ids.forEach(i => params.push(i));
+    } else {
+        return res.render("index", { circles: [], query: req.query || {}, isFavorite: true });
+    }
 
- 
-if (id && id.length > 0) {
-  const ids = Array.isArray(id) ? id : [id]; // `id` が単一の場合の対応
-  query += ` AND id IN (${ids.map(() => '?').join(',')})`;
-  ids.forEach(i => params.push(i));
-}
+    query += ` ORDER BY id ASC`;
 
-db.query(query, params, (err, rows) => {
-  if (err) {
-    return res.status(500).send("エラーが発生しました: " + err.message);
-  }
-  res.render("index", { circles: rows });
-});
+    db.query(query, params, (err, rows) => {
+        if (err) {
+            return res.status(500).send("エラーが発生しました: " + err.message);
+        }
+        res.render("index", { circles: rows, query: req.query || {}, isFavorite: true });
+    });
 });
 
 
@@ -578,12 +564,23 @@ app.get(`/contact`, (req, res) => {
 })
 
 app.get("/", (req, res) => {
-  db.query("SELECT * FROM Circles ORDER BY RAND()", [], (err, rows) => { 
-    if (err) {
-      return res.status(500).send("エラーが発生しました");
-    }
-    res.render("index", { circles: rows });
-  });
+    let page = parseInt(req.query.page) || 1; // デフォルト1ページ目
+    let limit = 25; // 1ページあたりの表示数
+    let offset = (page - 1) * limit;
+
+    const query = `
+        SELECT * FROM Circles 
+        ORDER BY RAND(UNIX_TIMESTAMP(NOW()) DIV 3600*24) 
+        LIMIT ? OFFSET ?;
+    `;
+
+    db.query(query, [limit, offset], (err, circles) => {
+        if (err) {
+            return res.status(500).json({ error: "データ取得エラー" });
+        }
+
+        res.render("index", { circles, page, query: req.query || {} , isFavorite: false }); // ここで query を渡す
+    });
 });
 
 

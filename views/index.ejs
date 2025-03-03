@@ -243,8 +243,20 @@
             </div>
             <% }) %>
         </div>
-    </div>
-
+        <% if (!isFavorite) { %>
+            <div class="flex justify-center space-x-2 mt-5">
+                <% if (page > 1) { %>
+                    <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page - 1 %>"
+                       class="px-4 py-2 bg-gray-300 rounded">前へ</a>
+                <% } %>
+        
+                <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page + 1 %>"
+                   class="px-4 py-2 bg-blue-500 text-white rounded">次へ</a>
+            </div>
+        <% } %>
+        
+    
+    
     <style>
     /* <!-- スクロールバーを非表示にするCSS --> */
        
