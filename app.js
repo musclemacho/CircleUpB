@@ -487,47 +487,69 @@ app.post('/circles/edit/:id', upload.fields([
         res.json({ success: true, message: "データベース更新成功", id: circleId });
     });
 });
-
 app.get("/search", (req, res) => {
     const { name, searchGenre, bigTag, page } = req.query;
 
-    let query = `SELECT * FROM Circles WHERE 1=1`;
+    let baseQuery = `SELECT COUNT(*) AS count FROM Circles WHERE 1=1`;
+    let dataQuery = `SELECT * FROM Circles WHERE 1=1`;
     const params = [];
     let limit = 25;
     let offset = ((parseInt(page) || 1) - 1) * limit;
 
     if (name) {
-        query += ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ? OR location LIKE ?)`;
+        const condition = ` AND (circleName LIKE ? OR mainGenre LIKE ? OR subGenre LIKE ? OR other LIKE ? OR location LIKE ?)`;
+        baseQuery += condition;
+        dataQuery += condition;
         params.push(`%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`, `%${name}%`);
     }
 
     if (searchGenre && searchGenre.length > 0) {
         const genres = Array.isArray(searchGenre) ? searchGenre : [searchGenre];
         const genreConditions = genres.map(() => `(mainGenre LIKE ? OR subGenre LIKE ?)`).join(' OR ');
-        query += ` AND (${genreConditions})`;
+        baseQuery += ` AND (${genreConditions})`;
+        dataQuery += ` AND (${genreConditions})`;
         genres.forEach(g => params.push(`%${g}%`, `%${g}%`));
     }
 
     if (bigTag && bigTag.length > 0) {
         const tags = Array.isArray(bigTag) ? bigTag : [bigTag];
         const matchCountQuery = tags.map(() => `IF(FIND_IN_SET(?, tag) > 0, 1, 0)`).join(' + ');
-        query += ` ORDER BY (${matchCountQuery}) DESC, id ASC`;
+        dataQuery += ` ORDER BY (${matchCountQuery}) DESC, id ASC`;
         tags.forEach(tag => params.push(tag));
     } else {
-        query += ` ORDER BY id ASC`;
+        dataQuery += ` ORDER BY id ASC`;
     }
 
-    query += ` LIMIT ? OFFSET ?`;
-    params.push(limit, offset);
-
-    db.query(query, params, (err, rows) => {
+    // まずは検索結果の総件数を取得
+    db.query(baseQuery, params, (err, result) => {
         if (err) {
+            console.error("データ取得エラー:", err);
             return res.status(500).send("エラーが発生しました: " + err.message);
         }
-        res.render("index", { circles: rows, page: parseInt(page) || 1, query: req.query || {}, isFavorite: false });
+
+        const totalItems = result[0].count;
+        const totalPages = Math.ceil(totalItems / limit); // `totalPages` を計算
+
+        // データ取得用クエリに `LIMIT` を追加
+        dataQuery += ` LIMIT ? OFFSET ?`;
+        params.push(limit, offset);
+
+        db.query(dataQuery, params, (err, rows) => {
+            if (err) {
+                console.error("データ取得エラー:", err);
+                return res.status(500).send("エラーが発生しました: " + err.message);
+            }
+
+            res.render("index", { 
+                circles: rows, 
+                page: parseInt(page) || 1, 
+                totalPages, // 🔹 追加
+                query: req.query || {}, 
+                isFavorite: false 
+            });
+        });
     });
 });
-
 
 
 app.get("/searchFav", (req, res) => {
@@ -571,16 +593,35 @@ app.get("/", (req, res) => {
 
     const query = `
         SELECT * FROM Circles 
-        ORDER BY RAND(UNIX_TIMESTAMP(NOW()) DIV 3600*24) 
+        ORDER BY RAND(UNIX_TIMESTAMP(NOW()) DIV (3600*24)) 
         LIMIT ? OFFSET ?;
     `;
 
-    db.query(query, [limit, offset], (err, circles) => {
+    // 総データ数を取得
+    db.query('SELECT COUNT(*) AS count FROM Circles', (err, result) => {
         if (err) {
+            console.error("データ取得エラー:", err);
             return res.status(500).json({ error: "データ取得エラー" });
         }
+        
+        const totalItems = result[0].count;
+        const totalPages = Math.ceil(totalItems / limit); // `limit` を適用
 
-        res.render("index", { circles, page, query: req.query || {}, isFavorite: false }); // ここで query を渡す
+        // データ取得
+        db.query(query, [limit, offset], (err, circles) => {
+            if (err) {
+                console.error("データ取得エラー:", err);
+                return res.status(500).json({ error: "データ取得エラー" });
+            }
+
+            res.render("index", { 
+                circles, 
+                page, 
+                totalPages,  
+                query: req.query || {}, 
+                isFavorite: false 
+            }); 
+        });
     });
 });
 

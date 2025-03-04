@@ -250,10 +250,15 @@
                        class="px-4 py-2 bg-gray-300 rounded">前へ</a>
                 <% } %>
         
-                <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page + 1 %>"
-                   class="px-4 py-2 bg-blue-500 text-white rounded">次へ</a>
+                <span class="px-4 py-2 bg-gray-200 rounded">ページ <%= page %> / <%= totalPages %></span>
+        
+                <% if (page < totalPages) { %>
+                    <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page + 1 %>"
+                       class="px-4 py-2 bg-yellow-500 text-white rounded">次へ</a>
+                <% } %>
             </div>
         <% } %>
+        
         
     
     
