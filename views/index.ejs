@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" >
+<html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="theme-color" content=" rgb(255, 210, 121)"> <!-- オレンジ色 (フォールバック) -->
@@ -8,109 +9,115 @@
     <link rel="stylesheet" href="/fontawesome/css/all.min.css">
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q114JWPDXL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q114JWPDXL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'G-Q114JWPDXL');
-</script>
+        gtag('config', 'G-Q114JWPDXL');
+    </script>
 </head>
-    <title>サークルパーク</title>
+<title>サークル検索・大学サークル情報なら|サークルパーク</title>
 </head>
 
 
-<body class="font-sans flex justify-center pb-64" >
-    <div class="w-full max-w-[500px]  min-h-screen" >
+<body class="font-sans flex justify-center pb-64">
+    <div class="w-full max-w-[500px]  min-h-screen">
 
-    <!-- ヘッダー -->
-    <header class="text-black pt-3 pb-2 px-4 flex justify-between items-center sticky top-0 z-50"
-        style="background: linear-gradient(to bottom, rgb(255, 210, 121), rgb(255, 222, 138));">
-        <div class="flex items-center gap-3">
-            <div class="hamburger cursor-pointer flex flex-col justify-around h-5" onclick="toggleMenu()">
-                <span class="block w-5 h-0.5 bg-black"></span>
-                <span class="block w-5 h-0.5 bg-black"></span>
-                <span class="block w-5 h-0.5 bg-black"></span>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <!-- ホームアイコン -->
-            <a href="/" class="text-black hover:text-gray-600">
-                <i class="fa-solid fa-house text-lg"></i>
-            </a>
-        </div>
-        <div class="relative w-3/4 bg-white rounded-lg">
-            <form action="/search" id="searchname" method="get">
-                <div class="flex items-center  rounded-lg px-3 py-1 focus-within:ring-2 focus-within:ring-blue-400">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    </svg>
-                    <input 
-                        id="inputname" 
-                        type="text" 
-                        name="name" 
-                        placeholder="キーワードを入力..." 
-                        class="w-full px-2 py-1 text-gray-800 focus:outline-none"
-                      
-                        >
+        <!-- ヘッダー -->
+        <header class="text-black pt-3 pb-2 px-4 flex justify-between items-center sticky top-0 z-50"
+            style="background: linear-gradient(to bottom, rgb(255, 210, 121), rgb(255, 222, 138));">
+            <div class="flex items-center gap-3">
+                <div class="hamburger cursor-pointer flex flex-col justify-around h-5" onclick="toggleMenu()">
+                    <span class="block w-5 h-0.5 bg-black"></span>
+                    <span class="block w-5 h-0.5 bg-black"></span>
+                    <span class="block w-5 h-0.5 bg-black"></span>
                 </div>
-            </form>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- ホームアイコン -->
+                <a href="/" class="text-black hover:text-gray-600">
+                    <i class="fa-solid fa-house text-lg"></i>
+                </a>
+            </div>
+            <div class="relative w-3/4 bg-white rounded-lg">
+                <form action="/search" id="searchname" method="get">
+                    <div class="flex items-center  rounded-lg px-3 py-1 focus-within:ring-2 focus-within:ring-blue-400">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        </svg>
+                        <input id="inputname" type="text" name="name" placeholder="キーワードを入力..."
+                            class="w-full px-2 py-1 text-gray-800 focus:outline-none">
+                    </div>
+                </form>
+            </div>
+        </header>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchWord = urlParams.get("name"); // `?name=検索ワード` から値を取得
+                if (searchWord) {
+                    document.getElementById("inputname").value = searchWord;
+                }
+            });
+
+        </script>
+
+        <!-- サイドメニュー -->
+        <div id="menu"
+            class="fixed top-0 left-[-280px] w-[270px] h-full bg-white shadow-lg p-5 transition-all duration-300 ease-in-out z-50 border-r border-gray-200">
+            <button class="my-3 mx-3 top-4 left-4 text-gray-700 hover:text-black transition" onclick="toggleMenu()">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+            <ul class="space-y-6 pl-4">
+                <li><a href="/contact" class="block text-gray-800 text-lg hover:text-black transition">お問い合わせ</a></li>
+                <li><a href="/policy" class="block text-gray-800 text-lg hover:text-black transition">プライバシーポリシー</a>
+                </li>
+                <li><a href="/newCircle" class="block text-gray-800 text-lg hover:text-black transition">サークルを投稿する</a>
+                </li>
+                <% if (isAuthenticated) { %>
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="block text-gray-800 text-lg hover:text-black transition">
+                            ログアウト
+                        </button>
+                    </form>
+                    <% } else { %>
+                        <a href="/login" class="block text-gray-800 text-lg hover:text-black transition">ログイン</a>
+                        <% } %>
+            </ul>
         </div>
-    </header>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchWord = urlParams.get("name"); // `?name=検索ワード` から値を取得
-    if (searchWord) {
-        document.getElementById("inputname").value = searchWord;
-    }
-});
-
-    </script>
-        
-    <!-- サイドメニュー -->
-    <div 
-        id="menu" 
-        class="fixed top-0 left-[-280px] w-[270px] h-full bg-white shadow-lg p-5 transition-all duration-300 ease-in-out z-50 border-r border-gray-200">
-         <button 
-            class="my-3 mx-3 top-4 left-4 text-gray-700 hover:text-black transition"
-            onclick="toggleMenu()">
-            <i class="fa-solid fa-xmark text-2xl"></i>
-        </button>
-        <ul class="space-y-6 pl-4">
-            <li><a href="/contact" class="block text-gray-800 text-lg hover:text-black transition">お問い合わせ</a></li>
-            <li><a href="/policy" class="block text-gray-800 text-lg hover:text-black transition">プライバシーポリシー</a></li>
-            <li><a href="/newCircle" class="block text-gray-800 text-lg hover:text-black transition">サークルを投稿する</a></li>
-        </ul>
-    </div>
-
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById("menu");
-            if (menu.style.left === "0px") {
-                menu.style.left = "-270px";
-            } else {
-                menu.style.left = "0px";
+        <script>
+            function toggleMenu() {
+                const menu = document.getElementById("menu");
+                if (menu.style.left === "0px") {
+                    menu.style.left = "-270px";
+                } else {
+                    menu.style.left = "0px";
+                }
             }
-        }
 
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById("menu");
-            const hamburger = document.querySelector(".hamburger");
+            document.addEventListener('click', function (event) {
+                const menu = document.getElementById("menu");
+                const hamburger = document.querySelector(".hamburger");
 
-            if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
-                menu.style.left = "-80%";
-            }
-        });
-    </script>
+                if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                    menu.style.left = "-80%";
+                }
+            });
+        </script>
 
-    <!-- header下 -->
-    <div class="flex justify-around items-center mb-4 py-3 px-4 bg-white shadow-md rounded-b-2xl gap-4" style="background: linear-gradient(to bottom,rgb(255, 222, 138), rgb(255, 255, 131));"">
+        <!-- header下 -->
+        <div class="flex justify-around items-center mb-4 py-3 px-4 bg-white shadow-md rounded-b-2xl gap-4"
+            style="background: linear-gradient(to bottom,rgb(255, 222, 138), rgb(255, 255, 131));"">
         <!-- 🔍 検索ボタン -->
-        <div data-target="search1" class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+        <div data-target=" search1"
+            class="flex-1 flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform"
             onclick="toggleModal(this)">
-            <div class="w-full max-w-[160px] h-14 flex items-center justify-center bg-blue-100 text-blue-600 rounded-lg shadow-md">
+            <div
+                class="w-full max-w-[160px] h-14 flex items-center justify-center bg-blue-100 text-blue-600 rounded-lg shadow-md">
                 <i class="fa-solid fa-magnifying-glass text-xl mr-2"></i>
                 <span class="text-sm font-medium">検索</span>
             </div>
@@ -118,13 +125,13 @@
 
         <!-- ⭐ お気に入りボタン -->
         <div class="flex-1 flex flex-col items-center justify-center cursor-pointer transition-transform"
-             id="favoriteButton" onclick="handleFavoriteButtonClick()">
+            id="favoriteButton" onclick="handleFavoriteButtonClick()">
             <div class="w-full max-w-[160px] h-14 flex items-center justify-center rounded-lg shadow-md"
                 id="favoriteButtonInner">
                 <i class="fa-solid fa-star text-xl mr-2"></i>
                 <span class="text-sm font-medium">お気に入り</span>
             </div>
-         </div>
+        </div>
     </div>
 
 
@@ -133,687 +140,722 @@
 
         <!-- サークルカード -->
         <div class="grid grid-cols-1 gap-4 mb-2">
-            <% circles.forEach(circle => { %>
+            <% circles.forEach(circle=> { %>
                 <div class="p-4 border border-gray-100 bg-white rounded-3xl shadow-lg hover:shadow-lg transition duration-300 cursor-pointer relative circle-card"
-                data-circle-id="<%= circle.id %>">
+                    data-circle-id="<%= circle.id %>">
 
-            <!-- 公認マーク -->
-                <% if (circle.tag.includes("公認")) { %>
-                    <div class="icon-container">
-                        <i class="fas fa-bookmark bg-gradient-to-r from-[#ffee00] via-[#ffcc00] to-[#ffbb00] bg-clip-text text-transparent drop-shadow-[0_4px_15px_rgba(255,220,50,0.85)]"></i>
-                        <span class="icon-text text-white">公認</span>
-                    </div>
-                <% } else if (circle.tag.includes("登録団体")) { %>
-                    <div class="icon-container">
-                        <i class="fas fa-bookmark  bg-gradient-to-r from-[#66ffe8]  to-[#40b8b4] bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(49,196,190,0.75)]"></i>
-                        <span class="icon-text text-white">登録</span>
-                    </div>
-                <% } %>
-                
-                
-
-                <!-- 上部: 写真 + 文字情報 -->
-                <div class="flex gap-4">
-                    <!-- 左側: 写真 -->
-                    <div class="flex flex-col w-32 relative">
-                        <% if (circle.topPhoto) { %>
-                            <div class="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden shadow-md">
-                                <img src="/uploads/<%= circle.topPhoto %>" 
-                                    alt="サークル画像" 
-                                    class="absolute inset-0 w-full h-full object-cover">
-                                
-                                <!-- お気に入りボタン（画像の右下） -->
-                                <div class="absolute bottom-1 right-1">
-                                    <input type="checkbox" id="favoriteCheckbox-<%= circle.id %>" class="hidden">
-                                    <label for="favoriteCheckbox-<%= circle.id %>" class="cursor-pointer">
-                                        <i id="favoriteIcon-<%= circle.id %>" class="fa-regular fa-star text-gray-400 text-xl"></i>
-                                    </label>
-                                </div>
+                    <!-- 公認マーク -->
+                    <% if (circle.tag.includes("公認")) { %>
+                        <div class="icon-container">
+                            <i
+                                class="fas fa-bookmark bg-gradient-to-r from-[#ffee00] via-[#ffcc00] to-[#ffbb00] bg-clip-text text-transparent drop-shadow-[0_4px_15px_rgba(255,220,50,0.85)]"></i>
+                            <span class="icon-text text-white">公認</span>
+                        </div>
+                        <% } else if (circle.tag.includes("登録団体")) { %>
+                            <div class="icon-container">
+                                <i
+                                    class="fas fa-bookmark  bg-gradient-to-r from-[#66ffe8]  to-[#40b8b4] bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(49,196,190,0.75)]"></i>
+                                <span class="icon-text text-white">登録</span>
                             </div>
-                        <% } %>
-                    </div>
-                    
-
-                    <!-- 右側: -->
-                    <div class="flex-1">
-                        <h5 class="text-xl font-bold line-clamp-3 overflow-hidden"><%= circle.circleName %></h5>
-                                        
-                        <!-- ジャンル -->
-                        <% if (circle && Object.keys(circle).length > 0) { %>
-                            <% if (circle.mainGenre || circle.subGenre) { %>
-                                <p class="mt-2 text-base border w-max border-gray-300 rounded px-1 text-bold text-gray-800">
-                                    <% if (["テニス", "軽音", "ボランティア", "国際交流", "イベント"].includes(circle.mainGenre)) { %>
-                                        <%= circle.mainGenre %>
-                                    <% } else if (circle.subGenre === "その他" && circle.other && circle.other.trim() !== "") { %>
-                                        <%= circle.other %>
-                                    <% } else if (circle.subGenre === "選択しない") { %>
-                                        <%= circle.mainGenre %>
-                                    <% } else { %>
-                                        <%= circle.subGenre || '' %>
-                                    <% } %>
-                                </p>
                             <% } %>
-                        <% } %>
-                        
-                        <!-- 人数 -->
-                        <p class="mt-1 text-sm text-gray-800">人数: <% if (circle.tag && circle.tag.includes("null1")) { %>
-                            未登録
-                        <% } else { %>
-                            <%= circle.parsedSlider1 %>人
-                        <% } %>
-                        </p>
 
-                        <!-- 活動地 -->
-                        <p class="mt-1 text-sm text-gray-800"> 活動地：<%= circle.location %></p>
 
-                </div>
-            </div>
-                    
-            <!-- コメント -->
-            <% if (circle.comment && circle.comment.trim() !== "") { %>
-                <!-- コメントセクション（データがある場合のみ表示） -->
-                <div class="relative mt-3">
-                    <!-- 鉛筆アイコン（左上固定） -->
-                    <i class="fas fa-pencil-alt text-sm absolute top-0 left-0 bg-gradient-to-r from-[#f5ce62] via-[#e43603] via-[#fa7199] to-[#e85a19] bg-clip-text text-transparent drop-shadow-[0_4px_15px_rgba(229,66,10,0.75)]"></i>
-                    
-                    <!-- コメントテキスト -->
-                    <p class="text-sm text-gray-700 line-clamp-3 overflow-hidden pl-4">
-                        <%= circle.comment %>
-                    </p>
-                </div>
-            <% } %>
 
-            <!-- タグ（写真＋テキストの下に横いっぱいに配置、横スクロール対応） -->
-            <% if (circle.tag) { %>
-                <div class="mt-2 w-full py-1 overflow-x-auto scrollbar-hide">
-                    <div class="flex flex-wrap gap-x-2 w-max">
-                        <% circle.tag.split(',').forEach(tag => { %>
-                            <% if (!["null1", "null2", "null3", "null4"].includes(tag.trim())) { %>
-                                <span class="border border-[#f5ce62] bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#ffc850] 
+                                <!-- 上部: 写真 + 文字情報 -->
+                                <div class="flex gap-4">
+                                    <!-- 左側: 写真 -->
+                                    <div class="flex flex-col w-32 relative">
+                                        <% if (circle.topPhoto) { %>
+                                            <div
+                                                class="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden shadow-md">
+                                                <img src="/uploads/<%= circle.topPhoto %>" alt="サークル画像"
+                                                    class="absolute inset-0 w-full h-full object-cover">
+
+                                                <!-- お気に入りボタン（画像の右下） -->
+                                                <div class="absolute bottom-1 right-1">
+                                                    <input type="checkbox" id="favoriteCheckbox-<%= circle.id %>"
+                                                        class="hidden">
+                                                    <label for="favoriteCheckbox-<%= circle.id %>"
+                                                        class="cursor-pointer">
+                                                        <i id="favoriteIcon-<%= circle.id %>"
+                                                            class="fa-regular fa-star text-gray-400 text-xl"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                    </div>
+
+
+                                    <!-- 右側: -->
+                                    <div class="flex-1">
+                                        <h5 class="text-xl font-bold line-clamp-3 overflow-hidden">
+                                            <%= circle.circleName %>
+                                        </h5>
+
+                                        <!-- ジャンル -->
+                                        <% if (circle && Object.keys(circle).length> 0) { %>
+                                            <% if (circle.mainGenre || circle.subGenre) { %>
+                                                <p
+                                                    class="mt-2 text-base border w-max border-gray-300 rounded px-1 text-bold text-gray-800">
+                                                    <% if (["テニス", "軽音" , "ボランティア" , "国際交流" , "イベント"
+                                                        ].includes(circle.mainGenre)) { %>
+                                                        <%= circle.mainGenre %>
+                                                            <% } else if (circle.subGenre==="その他" && circle.other &&
+                                                                circle.other.trim() !=="" ) { %>
+                                                                <%= circle.other %>
+                                                                    <% } else if (circle.subGenre==="選択しない" ) { %>
+                                                                        <%= circle.mainGenre %>
+                                                                            <% } else { %>
+                                                                                <%= circle.subGenre || '' %>
+                                                                                    <% } %>
+                                                </p>
+                                                <% } %>
+                                                    <% } %>
+
+                                                        <!-- 人数 -->
+                                                        <p class="mt-1 text-sm text-gray-800">人数: <% if (circle.tag &&
+                                                                circle.tag.includes("null1")) { %>
+                                                                未登録
+                                                                <% } else { %>
+                                                                    <%= circle.parsedSlider1 %>人
+                                                                        <% } %>
+                                                        </p>
+
+                                                        <!-- 活動地 -->
+                                                        <p class="mt-1 text-sm text-gray-800"> 活動地：<%= circle.location
+                                                                %>
+                                                        </p>
+
+                                    </div>
+                                </div>
+
+                                <!-- コメント -->
+                                <% if (circle.comment && circle.comment.trim() !=="" ) { %>
+                                    <!-- コメントセクション（データがある場合のみ表示） -->
+                                    <div class="relative mt-3">
+                                        <!-- 鉛筆アイコン（左上固定） -->
+                                        <i
+                                            class="fas fa-pencil-alt text-sm absolute top-0 left-0 bg-gradient-to-r from-[#f5ce62] via-[#e43603] via-[#fa7199] to-[#e85a19] bg-clip-text text-transparent drop-shadow-[0_4px_15px_rgba(229,66,10,0.75)]"></i>
+
+                                        <!-- コメントテキスト -->
+                                        <p class="text-sm text-gray-700 line-clamp-3 overflow-hidden pl-4">
+                                            <%= circle.comment %>
+                                        </p>
+                                    </div>
+                                    <% } %>
+
+                                        <!-- タグ（写真＋テキストの下に横いっぱいに配置、横スクロール対応） -->
+                                        <% if (circle.tag) { %>
+                                            <div class="mt-2 w-full py-1 overflow-x-auto scrollbar-hide">
+                                                <div class="flex flex-wrap gap-x-2 w-max">
+                                                    <% circle.tag.split(',').forEach(tag=> { %>
+                                                        <% if (!["null1", "null2" , "null3" , "null4"
+                                                            ].includes(tag.trim())) { %>
+                                                            <span class="border border-[#f5ce62] bg-gradient-to-r from-[#f5ce62] via-[hsl(353,100%,86%)] to-[#ffc850] 
                                             text-white px-3 py-1 opacity-90 rounded-full text-sm 
                                             shadow-lg transition duration-300 cursor-pointer">
-                                    <%= tag.trim() %>
-                                </span>
-                            <% } %>
-                        <% }) %>
-                    </div>
+                                                                <%= tag.trim() %>
+                                                            </span>
+                                                            <% } %>
+                                                                <% }) %>
+                                                </div>
+                                            </div>
+                                            <% } %>
+
                 </div>
-            <% } %>
-      
-            </div>
-            <% }) %>
+                <% }) %>
         </div>
         <% if (!isFavorite) { %>
             <div class="flex justify-center space-x-2 mt-5">
-                <% if (page > 1) { %>
+                <% if (page> 1) { %>
                     <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page - 1 %>"
-                       class="px-4 py-2 bg-gray-300 rounded">前へ</a>
-                <% } %>
-        
-                <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page + 1 %>"
-                   class="px-4 py-2 bg-blue-500 text-white rounded">次へ</a>
+                        class="px-4 py-2 bg-gray-300 rounded">前へ</a>
+                    <% } %>
+
+                        <a href="?<%= Object.entries(query || {}).map(([key, value]) => key !== 'page' ? key + '=' + encodeURIComponent(value) : '').filter(Boolean).join('&') %>&page=<%= page + 1 %>"
+                            class="px-4 py-2 bg-blue-500 text-white rounded">次へ</a>
             </div>
-        <% } %>
-        
-    
-    
-    <style>
-    /* <!-- スクロールバーを非表示にするCSS --> */
-       
-            .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-            }
-            .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-
-   /* お気に入りボタン */
-            .icon-container {
-            position: absolute;
-            top: -5px;
-            left: 16px;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px; /* アイコンのサイズと同じ */
-            height: 40px; /* アイコンのサイズと同じ */
-            font-size: 40px;
-            
-            color: rgb(255, 255, 126);
-        }
-
-        .icon {
-            position: absolute;
-            inset: 0; /* アイコンを `icon-container` にぴったり重ねる */
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            
-        }
-
-        .icon-text {
-            writing-mode: vertical-rl; /* 縦書き */
-            text-orientation: upright; /* 文字を正しく表示 */
-            white-space: nowrap; /* 折り返しを防ぐ */
-            letter-spacing: 4px; /* 文字の間隔を広げる */
-            position: absolute;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: center;
-            top: 45%;
-            transform: translateY(-50%);
-        }
-        </style>
-            
+            <% } %>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const favoriteCheckboxes = document.querySelectorAll("input[id^='favoriteCheckbox-']");
-            const favoriteIcons = document.querySelectorAll("i[id^='favoriteIcon-']");
 
-        
-        // ✅ カードクリック時にのみページ遷移
-        document.querySelectorAll(".circle-card").forEach(card => {
-            card.addEventListener("click", function (event) {
-                const circleId = card.getAttribute("data-circle-id");
+                <style>
+                    /* <!-- スクロールバーを非表示にするCSS --> */
 
-                // ✅ クリックされた要素が `input` や `i` でない場合のみ遷移
-                if (!event.target.closest("input[id^='favoriteCheckbox-'], i[id^='favoriteIcon-']")) {
-                    window.location.href = `/circle/${circleId}`;
-                }
-            });
-        });
-
-        // お気に入りボタン色
-            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
-            function updateFavoriteButton(circleId) {
-                const checkbox = document.getElementById(`favoriteCheckbox-${circleId}`);
-                const icon = document.getElementById(`favoriteIcon-${circleId}`);
-                const isFavorite = favorites.includes(circleId);
-
-                if (checkbox) checkbox.checked = isFavorite;
-                if (icon) {
-                    icon.classList.toggle("fa-solid", isFavorite);
-                    icon.classList.toggle("fa-regular", !isFavorite);
-                    icon.classList.toggle("text-yellow-400", isFavorite);
-                }
-            }
-
-            // ✅ 初期状態を適用　お気に入り登録
-            favoriteCheckboxes.forEach(checkbox => {
-                const circleId = checkbox.id.replace("favoriteCheckbox-", "");
-                updateFavoriteButton(circleId);
-
-                checkbox.addEventListener("change", function () {
-                    if (checkbox.checked) {
-                        favorites.push(circleId);
-                    } else {
-                        favorites = favorites.filter(id => id !== circleId);
+                    .scrollbar-hide::-webkit-scrollbar {
+                        display: none;
                     }
-                    localStorage.setItem("favorites", JSON.stringify(favorites));
-                    updateFavoriteButton(circleId);
-                });
-            });
-        });
-        
-        // ヘッダー下のお気に入りボタン
-        document.addEventListener("DOMContentLoaded", function () {
-            updateFavoriteButton();
-        });
 
-        function updateFavoriteButton() {
-            const button = document.getElementById("favoriteButtonInner");
+                    .scrollbar-hide {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                    }
 
-            if (window.location.pathname === "/searchFav") {
-                // お気に入り一覧ページの場合、ボタンの色を濃くする
-                button.classList.add("bg-yellow-500", "text-white");
-                button.classList.remove("bg-yellow-100", "text-yellow-600");
-            } else {
-                // ホームページの場合、ボタンの色を薄くする
-                button.classList.add("bg-yellow-100", "text-yellow-600");
-                button.classList.remove("bg-yellow-500", "text-white");
-            }
-        }
+                    /* お気に入りボタン */
+                    .icon-container {
+                        position: absolute;
+                        top: -5px;
+                        left: 16px;
+                        z-index: 5;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        /* アイコンのサイズと同じ */
+                        height: 40px;
+                        /* アイコンのサイズと同じ */
+                        font-size: 40px;
 
-        function handleFavoriteButtonClick() {
-            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+                        color: rgb(255, 255, 126);
+                    }
 
-            if (window.location.pathname === "/searchFav") {
-                // 現在のページが /searchFav の場合、ホームに戻る
-                window.location.href = "/";
-                return;
-            }
+                    .icon {
+                        position: absolute;
+                        inset: 0;
+                        /* アイコンを `icon-container` にぴったり重ねる */
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
 
-            if (favorites.length === 0) {
-                alert("お気に入りはありません。");
-                return;
-            }
+                    }
 
-            console.log("送信するIDリスト:", favorites);
+                    .icon-text {
+                        writing-mode: vertical-rl;
+                        /* 縦書き */
+                        text-orientation: upright;
+                        /* 文字を正しく表示 */
+                        white-space: nowrap;
+                        /* 折り返しを防ぐ */
+                        letter-spacing: 4px;
+                        /* 文字の間隔を広げる */
+                        position: absolute;
+                        font-size: 12px;
+                        font-weight: bold;
+                        text-align: center;
+                        top: 45%;
+                        transform: translateY(-50%);
+                    }
+                </style>
 
-            let params = new URLSearchParams();
-            favorites.forEach(id => params.append('id', id));
-
-            window.location.href = `/searchFav?${params.toString()}`;
-        }
 
 
-    </script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const favoriteCheckboxes = document.querySelectorAll("input[id^='favoriteCheckbox-']");
+                        const favoriteIcons = document.querySelectorAll("i[id^='favoriteIcon-']");
 
 
+                        // ✅ カードクリック時にのみページ遷移
+                        document.querySelectorAll(".circle-card").forEach(card => {
+                            card.addEventListener("click", function (event) {
+                                const circleId = card.getAttribute("data-circle-id");
 
-
-
-    <!-- 新しいページ -->
-    <div id="search1" class=" overflow-y-auto fixed bottom-0 left-0 w-full h-full bg-white rounded-t-2xl shadow-lg transform translate-y-full transition-transform duration-300 z-50">
-
-        <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-
-            <button class="mx-6 my-6 text-gray-700 hover:text-gray-900 mb-4 text-2xl"
-                data-target="search1" onclick="toggleModal(this)">
-                <i class="fa-solid fa-xmark"></i>
-             </button>
-
-             <!-- メインジャンルコーナー -->
-            <div class="space-y-6 p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto">
-
-                <form action="/search" id="filter-form" method="get">
-                                
-                    <!-- メインジャンル選択 -->
-                    <div class="mb-6">
-                        <fieldset class="checkbox-group">
-                            <legend class="checkbox-group-legend text-gray-700 text-lg font-bold mb-6">メインジャンルを選択</legend>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        
-                                <!-- テニス -->
-                                <div class="tile">
-                                    <input type="checkbox" id="tennis" name="searchGenre" value="テニス" class="hidden peer">
-                                    <label for="tennis" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-table-tennis text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">テニス</h6>
-                                    </label>
-                                </div>
-                        
-                                <!-- 軽音 -->
-                                <div class="tile">
-                                    <input type="checkbox" id="lightMusic" name="searchGenre" value="軽音" class="hidden peer">
-                                    <label for="lightMusic" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-guitar text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">軽音</h6>
-                                    </label>
-                                </div>
-                        
-                                <!-- スポーツ -->
-                                <div class="tile">
-                                    <input type="checkbox" id="sports" name="searchGenre" value="スポーツ" class="hidden peer">
-                                    <label for="sports" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-dumbbell text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">スポーツ</h6>
-                                    </label>
-                                </div>
-                        
-                                <!-- イベント -->
-                                <div class="tile">
-                                    <input type="checkbox" id="events" name="searchGenre" value="イベント" class="hidden peer">
-                                    <label for="events" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-tent text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">イベント</h6>
-                                    </label>
-                                </div>
-                        
-                                <!-- 文化系 -->
-                                <div class="tile">
-                                    <input type="checkbox" id="culture" name="searchGenre" value="文化系" class="hidden peer">
-                                    <label for="culture"class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-book text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">文化系</h6>
-                                    </label>
-                                </div>
-                                
-                                <!-- 部活 -->
-                                <div class="tile">
-                                    <input type="checkbox" id="club" name="searchGenre" value="部活" class="hidden peer">
-                                    <label for="club" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-users text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">部活</h6>
-                                    </label>
-                                </div>
-                        
-                                <!-- ダンス -->
-                                <div class="tile">
-                                    <input type="checkbox" id="dance" name="searchGenre" value="ダンス" class="hidden peer">
-                                    <label for="dance" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-music text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">ダンス</h6>
-                                    </label>
-                                </div>
-                                
-                        
-                                <!-- サッカー -->
-                                <div class="tile">
-                                    <input type="checkbox" id="soccerFutsal" name="searchGenre" value="サッカー・フットサル" class="hidden peer">
-                                    <label for="soccerFutsal" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-futbol text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">サッカー</h6>
-                                    </label>
-                                </div>
-                                
-                        
-                                <!-- 国際交流 -->
-                                <div class="tile">
-                                    <input type="checkbox" id="global" name="searchGenre" value="国際交流" class="hidden peer">
-                                    <label for="global"class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-globe text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">国際交流</h6>
-                                    </label>
-                                </div>
-
-                                <!-- ボランティア -->
-                                <div class="tile">
-                                    <input type="checkbox" id="volunteer" name="searchGenre" value="ボランティア" class="hidden peer">
-                                    <label for="volunteer" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
-                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
-                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
-                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
-                                        <i class="fas fa-hands-helping text-3xl"></i>
-                                        <h6 class="mt-2 text-lg font-semibold">ボランティア</h6>
-                                    </label>
-                                </div>
-                        
-                            </div>
-                        </fieldset>  
-                    </div>
-
-                    <!-- 一つだけチェック -->
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const mainGenreCheckboxes = document.querySelectorAll('input[name="searchGenre"]');
-                        
-                            mainGenreCheckboxes.forEach(checkbox => {
-                                checkbox.addEventListener("change", function () {
-                                    if (this.checked) {
-                                        mainGenreCheckboxes.forEach(otherCheckbox => {
-                                            if (otherCheckbox !== this) {
-                                                otherCheckbox.checked = false;
-                                            }
-                                        });
-                                    }
-                                });
+                                // ✅ クリックされた要素が `input` や `i` でない場合のみ遷移
+                                if (!event.target.closest("input[id^='favoriteCheckbox-'], i[id^='favoriteIcon-']")) {
+                                    window.location.href = `/circle/${circleId}`;
+                                }
                             });
                         });
-                        </script>
-            </div>                
 
-                    <!-- カテゴリ選択 -->
-            <div class="space-y-6 p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto  border-b border-t border-gray-300">
+                        // お気に入りボタン色
+                        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-                <div>
-                    <p class="block text-lg text-gray-700 font-bold mt-4 mb-12">優先表示を選択</p>
-                    <div class="container2 mb-12">
-                        <ul class="ks-cboxtags flex flex-wrap gap-4">
-                            <!-- 大人数 -->
-                            <li>
-                                <input type="checkbox" id="largeFun" name="bigTag"
-                                    value="大人数でわいわい, 出会い豊富, わいわい賑やかサークル, 飲み会で盛り上がる, ノリがいい, アウトドア向き" 
-                                    class="hidden peer">
-                                <label for="largeFun" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    大人数
-                                </label>
-                            </li>
-                    
-                            <!-- 少人数 -->
-                            <li>
-                                <input type="checkbox" id="smallFriendly" name="bigTag"
-                                    value="小人数で仲良し, 少なめの人数でアットホーム, 穏やかサークル" 
-                                    class="hidden peer">
-                                <label for="smallFriendly" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    少人数
-                                </label>
-                            </li>
-                        <br>
-                            <!-- 賑やかサークル -->
-                            <li>
-                                <input type="checkbox" id="crazy" name="bigTag"
-                                    value="大人数でわいわい, 出会い豊富, 飲み会で盛り上がる" 
-                                    class="hidden peer">
-                                <label for="crazy" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    賑やかサークル
-                                </label>
-                            </li>
-                    
-                            <!-- 穏やかサークル -->
-                            <li>
-                                <input type="checkbox" id="easy" name="bigTag"
-                                    value="穏やかサークル, インドア向き" 
-                                    class="hidden peer">
-                                <label for="easy" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    穏やかサークル
-                                </label>
-                            </li>
-                    
-                            <!-- 出会い豊富 -->
-                            <li>
-                                <input type="checkbox" id="manyMeetups" name="bigTag"
-                                    value="大人数でわいわい, 合宿あり, 出会い豊富, イケメンが多い, 美女が多い, 飲み会で盛り上がる" 
-                                    class="hidden peer">
-                                <label for="manyMeetups" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    出会い豊富
-                                </label>
-                            </li>
-                    
-                            <!-- 友達つくるならここ -->
-                            <li>
-                                <input type="checkbox" id="makeFriends" name="bigTag"
-                                    value="大人数でわいわい, 合宿あり, 出会い豊富, イベント多い, ノリがいい, わいわい賑やかサークル, 飲み会で盛り上がる, 楽しめればOK" 
-                                    class="hidden peer">
-                                <label for="makeFriends" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    友達つくるならここ
-                                </label>
-                            </li>
-                    
-                            <!-- 国際交流 -->
-                            <li>
-                                <input type="checkbox" id="meetDifferentCountries" name="bigTag"
-                                    value="国際交流できる, 留学生多め, 言語を学べる" 
-                                    class="hidden peer">
-                                <label for="meetDifferentCountries" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    国際交流できる
-                                </label>
-                            </li>
-                    
-                            <!-- ガクチカ作れる -->
-                            <li>
-                                <input type="checkbox" id="careerBoost" name="bigTag"
-                                    value="ガクチカ作れる, ボランティア, 就活で役立つ, 国際交流できる, 表彰経験あり" 
-                                    class="hidden peer">
-                                <label for="careerBoost" class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
-                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
-                                    ガクチカ作れる
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
-                    
+                        function updateFavoriteButton(circleId) {
+                            const checkbox = document.getElementById(`favoriteCheckbox-${circleId}`);
+                            const icon = document.getElementById(`favoriteIcon-${circleId}`);
+                            const isFavorite = favorites.includes(circleId);
 
-                        
+                            if (checkbox) checkbox.checked = isFavorite;
+                            if (icon) {
+                                icon.classList.toggle("fa-solid", isFavorite);
+                                icon.classList.toggle("fa-regular", !isFavorite);
+                                icon.classList.toggle("text-yellow-400", isFavorite);
+                            }
+                        }
+
+                        // ✅ 初期状態を適用　お気に入り登録
+                        favoriteCheckboxes.forEach(checkbox => {
+                            const circleId = checkbox.id.replace("favoriteCheckbox-", "");
+                            updateFavoriteButton(circleId);
+
+                            checkbox.addEventListener("change", function () {
+                                if (checkbox.checked) {
+                                    favorites.push(circleId);
+                                } else {
+                                    favorites = favorites.filter(id => id !== circleId);
+                                }
+                                localStorage.setItem("favorites", JSON.stringify(favorites));
+                                updateFavoriteButton(circleId);
+                            });
+                        });
+                    });
+
+                    // ヘッダー下のお気に入りボタン
+                    document.addEventListener("DOMContentLoaded", function () {
+                        updateFavoriteButton();
+                    });
+
+                    function updateFavoriteButton() {
+                        const button = document.getElementById("favoriteButtonInner");
+
+                        if (window.location.pathname === "/searchFav") {
+                            // お気に入り一覧ページの場合、ボタンの色を濃くする
+                            button.classList.add("bg-yellow-500", "text-white");
+                            button.classList.remove("bg-yellow-100", "text-yellow-600");
+                        } else {
+                            // ホームページの場合、ボタンの色を薄くする
+                            button.classList.add("bg-yellow-100", "text-yellow-600");
+                            button.classList.remove("bg-yellow-500", "text-white");
+                        }
+                    }
+
+                    function handleFavoriteButtonClick() {
+                        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+                        if (window.location.pathname === "/searchFav") {
+                            // 現在のページが /searchFav の場合、ホームに戻る
+                            window.location.href = "/";
+                            return;
+                        }
+
+                        if (favorites.length === 0) {
+                            alert("お気に入りはありません。");
+                            return;
+                        }
+
+                        console.log("送信するIDリスト:", favorites);
+
+                        let params = new URLSearchParams();
+                        favorites.forEach(id => params.append('id', id));
+
+                        window.location.href = `/searchFav?${params.toString()}`;
+                    }
+
+
+                </script>
+
+
+
+
+
+                <!-- 新しいページ -->
+                <div id="search1"
+                    class=" overflow-y-auto fixed bottom-0 left-0 w-full h-full bg-white rounded-t-2xl shadow-lg transform translate-y-full transition-transform duration-300 z-50">
+
+                    <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+                        <button class="mx-6 my-6 text-gray-700 hover:text-gray-900 mb-4 text-2xl" data-target="search1"
+                            onclick="toggleModal(this)">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+
+                        <!-- メインジャンルコーナー -->
+                        <div class="space-y-6 p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto">
+
+                            <form action="/search" id="filter-form" method="get">
+
+                                <!-- メインジャンル選択 -->
+                                <div class="mb-6">
+                                    <fieldset class="checkbox-group">
+                                        <legend class="checkbox-group-legend text-gray-700 text-lg font-bold mb-6">
+                                            メインジャンルを選択</legend>
+                                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+                                            <!-- テニス -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="tennis" name="searchGenre" value="テニス"
+                                                    class="hidden peer">
+                                                <label for="tennis" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-table-tennis text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">テニス</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- 軽音 -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="lightMusic" name="searchGenre" value="軽音"
+                                                    class="hidden peer">
+                                                <label for="lightMusic" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-guitar text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">軽音</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- スポーツ -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="sports" name="searchGenre" value="スポーツ"
+                                                    class="hidden peer">
+                                                <label for="sports" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-dumbbell text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">スポーツ</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- イベント -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="events" name="searchGenre" value="イベント"
+                                                    class="hidden peer">
+                                                <label for="events" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-tent text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">イベント</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- 文化系 -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="culture" name="searchGenre" value="文化系"
+                                                    class="hidden peer">
+                                                <label for="culture" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-book text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">文化系</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- 部活 -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="club" name="searchGenre" value="部活"
+                                                    class="hidden peer">
+                                                <label for="club" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-users text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">部活</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- ダンス -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="dance" name="searchGenre" value="ダンス"
+                                                    class="hidden peer">
+                                                <label for="dance" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-music text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">ダンス</h6>
+                                                </label>
+                                            </div>
+
+
+                                            <!-- サッカー -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="soccerFutsal" name="searchGenre"
+                                                    value="サッカー・フットサル" class="hidden peer">
+                                                <label for="soccerFutsal" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-futbol text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">サッカー</h6>
+                                                </label>
+                                            </div>
+
+
+                                            <!-- 国際交流 -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="global" name="searchGenre" value="国際交流"
+                                                    class="hidden peer">
+                                                <label for="global" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-globe text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">国際交流</h6>
+                                                </label>
+                                            </div>
+
+                                            <!-- ボランティア -->
+                                            <div class="tile">
+                                                <input type="checkbox" id="volunteer" name="searchGenre" value="ボランティア"
+                                                    class="hidden peer">
+                                                <label for="volunteer" class="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg cursor-pointer 
+                                    peer-checked:bg-gradient-to-r peer-checked:from-[#f5ce62] peer-checked:via-[hsl(353,100%,86%)] peer-checked:to-[#ffc850] 
+                                    peer-checked:border-[#f5ce62] peer-checked:text-white peer-checked:scale-105 
+                                        transition-all duration-300 ease-in-out shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-hands-helping text-3xl"></i>
+                                                    <h6 class="mt-2 text-lg font-semibold">ボランティア</h6>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- 一つだけチェック -->
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        const mainGenreCheckboxes = document.querySelectorAll('input[name="searchGenre"]');
+
+                                        mainGenreCheckboxes.forEach(checkbox => {
+                                            checkbox.addEventListener("change", function () {
+                                                if (this.checked) {
+                                                    mainGenreCheckboxes.forEach(otherCheckbox => {
+                                                        if (otherCheckbox !== this) {
+                                                            otherCheckbox.checked = false;
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+                        </div>
+
+                        <!-- カテゴリ選択 -->
+                        <div
+                            class="space-y-6 p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto  border-b border-t border-gray-300">
+
+                            <div>
+                                <p class="block text-lg text-gray-700 font-bold mt-4 mb-12">優先表示を選択</p>
+                                <div class="container2 mb-12">
+                                    <ul class="ks-cboxtags flex flex-wrap gap-4">
+                                        <!-- 大人数 -->
+                                        <li>
+                                            <input type="checkbox" id="largeFun" name="bigTag"
+                                                value="大人数でわいわい, 出会い豊富, わいわい賑やかサークル, 飲み会で盛り上がる, ノリがいい, アウトドア向き"
+                                                class="hidden peer">
+                                            <label for="largeFun"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                大人数
+                                            </label>
+                                        </li>
+
+                                        <!-- 少人数 -->
+                                        <li>
+                                            <input type="checkbox" id="smallFriendly" name="bigTag"
+                                                value="小人数で仲良し, 少なめの人数でアットホーム, 穏やかサークル" class="hidden peer">
+                                            <label for="smallFriendly"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                少人数
+                                            </label>
+                                        </li>
+                                        <br>
+                                        <!-- 賑やかサークル -->
+                                        <li>
+                                            <input type="checkbox" id="crazy" name="bigTag"
+                                                value="大人数でわいわい, 出会い豊富, 飲み会で盛り上がる" class="hidden peer">
+                                            <label for="crazy"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                賑やかサークル
+                                            </label>
+                                        </li>
+
+                                        <!-- 穏やかサークル -->
+                                        <li>
+                                            <input type="checkbox" id="easy" name="bigTag" value="穏やかサークル, インドア向き"
+                                                class="hidden peer">
+                                            <label for="easy"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                穏やかサークル
+                                            </label>
+                                        </li>
+
+                                        <!-- 出会い豊富 -->
+                                        <li>
+                                            <input type="checkbox" id="manyMeetups" name="bigTag"
+                                                value="大人数でわいわい, 合宿あり, 出会い豊富, イケメンが多い, 美女が多い, 飲み会で盛り上がる"
+                                                class="hidden peer">
+                                            <label for="manyMeetups"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                出会い豊富
+                                            </label>
+                                        </li>
+
+                                        <!-- 友達つくるならここ -->
+                                        <li>
+                                            <input type="checkbox" id="makeFriends" name="bigTag"
+                                                value="大人数でわいわい, 合宿あり, 出会い豊富, イベント多い, ノリがいい, わいわい賑やかサークル, 飲み会で盛り上がる, 楽しめればOK"
+                                                class="hidden peer">
+                                            <label for="makeFriends"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                友達つくるならここ
+                                            </label>
+                                        </li>
+
+                                        <!-- 国際交流 -->
+                                        <li>
+                                            <input type="checkbox" id="meetDifferentCountries" name="bigTag"
+                                                value="国際交流できる, 留学生多め, 言語を学べる" class="hidden peer">
+                                            <label for="meetDifferentCountries"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                国際交流できる
+                                            </label>
+                                        </li>
+
+                                        <!-- ガクチカ作れる -->
+                                        <li>
+                                            <input type="checkbox" id="careerBoost" name="bigTag"
+                                                value="ガクチカ作れる, ボランティア, 就活で役立つ, 国際交流できる, 表彰経験あり" class="hidden peer">
+                                            <label for="careerBoost"
+                                                class="flex items-center px-5 py-2 bg-white border-2 border-gray-300 text-gray-500 rounded-full cursor-pointer shadow-md transition 
+                                    peer-checked:bg-blue-500 peer-checked:border-blue-400 peer-checked:text-white peer-checked:scale-105 peer-checked:shadow-lg">
+                                                ガクチカ作れる
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
+
+                            </div>
+                            <!-- 検索ボタン -->
+                            <div class="text-center my-6">
+                                <button id="searchButton"
+                                    class="btn-hover color-1 w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-md transition duration-200">
+                                    検索
+                                </button>
+                            </div>
+                        </div>
                 </div>
-                <!-- 検索ボタン -->
-                <div class="text-center my-6">
-                    <button 
-                        id="searchButton" 
-                        class="btn-hover color-1 w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow-md transition duration-200"
-                    >
-                        検索
-                    </button>
-                </div>
-        </div>
-    </div>
 </body>
+
 </html>
- 
+
 <style>
-                
-        .buttons {
-            margin: 10%;
-            text-align: center;
-        }
+    .buttons {
+        margin: 10%;
+        text-align: center;
+    }
 
-        .btn-hover {
-            width: 200px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            cursor: pointer;
-            margin: 20px;
-            height: 55px;
-            text-align:center;
-            border: none;
-            background-size: 300% 100%;
+    .btn-hover {
+        width: 200px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        margin: 20px;
+        height: 55px;
+        text-align: center;
+        border: none;
+        background-size: 300% 100%;
 
-            border-radius: 50px;
-            -o-transition: all .4s ease-in-out;
-            -webkit-transition: all .4s ease-in-out;
-            transition: all .4s ease-in-out;
-        }
+        border-radius: 50px;
+        -o-transition: all .4s ease-in-out;
+        -webkit-transition: all .4s ease-in-out;
+        transition: all .4s ease-in-out;
+    }
 
-        .btn-hover:hover {
-            background-position: 100% 0;
-            -o-transition: all .4s ease-in-out;
-            -webkit-transition: all .4s ease-in-out;
-            transition: all .4s ease-in-out;
-        }
+    .btn-hover:hover {
+        background-position: 100% 0;
+        -o-transition: all .4s ease-in-out;
+        -webkit-transition: all .4s ease-in-out;
+        transition: all .4s ease-in-out;
+    }
 
-        .btn-hover:focus {
-            outline: none;
-        }
+    .btn-hover:focus {
+        outline: none;
+    }
 
-        .btn-hover.color-2 {
-            background-image: linear-gradient(to right, #25aae1, #66ffe8, #40b8b4, #2bb673);
-            box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
-        }
+    .btn-hover.color-2 {
+        background-image: linear-gradient(to right, #25aae1, #66ffe8, #40b8b4, #2bb673);
+        box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+    }
 
 
-        .btn-hover.color-1 {
-            background-image: linear-gradient(to right, #f5ce62, hsl(17, 100%, 82%), #eba789);
-            box-shadow: 0 4px 15px 0 rgba(239, 194, 81, 0.75);
-        }
-
+    .btn-hover.color-1 {
+        background-image: linear-gradient(to right, #f5ce62, hsl(17, 100%, 82%), #eba789);
+        box-shadow: 0 4px 15px 0 rgba(239, 194, 81, 0.75);
+    }
 
 
 
 
 
-        /* 必要なカスタムスタイル */
-        .container2 {
-            max-width: 640px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 13px;
-        }
 
-        /* リストの基本スタイル */
-        ul.ks-cboxtags {
-            list-style: none;
-        }
-        ul.ks-cboxtags li {
-            display: inline;
-        }
+    /* 必要なカスタムスタイル */
+    .container2 {
+        max-width: 640px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 13px;
+    }
 
-        /* チェックボックスラベルの基本スタイル */
-        ul.ks-cboxtags li label {
-            display: inline-block;
-            background-color: rgba(255, 255, 255, .9);
-            border: 2px solid rgba(139, 139, 139, .3);
-            color: #adadad;
-            border-radius: 25px;
-            white-space: nowrap;
-            padding: 8px 12px;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            transition: all .2s;
-        }
+    /* リストの基本スタイル */
+    ul.ks-cboxtags {
+        list-style: none;
+    }
 
-        /* チェック時のスタイル */
-        ul.ks-cboxtags li input[type="checkbox"]:checked + label {
-            border-color: #6dfec7;
-            background-color: #58ebb1;
-            color: #fff;
-            transition: all .2s;
-        }
+    ul.ks-cboxtags li {
+        display: inline;
+    }
 
-        /* アイコンの変化 */
-        ul.ks-cboxtags li label::before {
-            display: inline-block;
-            font-family: "Font Awesome 5 Free";
-            font-weight: 900;
-            font-size: 12px;
-            content: "\f067";
-            transition: transform .3s ease-in-out;
-        }
+    /* チェックボックスラベルの基本スタイル */
+    ul.ks-cboxtags li label {
+        display: inline-block;
+        background-color: rgba(255, 255, 255, .9);
+        border: 2px solid rgba(139, 139, 139, .3);
+        color: #adadad;
+        border-radius: 25px;
+        white-space: nowrap;
+        padding: 8px 12px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: all .2s;
+    }
 
-        ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
-            content: "\f00c";
-            transform: rotate(-360deg);
-            transition: transform .3s ease-in-out;
-        }
+    /* チェック時のスタイル */
+    ul.ks-cboxtags li input[type="checkbox"]:checked+label {
+        border-color: #6dfec7;
+        background-color: #58ebb1;
+        color: #fff;
+        transition: all .2s;
+    }
 
+    /* アイコンの変化 */
+    ul.ks-cboxtags li label::before {
+        display: inline-block;
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 12px;
+        content: "\f067";
+        transition: transform .3s ease-in-out;
+    }
 
-
+    ul.ks-cboxtags li input[type="checkbox"]:checked+label::before {
+        content: "\f00c";
+        transform: rotate(-360deg);
+        transition: transform .3s ease-in-out;
+    }
 </style>
 
 <script>
     document.getElementById("filter-form")?.addEventListener("submit", function (event) {
-      event.preventDefault();
-    
-      const searchGenres = Array.from(document.querySelectorAll('input[name="searchGenre"]:checked'))
-        .map(el => el.value);
-      const params = new URLSearchParams();
-      searchGenres.forEach(genre => params.append('searchGenre', genre));
-    
-      console.log('Search Parameters:', params.toString());
-    
-      window.location.href = `/search?${params.toString()}`;
+        event.preventDefault();
+
+        const searchGenres = Array.from(document.querySelectorAll('input[name="searchGenre"]:checked'))
+            .map(el => el.value);
+        const params = new URLSearchParams();
+        searchGenres.forEach(genre => params.append('searchGenre', genre));
+
+        console.log('Search Parameters:', params.toString());
+
+        window.location.href = `/search?${params.toString()}`;
     });
-   
+
 
     function toggleModal(element) {
         const targetId = element.getAttribute('data-target');
@@ -830,37 +872,36 @@
     }
 
     document.getElementById("searchname")?.addEventListener("submit", function (event) {
-      event.preventDefault();
-    
-      const name = document.getElementById("inputname")?.value.trim();
-      const params = new URLSearchParams();
-    
-      if (name) params.append('name', name);
-    
-      console.log('Search Parameters:', params.toString());
-    
-      window.location.href = `/search?${params.toString()}`;
-    });
-    
-    document.getElementById("filter-form")?.addEventListener("submit", function (event) {
-      event.preventDefault();
-    
-      const searchGenres = Array.from(document.querySelectorAll('input[name="searchGenre"]:checked'))
-        .map(el => el.value);
-       // 🔹 `bigTag` のチェックボックスの値を取得（`.split(',')` は不要）
-    const tags = Array.from(document.querySelectorAll('input[name="bigTag"]:checked'))
-    .flatMap(el => el.value.split(',').map(tag => tag.trim())); // 空白を除去
-       
-    
-      const params = new URLSearchParams();
-      searchGenres.forEach(genre => params.append('searchGenre', genre));
-      tags.forEach(tag => params.append('bigTag', tag));
+        event.preventDefault();
 
-      console.log("優先表示選択されたタグ:", tags);
-      console.log('検索パラメータ:', params.toString());
-    
-      window.location.href = `/search?${params.toString()}`;
+        const name = document.getElementById("inputname")?.value.trim();
+        const params = new URLSearchParams();
+
+        if (name) params.append('name', name);
+
+        console.log('Search Parameters:', params.toString());
+
+        window.location.href = `/search?${params.toString()}`;
+    });
+
+    document.getElementById("filter-form")?.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const searchGenres = Array.from(document.querySelectorAll('input[name="searchGenre"]:checked'))
+            .map(el => el.value);
+        // 🔹 `bigTag` のチェックボックスの値を取得（`.split(',')` は不要）
+        const tags = Array.from(document.querySelectorAll('input[name="bigTag"]:checked'))
+            .flatMap(el => el.value.split(',').map(tag => tag.trim())); // 空白を除去
+
+
+        const params = new URLSearchParams();
+        searchGenres.forEach(genre => params.append('searchGenre', genre));
+        tags.forEach(tag => params.append('bigTag', tag));
+
+        console.log("優先表示選択されたタグ:", tags);
+        console.log('検索パラメータ:', params.toString());
+
+        window.location.href = `/search?${params.toString()}`;
     });
 
 </script>
-    

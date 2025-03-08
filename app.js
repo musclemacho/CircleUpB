@@ -13,8 +13,23 @@ const nl2br = (str) => {
     return str.replace(/\n/g, "<br>");
 };
 const helmet = require("helmet");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
+
 // 環境変数ファイルの読み込み
 const config = require("./config");
+
+// ログインしているかどうかを判別する。
+const ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+};
+
 
 app.use(
     helmet({
@@ -23,6 +38,7 @@ app.use(
 );
 
 const cors = require("cors");
+const { arrowAltRight, user } = require("fontawesome");
 app.use(cors({
     origin: "*",  // すべてのオリジンを許可
     methods: "GET,POST,PUT,DELETE,OPTIONS",
@@ -34,24 +50,107 @@ app.options("*", (req, res) => {
     res.sendStatus(200);
 });
 
-// 改行コード<br>
 app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 
 app.use(session({
-    secret: "your_secret_key",  // 任意のシークレットキー
+    secret: config.session_Key,  // 任意のシークレットキー
     resave: false,  // セッションが変更されたときのみ保存
     saveUninitialized: false,  // 未初期化のセッションは保存しない
+    rolling: true,
     cookie: {
         secure: false,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
         sameSite: "lax",  // CSRF対策
-        maxAge: 30 * 60 * 1000 // セッションの有効期限: 30分
+        maxAge: 7 * 24 * 60 * 60 * 1000 // セッションの有効期限: 1週間
     }
 }));
 
+
+// passportの初期化
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new GoogleStrategy(
+    {
+        clientID: config.google.clientId,
+        clientSecret: config.google.clientSecret,
+        callbackURL: config.google.callbackUrl
+    },
+    (accessToken, refreshToken, profile, done) => {
+        const { id, displayName, emails } = profile;
+        const email = emails[0].value;
+        console.log(profile.id)
+
+        db.query(
+            "SELECT * FROM Users WHERE googleId = ?",
+            [id],
+            (err, results) => {
+                if (err) return done(err);
+
+                if (results.length > 0) {
+                    return done(null, results[0]); // 既存ユーザー
+                } else {
+                    // 新規ユーザー登録
+                    db.query(
+                        "INSERT INTO Users (googleId, name, email) VALUES (?, ?, ?)",
+                        [id, displayName, email],
+                        (err, result) => {
+                            if (err) return done(err);
+                            return done(null, { id: result.insertId, googleId: id, name: displayName, email });
+                        }
+                    );
+                }
+            }
+        );
+    }
+));
+
+// ユーザーのシリアライズ & デシリアライズ
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+// クライアントにisAuthentificatedを渡す
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.isAuthenticated();
+    res.locals.user = req.user || null; // ユーザー情報をEJSに渡す
+    next();
+});
+
+// ------ここから下はルートハンドラー--------
+// ログイン画面
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+// ログアウトエンドポイント
+app.post("/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("ログアウトエラーが発生しました");
+            return res.status(500).json({ message: "ログアウトに失敗しました" });
+        }
+        // 
+        req.session = null;
+        // connect.sidはsidが格納されるデフォのオブジェクト名
+        res.clearCookie("connect.sid");
+        res.redirect("/");
+    });
+
+})
+
+// Google OAuth ログインエンドポイント
+app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
+// oauth認証成功時の処理→→/auth/google/callbackにルーティングされる
+app.get("/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: "/" }),
+    (req, res) => {
+        res.redirect("/");
+    }
+);
 
 // リクエストをログに記録するミドルウェア
 app.use((req, res, next) => {
@@ -95,7 +194,8 @@ const upload = multer({
 const db = mysql.createConnection({
     host: config.db.host,
     user: config.db.user,
-    password: config.db.password
+    password: config.db.password,
+    database: "Circles"
 });
 
 
@@ -273,14 +373,22 @@ async function compressImage(inputPath, filename) {
 
 
 // 🔹 サークルの登録処理
-app.post('/circles', upload.fields([
+app.post('/circles', ensureAuthenticated, upload.fields([
     { name: 'topPhoto', maxCount: 1 },
     { name: 'subPhotos', maxCount: 5 },
     { name: 'calendarPhotos', maxCount: 3 }
 ]), async (req, res) => {
+
+    if (!req.user) {
+        res.status(401).json({ eroor: "認証が必要です" });
+    }
     console.log("=== Request Body ===", req.body);
     console.log("=== Request Headers ===", req.headers);
     console.log("=== Uploaded Files ===", req.files);
+    console.log("=== uploader ===", req.user.id, req.user.displayName);
+
+    const userId = req.user.id;
+    const userGoogleId = req.user.googleId;
 
     const {
         circleName, mainGenre, subGenre, comment, other, tag, description, password,
@@ -328,8 +436,8 @@ app.post('/circles', upload.fields([
             circleName, mainGenre, subGenre, comment, other, tag, description, password,
             admissionFee, annualFee, location, instagram,
             parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
-            topPhoto, subPhotos, calendarPhotos
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            topPhoto, subPhotos, calendarPhotos , created_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.query(
@@ -339,7 +447,7 @@ app.post('/circles', upload.fields([
             description, password,
             parsedAdmissionFee, parsedAnnualFee, location, instagram,
             parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
-            compressedTopPhoto, compressedSubPhotos.join(','), compressedCalendarPhotos.join(',')
+            compressedTopPhoto, compressedSubPhotos.join(','), compressedCalendarPhotos.join(','), userGoogleId
         ],
         (err, result) => {
             if (err) {
@@ -555,7 +663,7 @@ app.get("/searchFav", (req, res) => {
 
 
 // 各ページのルート
-app.get('/newCircle', (req, res) => {
+app.get('/newCircle', ensureAuthenticated, (req, res) => {
     res.render('newCircle', { title: '新しいサークル掲載' });
 });
 
