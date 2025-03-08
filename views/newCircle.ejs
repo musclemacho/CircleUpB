@@ -1,1322 +1,1346 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"> -->
     <link rel="stylesheet" href="/cropperjs/cropper.min.css">
     <script defer src="/cropperjs/cropper.min.js"></script>
-    
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q114JWPDXL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-Q114JWPDXL');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q114JWPDXL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-<link rel="stylesheet" href="/fontawesome/css/all.min.css">
+        gtag('config', 'G-Q114JWPDXL');
+    </script>
+
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
 
 
 
-<link href="/output.css" rel="stylesheet">
-    <title>サークル掲載ページ</title>
+    <link href="/output.css" rel="stylesheet">
+    <title>あなたのサークルを登録しよう！|サークルパーク</title>
 </head>
+
 <body class="font-sans">
 
     <!-- ヘッダー -->
     <header class="text-black pt-3 pb-2 px-4 flex justify-between items-center sticky top-0 z-50"
-    style="background: linear-gradient(to bottom, rgb(255, 210, 121), rgb(255, 222, 138));">
-    <div class="z-50">
-        <button onclick="history.back()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
-            <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
-        </button>
-    </div>
-    <h1 class="text-lg font-bold p-2">サークルを掲載する</h1>
-    <div class="flex items-center gap-3">
-        <!-- ホームアイコン -->
-        <a href="/" class="text-black hover:text-gray-600">
-            <i class="fa-solid fa-house text-lg"></i>
-        </a>
-    </div>
-   
-</header>
-   <!-- フォーム -->
-   <form id="circle-form" enctype="multipart/form-data" class="bg-white max-w-lg mx-auto rounded-lg shadow-md">
-    
- 
-    <!-- トップ画像 -->
-    <div class="p-6 border-t border-gray-300">
-        <div class="mb-6 flex justify-center relative flex-col">
-            <label for="topPhoto" class="block text-gray-700 font-bold my-4">トップ画像　<span class="text-red-500 opacity-80">＊必須</span></label>
-            <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl border border-[#ddc4ff] shadow-lg  relative cursor-pointer" id="topPhotoUpload" style="padding-top: 100%;">
-                <span class="absolute inset-0 flex items-center justify-center text-4xl text-gray-400">+</span>
-                <img id="topPhotoPreview" src="#" alt="プレビュー画像" class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
-                <button id="removeTopPhoto" class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1 hidden">×</button>
-            </div>
-            <input type="file" id="topPhoto" name="topPhoto" accept="image/*" class="hidden" required>
+        style="background: linear-gradient(to bottom, rgb(255, 210, 121), rgb(255, 222, 138));">
+        <div class="z-50">
+            <button onclick="history.back()" class=" text-gray-800 font-bold py-2 px-1 flex items-center">
+                <i class="fa-solid fa-arrow-left mr-2"></i> 戻る
+            </button>
+        </div>
+        <h1 class="text-lg font-bold p-2">サークルを掲載する</h1>
+        <div class="flex items-center gap-3">
+            <!-- ホームアイコン -->
+            <a href="/" class="text-black hover:text-gray-600">
+                <i class="fa-solid fa-house text-lg"></i>
+            </a>
         </div>
 
-        <!-- サブ画像 -->
-        <div class="mb-12">
-            <label for="subPhotos" class="block text-gray-700 font-bold my-5">サブ画像（最大5枚）</label>
-            <div id="subPhotoUpload" class="flex gap-2 flex-wrap">
-                <div id="addSubPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg border border-[#ddc4ff] shadow-lg  flex items-center justify-center cursor-pointer">
-                    <span class="text-2xl text-gray-400">+</span>
-                    <input type="file" id="subPhotos" accept="image/*" class="hidden">
+    </header>
+    <!-- フォーム -->
+    <form id="circle-form" enctype="multipart/form-data" class="bg-white max-w-lg mx-auto rounded-lg shadow-md">
+
+
+        <!-- トップ画像 -->
+        <div class="p-6 border-t border-gray-300">
+            <div class="mb-6 flex justify-center relative flex-col">
+                <label for="topPhoto" class="block text-gray-700 font-bold my-4">トップ画像　<span
+                        class="text-red-500 opacity-80">＊必須</span></label>
+                <div class="w-full max-w-[450px] bg-gray-100 rounded-2xl border border-[#ddc4ff] shadow-lg  relative cursor-pointer"
+                    id="topPhotoUpload" style="padding-top: 100%;">
+                    <span class="absolute inset-0 flex items-center justify-center text-4xl text-gray-400">+</span>
+                    <img id="topPhotoPreview" src="#" alt="プレビュー画像"
+                        class="absolute inset-0 w-full h-full object-cover hidden rounded-2xl">
+                    <button id="removeTopPhoto"
+                        class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1 hidden">×</button>
                 </div>
+                <input type="file" id="topPhoto" name="topPhoto" accept="image/*" class="hidden" required>
             </div>
-            <div id="subPhotoPreviewContainer" class="flex gap-2 flex-wrap mt-4">
-                <!-- プレビュー画像がここに追加される -->
-            </div>
-        </div>
-    </div>
-    </div>
-<!-- トリミングモーダル -->
-<div id="cropModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-50">
-    <div class="bg-white w-full max-w-[450px] h-screen rounded-2xl shadow-lg flex flex-col">
-        <!-- 画像エリア（上部の無駄なスペースを削除） -->
-        <div class="relative w-full flex-1 max-h-[85vh] flex justify-center items-center">
-            <img id="cropImage" class="w-full h-auto max-h-full object-contain">
-        </div>
-        <!-- ボタンエリア（画面の下部に固定） -->
-        <div class="absolute inset-x-0 bottom-0 bg-white py-3 shadow-lg flex justify-center space-x-4">
-            <button id="cropCancel" class="px-5 py-2 bg-gray-500 text-white rounded-lg">キャンセル</button>
-            <button id="cropSave" class="px-5 py-2 bg-blue-500 text-white rounded-lg">保存</button>
-        </div>
-    </div>
-</div>
 
-
-
-
-
-<div class="p-6 border-t border-gray-300">
-        <!-- サークル名 -->
-        <div class="form-group my-5">
-            <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊必須</span></label>
-            <input type="text" id="circleName" name="circleName" placeholder="例: CirclePark" required
-                   class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
-        </div>
-
-
-         
-
-       <!-- メインジャンル -->
-       <div class="my-7">
-        <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
-        <select id="mainGenre" name="mainGenre"       required              class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
-
-
-            <option value="">選択してください</option>
-            <option value="スポーツ">スポーツ</option>
-            <option value="テニス">テニス</option>
-            <option value="ダンス">ダンス</option>
-            <option value="軽音">軽音</option>
-            <option value="文化系">文化系</option>
-            <option value="イベント">イベント</option>
-            <option value="ボランティア">ボランティア</option>
-            <option value="国際交流">国際交流</option>
-            <option value="部活">部活</option>
-        </select>
-    </div>
-
-    <!-- サブジャンル -->
-    <div class="my-7">
-        <label for="subGenre" class="block text-gray-700 font-bold mb-4">サブジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
-        <select id="subGenre" name="subGenre"       required             class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
-
-            <option value="">メインジャンルを選択してください</option>
-        </select>
-    </div>
-
-    <script>
-   document.addEventListener("DOMContentLoaded", function () {
-    const mainGenre = document.getElementById("mainGenre");
-    const subGenre = document.getElementById("subGenre");
-
-    // 初期状態でサブジャンルを無効化
-    subGenre.disabled = true;
-
-    const subOptions = {
-        "スポーツ": ["スポーツ", "イベント", "サッカー・フットサル", "テニス", "バスケットボール", "バレーボール", "バドミントン", "スキー・スノボー", "ハンドボール", "ラグビー", "陸上", "野球", "空手", "柔道", "弓道", "自転車", "お出かけ・旅行", "その他", "選択しない"],
-        "テニス": ["イベント", "スポーツ"],
-        "ダンス": ["イベント", "よさこい", "その他", "選択しない"],  // 余分なスペース削除
-        "軽音": ["イベント", "選択しない"],
-        "文化系": ["委員会・研究会", "広告", "料理", "アカペラ・合唱", "ボランティア", "IT・eスポーツ", "その他", "選択しない"],
-        "イベント": ["お出かけ・旅行", "スポーツ", "ボランティア", "国際交流", "その他", "選択しない"],
-        "ボランティア": ["お出かけ・旅行", "国際交流", "イベント", "その他", "選択しない"],
-        "国際交流": ["お出かけ・旅行", "イベント", "ボランティア", "その他", "選択しない"],
-        "部活": ["アメフト部", "ラグビー部", "サッカー部", "バスケ部", "バレーボール部", "ハンドボール部", "野球部", "ソフトボール部", "テニス部", "バドミントン部", "陸上部", "フットサル部", "ダンス部", "よさこい部", "スキー部", "軽音・バンド部", "アカペラ・合唱部", "写真部", "その他", "選択しない"]
-    };
-
-    mainGenre.addEventListener("change", function () {
-        const selectedGenre = mainGenre.value;
-        subGenre.innerHTML = "<option value=''>サブジャンルを選択</option>";
-
-        if (selectedGenre && subOptions[selectedGenre]) {
-            subOptions[selectedGenre].forEach(sub => {
-                const option = document.createElement("option");
-                option.value = sub;
-                option.textContent = sub;
-                subGenre.appendChild(option);
-            });
-            subGenre.disabled = false;
-        } else {
-            subGenre.disabled = true;
-            subGenre.value = ""; // 無効化時に値をリセット
-        }
-    });
-});
-
-    </script>
-        <!-- その他 -->
-        <div class="my-4">
-            <label for="other" class="block text-gray-700 font-bold mb-4">その他 （その他を選択した場合のみ入力）</label>
-            <input type="text" id="other" name="other" placeholder="例: ラクロス" maxlength="20"
-            class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
-        </div>
-
-</div>
-<div class="p-6 mb-6 border-t border-gray-300">
-        <!-- サークル選択グラフ -->
-        <h2 class="text-lg font-bold my-10">サークル選択グラフ</h2>
-        <ul class="ks-cboxtags">
-        <div class="space-y-7">
-            <!-- スライダー: 人数 -->
-            <div>
-                <div class="flex items-center justify-between">
-                    <label for="slider1" class="block text-lg text-gray-700 font-bold mb-4">人数</label>
-                    
-                    <!-- 🔹 チェックボックス -->
-                    <div class="flex items-center">
-                       <li>
-                        <input type="checkbox" id="toggle1" name="tag" value="null1" class="hidden peer" onchange="toggleSlider('toggle1', 'slider1', 'slider1Value', '150人')">
-                        <label for="toggle1"class="shadow-md">
-                            未選択
-                        </label>
-                    </li>
+            <!-- サブ画像 -->
+            <div class="mb-12">
+                <label for="subPhotos" class="block text-gray-700 font-bold my-5">サブ画像（最大5枚）</label>
+                <div id="subPhotoUpload" class="flex gap-2 flex-wrap">
+                    <div id="addSubPhotoButton"
+                        class="w-20 h-20 bg-gray-100 rounded-lg border border-[#ddc4ff] shadow-lg  flex items-center justify-center cursor-pointer">
+                        <span class="text-2xl text-gray-400">+</span>
+                        <input type="file" id="subPhotos" accept="image/*" class="hidden">
                     </div>
                 </div>
-                <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
-                    <span>1人</span> 
-                     <span id="slider1Value"class="text-lg text-[#eba789] font-bold">150人</span>
-                    <span>300人以上</span>
-                </div>
-                <input type="range" id="slider1" class="w-full slider" min="0" max="300" step="10" value="150">
-                <div class="text-center text-[#eba789] font-bold mt-2">
-                  
-                </div>
-               
-            </div>
-        
-            <!-- スライダー: 男女比 -->
-            <div>
-                <div class="flex items-center justify-between">
-                    <label for="slider2" class="block text-gray-700 text-lg font-bold mb-4">男女比</label>
-                    <div class="flex items-center">
-                        <li>
-                            <input type="checkbox" id="toggle2" name="tag" value="null2" class="hidden peer" onchange="toggleSlider('toggle2', 'slider2', 'slider2Value', '5:5')">
-                            <label for="toggle2"class="shadow-md">
-                                未選択
-                            </label>
-                        </li>
-                    </div>
-                </div>
-                <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
-                    <span>男</span>
-                    <span id="slider2Value"class="text-lg text-[#eba789] font-bold">5:5</span>
-                    <span>女</span>
-                </div>
-                <input type="range" id="slider2" class="w-full slider" min="0" max="10" value="5">
-                <div class="text-center text-[#eba789] font-bold mt-2">
+                <div id="subPhotoPreviewContainer" class="flex gap-2 flex-wrap mt-4">
+                    <!-- プレビュー画像がここに追加される -->
                 </div>
             </div>
-        
-            <!-- スライダー: 活動頻度 -->
-            <div>
-                <div class="flex items-center justify-between">
-                    <label for="slider3" class="block text-gray-700 text-lg font-bold mb-4">活動頻度</label>
-                    <div class="flex items-center">
-                        <li>
-                            <input type="checkbox" id="toggle3" name="tag" value="null3" class="hidden peer" onchange="toggleSlider('toggle3', 'slider3', 'slider3Value', '２か月に一回')">
-                            <label for="toggle3"class="shadow-md">
-                                未選択
-                            </label>
-                        </li>
-                    </div>
-                </div>
-                <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
-                    <span>年数回</span>
-                    <span id="slider3Value"class="text-lg text-[#eba789] font-bold"></span>
-                    <span>ほぼ毎日</span>
-                </div>
-                <input type="range" id="slider3" class="w-full slider" min="0" max="100" value="50">
-                <div class="text-center text-[#eba789] font-bold mt-2">
-                </div>
-            </div>
-        
-          <!-- スライダー: 雰囲気 -->
-        <div>
-            <div class="flex items-center justify-between">
-                <label for="slider4" class="block text-gray-700 text-lg font-bold mb-4">雰囲気</label>
-                <div class="flex items-center">
-                    <li>
-                        <input type="checkbox" id="toggle4" name="tag" value="null4" class="hidden peer" onchange="toggleSlider('toggle4', 'slider4', 'slider4Value', '50%')">
-                        <label for="toggle4"class="shadow-md">
-                            未選択
-                        </label>
-                    </li>
-                </div>
-            </div>
-            <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
-                <span>真面目</span>
-                <span id="slider4Value" class="text-lg text-[#eba789] font-bold">50%</span>
-                <span>全力エンジョイ</span>
-            </div>
-            <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="50">
         </div>
-</div>
-</ul>
-</div>
-<style>
-    /* 共通のスライダー設定 */
-.slider {
--webkit-appearance: none;
-appearance: none;
-width: 100%;
-height: 8px;
-border-radius: 4px;
-outline: none;
+        </div>
+        <!-- トリミングモーダル -->
+        <div id="cropModal"
+            class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col items-center justify-center z-50">
+            <div class="bg-white w-full max-w-[450px] h-screen rounded-2xl shadow-lg flex flex-col">
+                <!-- 画像エリア（上部の無駄なスペースを削除） -->
+                <div class="relative w-full flex-1 max-h-[85vh] flex justify-center items-center">
+                    <img id="cropImage" class="w-full h-auto max-h-full object-contain">
+                </div>
+                <!-- ボタンエリア（画面の下部に固定） -->
+                <div class="absolute inset-x-0 bottom-0 bg-white py-3 shadow-lg flex justify-center space-x-4">
+                    <button id="cropCancel" class="px-5 py-2 bg-gray-500 text-white rounded-lg">キャンセル</button>
+                    <button id="cropSave" class="px-5 py-2 bg-blue-500 text-white rounded-lg">保存</button>
+                </div>
+            </div>
+        </div>
 
-}
 
 
 
-.slider::-moz-range-thumb {
-width: 18px;
-height: 18px;
-background: #eba789;
-border-radius: 50%;
-cursor: pointer;
-}
 
-/* 初期状態で左側に色を付ける */
-.slider {
-background: linear-gradient(to right, #eba789 0%, #ffc062 0%, #fec86b 0%);
-}
+        <div class="p-6 border-t border-gray-300">
+            <!-- サークル名 -->
+            <div class="form-group my-5">
+                <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span
+                        class="text-red-500 opacity-80">＊必須</span></label>
+                <input type="text" id="circleName" name="circleName" placeholder="例: CirclePark" required
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+            </div>
 
-       </style>
-            
+
+
+
+            <!-- メインジャンル -->
+            <div class="my-7">
+                <label for="mainGenre" class="block text-gray-700 font-bold mb-4">ジャンルを選択　<span
+                        class="text-red-500 opacity-80">＊必須</span></label>
+                <select id="mainGenre" name="mainGenre" required
+                    class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
+
+                    <option value="">選択してください</option>
+                    <option value="スポーツ">スポーツ</option>
+                    <option value="テニス">テニス</option>
+                    <option value="ダンス">ダンス</option>
+                    <option value="軽音">軽音</option>
+                    <option value="文化系">文化系</option>
+                    <option value="イベント">イベント</option>
+                    <option value="ボランティア">ボランティア</option>
+                    <option value="国際交流">国際交流</option>
+                    <option value="部活">部活</option>
+                </select>
+            </div>
+
+            <!-- サブジャンル -->
+            <div class="my-7">
+                <label for="subGenre" class="block text-gray-700 font-bold mb-4">サブジャンルを選択　<span
+                        class="text-red-500 opacity-80">＊必須</span></label>
+                <select id="subGenre" name="subGenre" required
+                    class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
+                    <option value="">メインジャンルを選択してください</option>
+                </select>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const mainGenre = document.getElementById("mainGenre");
+                    const subGenre = document.getElementById("subGenre");
+
+                    // 初期状態でサブジャンルを無効化
+                    subGenre.disabled = true;
+
+                    const subOptions = {
+                        "スポーツ": ["スポーツ", "イベント", "サッカー・フットサル", "テニス", "バスケットボール", "バレーボール", "バドミントン", "スキー・スノボー", "ハンドボール", "ラグビー", "陸上", "野球", "空手", "柔道", "弓道", "自転車", "お出かけ・旅行", "その他", "選択しない"],
+                        "テニス": ["イベント", "スポーツ"],
+                        "ダンス": ["イベント", "よさこい", "その他", "選択しない"],  // 余分なスペース削除
+                        "軽音": ["イベント", "選択しない"],
+                        "文化系": ["委員会・研究会", "広告", "料理", "アカペラ・合唱", "ボランティア", "IT・eスポーツ", "その他", "選択しない"],
+                        "イベント": ["お出かけ・旅行", "スポーツ", "ボランティア", "国際交流", "その他", "選択しない"],
+                        "ボランティア": ["お出かけ・旅行", "国際交流", "イベント", "その他", "選択しない"],
+                        "国際交流": ["お出かけ・旅行", "イベント", "ボランティア", "その他", "選択しない"],
+                        "部活": ["アメフト部", "ラグビー部", "サッカー部", "バスケ部", "バレーボール部", "ハンドボール部", "野球部", "ソフトボール部", "テニス部", "バドミントン部", "陸上部", "フットサル部", "ダンス部", "よさこい部", "スキー部", "軽音・バンド部", "アカペラ・合唱部", "写真部", "その他", "選択しない"]
+                    };
+
+                    mainGenre.addEventListener("change", function () {
+                        const selectedGenre = mainGenre.value;
+                        subGenre.innerHTML = "<option value=''>サブジャンルを選択</option>";
+
+                        if (selectedGenre && subOptions[selectedGenre]) {
+                            subOptions[selectedGenre].forEach(sub => {
+                                const option = document.createElement("option");
+                                option.value = sub;
+                                option.textContent = sub;
+                                subGenre.appendChild(option);
+                            });
+                            subGenre.disabled = false;
+                        } else {
+                            subGenre.disabled = true;
+                            subGenre.value = ""; // 無効化時に値をリセット
+                        }
+                    });
+                });
+
+            </script>
+            <!-- その他 -->
+            <div class="my-4">
+                <label for="other" class="block text-gray-700 font-bold mb-4">その他 （その他を選択した場合のみ入力）</label>
+                <input type="text" id="other" name="other" placeholder="例: ラクロス" maxlength="20"
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+            </div>
+
+        </div>
+        <div class="p-6 mb-6 border-t border-gray-300">
+            <!-- サークル選択グラフ -->
+            <h2 class="text-lg font-bold my-10">サークル選択グラフ</h2>
+            <ul class="ks-cboxtags">
+                <div class="space-y-7">
+                    <!-- スライダー: 人数 -->
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label for="slider1" class="block text-lg text-gray-700 font-bold mb-4">人数</label>
+
+                            <!-- 🔹 チェックボックス -->
+                            <div class="flex items-center">
+                                <li>
+                                    <input type="checkbox" id="toggle1" name="tag" value="null1" class="hidden peer"
+                                        onchange="toggleSlider('toggle1', 'slider1', 'slider1Value', '150人')">
+                                    <label for="toggle1" class="shadow-md">
+                                        未選択
+                                    </label>
+                                </li>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
+                            <span>1人</span>
+                            <span id="slider1Value" class="text-lg text-[#eba789] font-bold">150人</span>
+                            <span>300人以上</span>
+                        </div>
+                        <input type="range" id="slider1" class="w-full slider" min="0" max="300" step="10" value="150">
+                        <div class="text-center text-[#eba789] font-bold mt-2">
+
+                        </div>
+
+                    </div>
+
+                    <!-- スライダー: 男女比 -->
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label for="slider2" class="block text-gray-700 text-lg font-bold mb-4">男女比</label>
+                            <div class="flex items-center">
+                                <li>
+                                    <input type="checkbox" id="toggle2" name="tag" value="null2" class="hidden peer"
+                                        onchange="toggleSlider('toggle2', 'slider2', 'slider2Value', '5:5')">
+                                    <label for="toggle2" class="shadow-md">
+                                        未選択
+                                    </label>
+                                </li>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
+                            <span>男</span>
+                            <span id="slider2Value" class="text-lg text-[#eba789] font-bold">5:5</span>
+                            <span>女</span>
+                        </div>
+                        <input type="range" id="slider2" class="w-full slider" min="0" max="10" value="5">
+                        <div class="text-center text-[#eba789] font-bold mt-2">
+                        </div>
+                    </div>
+
+                    <!-- スライダー: 活動頻度 -->
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label for="slider3" class="block text-gray-700 text-lg font-bold mb-4">活動頻度</label>
+                            <div class="flex items-center">
+                                <li>
+                                    <input type="checkbox" id="toggle3" name="tag" value="null3" class="hidden peer"
+                                        onchange="toggleSlider('toggle3', 'slider3', 'slider3Value', '２か月に一回')">
+                                    <label for="toggle3" class="shadow-md">
+                                        未選択
+                                    </label>
+                                </li>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
+                            <span>年数回</span>
+                            <span id="slider3Value" class="text-lg text-[#eba789] font-bold"></span>
+                            <span>ほぼ毎日</span>
+                        </div>
+                        <input type="range" id="slider3" class="w-full slider" min="0" max="100" value="50">
+                        <div class="text-center text-[#eba789] font-bold mt-2">
+                        </div>
+                    </div>
+
+                    <!-- スライダー: 雰囲気 -->
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label for="slider4" class="block text-gray-700 text-lg font-bold mb-4">雰囲気</label>
+                            <div class="flex items-center">
+                                <li>
+                                    <input type="checkbox" id="toggle4" name="tag" value="null4" class="hidden peer"
+                                        onchange="toggleSlider('toggle4', 'slider4', 'slider4Value', '50%')">
+                                    <label for="toggle4" class="shadow-md">
+                                        未選択
+                                    </label>
+                                </li>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline text-sm text-gray-500 my-3">
+                            <span>真面目</span>
+                            <span id="slider4Value" class="text-lg text-[#eba789] font-bold">50%</span>
+                            <span>全力エンジョイ</span>
+                        </div>
+                        <input type="range" id="slider4" class="w-full slider" min="0" max="100" value="50">
+                    </div>
+                </div>
+            </ul>
+        </div>
+        <style>
+            /* 共通のスライダー設定 */
+            .slider {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 100%;
+                height: 8px;
+                border-radius: 4px;
+                outline: none;
+
+            }
+
+
+
+            .slider::-moz-range-thumb {
+                width: 18px;
+                height: 18px;
+                background: #eba789;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+            /* 初期状態で左側に色を付ける */
+            .slider {
+                background: linear-gradient(to right, #eba789 0%, #ffc062 0%, #fec86b 0%);
+            }
+        </style>
+
 
 
         <script>
 
-document.addEventListener("DOMContentLoaded", function () {
-    const sliders = document.querySelectorAll(".slider");
+            document.addEventListener("DOMContentLoaded", function () {
+                const sliders = document.querySelectorAll(".slider");
 
-    sliders.forEach(slider => {
-        function updateSliderBackground() {
-            let value = slider.value;
-            let min = slider.min;
-            let max = slider.max;
-            let percentage = ((value - min) / (max - min)) * 100; // 0% - 100%
+                sliders.forEach(slider => {
+                    function updateSliderBackground() {
+                        let value = slider.value;
+                        let min = slider.min;
+                        let max = slider.max;
+                        let percentage = ((value - min) / (max - min)) * 100; // 0% - 100%
 
-            slider.style.background = `linear-gradient(to right, #fec86b ${percentage}%, #eba789 ${percentage}%, #fff ${percentage}%)`;
-        }
-
-        // 初期値設定
-        updateSliderBackground();
-
-        // スライダーの値が変更されたら背景を更新
-        slider.addEventListener("input", updateSliderBackground);
-    });
-});
-
-
-
-
-           function toggleSlider(toggleId, sliderId, valueId, defaultValue) {
-    const toggle = document.getElementById(toggleId);
-    const slider = document.getElementById(sliderId);
-    const valueDisplay = document.getElementById(valueId);
-  
-
-    if (toggle.checked) {
-        slider.disabled = true;  
-        valueDisplay.textContent = "選択なし";
-       
-
-    } else {
-        slider.disabled = false;
-        slider.value = slider.dataset.default; // 初期値を適用
-        valueDisplay.textContent = defaultValue;
-
-    }
-    }
-
-
-    
-    // 人数スライダー
-    const slider1 = document.getElementById('slider1');
-const slider1Value = document.getElementById('slider1Value');
-
-slider1.addEventListener('input', () => {
-    if (slider1.value == 300) {
-        slider1Value.textContent = "300人以上";
-    } else {
-        slider1Value.textContent = slider1.value + "人";
-    }
-});
-
-    // 活動頻度スライダー
-    const activityFrequency = ['不定期', '年一回', '半年に一回', '３か月に一回', '２か月に一回', '月一', '月２', '週一', 'ほぼ毎日'];
-    const slider3 = document.getElementById('slider3');
-    const slider3Value = document.getElementById('slider3Value');
-    slider3.addEventListener('input', () => {
-        const index = Math.round(slider3.value / 12.5);
-        slider3Value.textContent = activityFrequency[index];
-    });
-
-    // 男女比スライダー
-    const slider2 = document.getElementById('slider2');
-    const slider2Value = document.getElementById('slider2Value');
-    slider2.addEventListener('input', () => {
-        const index = Math.round(slider2.value);
-        const femaleRatio = 10 - index;
-        const maleRatio = index;
-        slider2Value.textContent = `${maleRatio}:${femaleRatio}`;
-    });
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const slider4 = document.getElementById("slider4");
-        const slider4Value = document.getElementById("slider4Value");
-
-        slider4.addEventListener("input", () => {
-            slider4Value.textContent = slider4.value + "%";
-        });
-    });
-
-    // 初期値設定
-    slider3.dispatchEvent(new Event('input'));
-     </script>
-
-
-
-
-
-       <!-- フォーム -->
-       <div class="p-6 mb-6 border-t border-gray-300">
-
-        <h2 class="text-lg font-bold my-10">タグ選択</h2>
-        <div>
-
-            
-            <h3 class="text-lg font-bold my-8">公認・登録団体の場合はチェック</h3>
-            <ul class="ks-cboxtags flex flex-wrap gap-4">
-              
-             <li>
-                <div>  
-                    <input type="checkbox" id="officialCircle" name="tag" value="公認" class="hidden peer">
-                    <label for="officialCircle"class="shadow-md">
-                        公認
-                    </label>
-                </div>
-            </li>
-                </li>
-             <li>
-<div>
-                    <input type="checkbox" id="certifiedCircle" name="tag" value="登録団体" class="hidden peer">
-                    <label for="certifiedCircle"class="shadow-md">
-                        登録団体
-                    </label>
-                </div>
-</li>
-                <h3 class="text-lg font-bold my-7 mt-4">サークルの雰囲気・規模</h3><span></span>
-             <li>
-<div>
-                    <input type="checkbox" id="smallFriendly" name="tag" value="少人数で仲良し" class="hidden peer">
-                    <label for="smallFriendly"class="shadow-md 
-                   ">
-                        少人数で仲良し
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="largeFun" name="tag" value="大人数でわいわい" class="hidden peer">
-                    <label for="largeFun"class="shadow-md 
-                   ">
-                        大人数でわいわい
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="hasCamps" name="tag" value="合宿あり" class="hidden peer">
-                    <label for="hasCamps"class="shadow-md 
-                   ">
-                        合宿あり
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="richMeetup" name="tag" value="出会い豊富" class="hidden peer">
-                    <label for="richMeetup"class="shadow-md 
-                   ">
-                        出会い豊富
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="manyEvents" name="tag" value="イベント多い" class="hidden peer">
-                    <label for="manyEvents"class="shadow-md 
-                   ">
-                        イベント多い
-                    </label>
-                </div>
-</li>
-  
-<li>
-    <div>
-                        <input type="checkbox" id="anything" name="tag" value="何でもできる" class="hidden peer">
-                        <label for="anything"class="shadow-md 
-                       ">
-                            何でもできる
-                        </label>
-                    </div>
-    </li>
-             <li>
-<div>
-                    <input type="checkbox" id="calmCircle" name="tag" value="穏やかサークル" class="hidden peer">
-                    <label for="calmCircle"class="shadow-md 
-                   ">
-                        穏やかサークル
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="livelyCircle" name="tag" value="ノリがいい" class="hidden peer">
-                    <label for="livelyCircle"class="shadow-md 
-                   ">
-                        ノリがいい
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="smallHomey" name="tag" value="少人数でアットホーム" class="hidden peer">
-                    <label for="smallHomey"class="shadow-md 
-                   ">
-                        少人数でアットホーム
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="livelyBig" name="tag" value="全力エンジョイ" class="hidden peer">
-                    <label for="livelyBig"class="shadow-md 
-                   ">
-                        全力エンジョイ
-                    </label>
-                </div>
-</li>
-       
-</li>
-            <h3 class="text-lg font-bold mb-6 mt-6">活動スタイル・メンバー</h3>
-            <div class="flex flex-wrap gap-4">
-             <li>
-<div>
-                    <input type="checkbox" id="moreBoys" name="tag" value="男子多め" class="hidden peer">
-                    <label for="moreBoys"class="shadow-md 
-                   ">
-                        男子多め
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="moreGirls" name="tag" value="女子多め" class="hidden peer">
-                    <label for="moreGirls"class="shadow-md 
-                   ">
-                        女子多め
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="balancedGender" name="tag" value="男女のバランスがいい" class="hidden peer">
-                    <label for="balancedGender"class="shadow-md 
-                   ">
-                        男女のバランスがいい
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="handsomeGuys" name="tag" value="イケメンが多い" class="hidden peer">
-                    <label for="handsomeGuys"class="shadow-md 
-                   ">
-                        イケメンが多い
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="prettyGirls" name="tag" value="美女が多い" class="hidden peer">
-                    <label for="prettyGirls"class="shadow-md 
-                   ">
-                        美女が多い
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="indoor" name="tag" value="インドア向き" class="hidden peer">
-                    <label for="indoor"class="shadow-md 
-                   ">
-                        インドア向き
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="outdoor" name="tag" value="アウトドア向き" class="hidden peer">
-                    <label for="outdoor"class="shadow-md 
-                   ">
-                        アウトドア向き
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="drinksOk" name="tag" value="ソフドリ全然OK!" class="hidden peer">
-                    <label for="drinksOk"class="shadow-md 
-                   ">
-                        ソフドリ全然OK!
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="drinkingParty" name="tag" value="飲み会で盛り上がる" class="hidden peer">
-                    <label for="drinkingParty"class="shadow-md 
-                   ">
-                        飲み会で盛り上がる
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="experienced" name="tag" value="経験者多め" class="hidden peer">
-                    <label for="experienced"class="shadow-md 
-                   ">
-                        経験者多め
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="beginnersWelcome" name="tag" value="初心者大歓迎" class="hidden peer">
-                    <label for="beginnersWelcome"class="shadow-md 
-                   ">
-                        初心者大歓迎
-                    </label>
-                </div>
-</li>
-<li>
-    <div>
-                        <input type="checkbox" id="internationalStudents" name="tag" value="留学生多め" class="hidden peer">
-                        <label for="internationalStudents"class="shadow-md 
-                       ">
-                            留学生多め
-                        </label>
-                    </div>
-                    </li>
-           
-            </div>
-</li>
-            <h3 class="text-lg font-bold mb-6 mt-6">実績・得られるもの</h3>
-            <div class="flex flex-wrap gap-4">
-             <li>
-<div>
-                    <input type="checkbox" id="seriousCircle" name="tag" value="真面目に活動" class="hidden peer">
-                    <label for="seriousCircle"class="shadow-md 
-                   ">
-                        真面目に活動
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="enjoyable" name="tag" value="楽しめればOK" class="hidden peer">
-                    <label for="enjoyable"class="shadow-md 
-                   ">
-                        楽しめればOK
-                    </label>
-                </div>
-</li>
-          
-
-              
-             <li>
-<div>
-                    <input type="checkbox" id="globalExchange" name="tag" value="国際交流できる" class="hidden peer">
-                    <label for="globalExchange"class="shadow-md 
-                   ">
-                        国際交流できる
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="freeMembership" name="tag" value="入会費・年会費無料" class="hidden peer">
-                    <label for="freeMembership"class="shadow-md 
-                   ">
-                        入会費・年会費無料
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="languageLearning" name="tag" value="言語を学べる" class="hidden peer">
-                    <label for="languageLearning"class="shadow-md 
-                   ">
-                        言語を学べる
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="achievements" name="tag" value="ガクチカ作れる" class="hidden peer">
-                    <label for="achievements"class="shadow-md 
-                   ">
-                        ガクチカ作れる
-                    </label>
-                </div>
-</li>
-             <li>
-<div>
-                    <input type="checkbox" id="senpaiFriendly" name="tag" value="先輩とも仲良し" class="hidden peer">
-                    <label for="senpaiFriendly"class="shadow-md 
-                   ">
-                        先輩とも仲良し
-                    </label>
-                </div>
-             <li>
-<div>
-                    <input type="checkbox" id="volunteer" name="tag" value="ボランティア" class="hidden peer">
-                    <label for="volunteer"class="shadow-md 
-                   ">
-                        ボランティア
-                    </label>
-                </div>
-             <li>
-<div>
-                    <input type="checkbox" id="awardWinning" name="tag" value="表彰経験あり" class="hidden peer">
-                    <label for="awardWinning"class="shadow-md 
-                   ">
-                        表彰経験あり
-                    </label>
-                </div>
-
-           
-            </div>
-        </ul>
-        </div>
-       </div>
-
-       <script>
-
-   // 🔹 公認と登録団体のチェックボックス
-   const officialCircle = document.getElementById("officialCircle");
-    const certifiedCircle = document.getElementById("certifiedCircle");
-
-    // 🔹 「公認」と「登録団体」はどちらか一方のみ選択可能にする
-    function toggleExclusiveSelection(selected, other) {
-        if (selected.checked) {
-            other.checked = false; // もう一方を解除
-        }
-    }
-
-    officialCircle.addEventListener("change", function () {
-        toggleExclusiveSelection(this, certifiedCircle);
-    });
-
-    certifiedCircle.addEventListener("change", function () {
-        toggleExclusiveSelection(this, officialCircle);
-    });
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const maxTags = 25; // 🔹 選択できるタグの最大数
-            const checkboxes = document.querySelectorAll('input[name="tag"]');
-        
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", function () {
-                    const checkedBoxes = document.querySelectorAll('input[name="tag"]:checked');
-                    const checkedCount = checkedBoxes.length;
-        
-                    if (checkedCount > maxTags) {
-                        alert(`タグは最大２５個までしか選択できません！`);
-                        this.checked = false; // 🔹 これ以上選べないようにする
-                        return;
+                        slider.style.background = `linear-gradient(to right, #fec86b ${percentage}%, #eba789 ${percentage}%, #fff ${percentage}%)`;
                     }
-        
-                   
+
+                    // 初期値設定
+                    updateSliderBackground();
+
+                    // スライダーの値が変更されたら背景を更新
+                    slider.addEventListener("input", updateSliderBackground);
                 });
             });
-        });
+
+
+
+
+            function toggleSlider(toggleId, sliderId, valueId, defaultValue) {
+                const toggle = document.getElementById(toggleId);
+                const slider = document.getElementById(sliderId);
+                const valueDisplay = document.getElementById(valueId);
+
+
+                if (toggle.checked) {
+                    slider.disabled = true;
+                    valueDisplay.textContent = "選択なし";
+
+
+                } else {
+                    slider.disabled = false;
+                    slider.value = slider.dataset.default; // 初期値を適用
+                    valueDisplay.textContent = defaultValue;
+
+                }
+            }
+
+
+
+            // 人数スライダー
+            const slider1 = document.getElementById('slider1');
+            const slider1Value = document.getElementById('slider1Value');
+
+            slider1.addEventListener('input', () => {
+                if (slider1.value == 300) {
+                    slider1Value.textContent = "300人以上";
+                } else {
+                    slider1Value.textContent = slider1.value + "人";
+                }
+            });
+
+            // 活動頻度スライダー
+            const activityFrequency = ['不定期', '年一回', '半年に一回', '３か月に一回', '２か月に一回', '月一', '月２', '週一', 'ほぼ毎日'];
+            const slider3 = document.getElementById('slider3');
+            const slider3Value = document.getElementById('slider3Value');
+            slider3.addEventListener('input', () => {
+                const index = Math.round(slider3.value / 12.5);
+                slider3Value.textContent = activityFrequency[index];
+            });
+
+            // 男女比スライダー
+            const slider2 = document.getElementById('slider2');
+            const slider2Value = document.getElementById('slider2Value');
+            slider2.addEventListener('input', () => {
+                const index = Math.round(slider2.value);
+                const femaleRatio = 10 - index;
+                const maleRatio = index;
+                slider2Value.textContent = `${maleRatio}:${femaleRatio}`;
+            });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const slider4 = document.getElementById("slider4");
+                const slider4Value = document.getElementById("slider4Value");
+
+                slider4.addEventListener("input", () => {
+                    slider4Value.textContent = slider4.value + "%";
+                });
+            });
+
+            // 初期値設定
+            slider3.dispatchEvent(new Event('input'));
         </script>
-        
-        
-        
+
+
+
+
+
+        <!-- フォーム -->
+        <div class="p-6 mb-6 border-t border-gray-300">
+
+            <h2 class="text-lg font-bold my-10">タグ選択</h2>
+            <div>
+
+
+                <h3 class="text-lg font-bold my-8">公認・登録団体の場合はチェック</h3>
+                <ul class="ks-cboxtags flex flex-wrap gap-4">
+
+                    <li>
+                        <div>
+                            <input type="checkbox" id="officialCircle" name="tag" value="公認" class="hidden peer">
+                            <label for="officialCircle" class="shadow-md">
+                                公認
+                            </label>
+                        </div>
+                    </li>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="certifiedCircle" name="tag" value="登録団体" class="hidden peer">
+                            <label for="certifiedCircle" class="shadow-md">
+                                登録団体
+                            </label>
+                        </div>
+                    </li>
+                    <h3 class="text-lg font-bold my-7 mt-4">サークルの雰囲気・規模</h3><span></span>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="smallFriendly" name="tag" value="少人数で仲良し" class="hidden peer">
+                            <label for="smallFriendly" class="shadow-md 
+                   ">
+                                少人数で仲良し
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="largeFun" name="tag" value="大人数でわいわい" class="hidden peer">
+                            <label for="largeFun" class="shadow-md 
+                   ">
+                                大人数でわいわい
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="hasCamps" name="tag" value="合宿あり" class="hidden peer">
+                            <label for="hasCamps" class="shadow-md 
+                   ">
+                                合宿あり
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="richMeetup" name="tag" value="出会い豊富" class="hidden peer">
+                            <label for="richMeetup" class="shadow-md 
+                   ">
+                                出会い豊富
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="manyEvents" name="tag" value="イベント多い" class="hidden peer">
+                            <label for="manyEvents" class="shadow-md 
+                   ">
+                                イベント多い
+                            </label>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div>
+                            <input type="checkbox" id="anything" name="tag" value="何でもできる" class="hidden peer">
+                            <label for="anything" class="shadow-md 
+                       ">
+                                何でもできる
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="calmCircle" name="tag" value="穏やかサークル" class="hidden peer">
+                            <label for="calmCircle" class="shadow-md 
+                   ">
+                                穏やかサークル
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="livelyCircle" name="tag" value="ノリがいい" class="hidden peer">
+                            <label for="livelyCircle" class="shadow-md 
+                   ">
+                                ノリがいい
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="smallHomey" name="tag" value="少人数でアットホーム" class="hidden peer">
+                            <label for="smallHomey" class="shadow-md 
+                   ">
+                                少人数でアットホーム
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <input type="checkbox" id="livelyBig" name="tag" value="全力エンジョイ" class="hidden peer">
+                            <label for="livelyBig" class="shadow-md 
+                   ">
+                                全力エンジョイ
+                            </label>
+                        </div>
+                    </li>
+
+                    </li>
+                    <h3 class="text-lg font-bold mb-6 mt-6">活動スタイル・メンバー</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <li>
+                            <div>
+                                <input type="checkbox" id="moreBoys" name="tag" value="男子多め" class="hidden peer">
+                                <label for="moreBoys" class="shadow-md 
+                   ">
+                                    男子多め
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="moreGirls" name="tag" value="女子多め" class="hidden peer">
+                                <label for="moreGirls" class="shadow-md 
+                   ">
+                                    女子多め
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="balancedGender" name="tag" value="男女のバランスがいい"
+                                    class="hidden peer">
+                                <label for="balancedGender" class="shadow-md 
+                   ">
+                                    男女のバランスがいい
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="handsomeGuys" name="tag" value="イケメンが多い" class="hidden peer">
+                                <label for="handsomeGuys" class="shadow-md 
+                   ">
+                                    イケメンが多い
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="prettyGirls" name="tag" value="美女が多い" class="hidden peer">
+                                <label for="prettyGirls" class="shadow-md 
+                   ">
+                                    美女が多い
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="indoor" name="tag" value="インドア向き" class="hidden peer">
+                                <label for="indoor" class="shadow-md 
+                   ">
+                                    インドア向き
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="outdoor" name="tag" value="アウトドア向き" class="hidden peer">
+                                <label for="outdoor" class="shadow-md 
+                   ">
+                                    アウトドア向き
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="drinksOk" name="tag" value="ソフドリ全然OK!" class="hidden peer">
+                                <label for="drinksOk" class="shadow-md 
+                   ">
+                                    ソフドリ全然OK!
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="drinkingParty" name="tag" value="飲み会で盛り上がる"
+                                    class="hidden peer">
+                                <label for="drinkingParty" class="shadow-md 
+                   ">
+                                    飲み会で盛り上がる
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="experienced" name="tag" value="経験者多め" class="hidden peer">
+                                <label for="experienced" class="shadow-md 
+                   ">
+                                    経験者多め
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="beginnersWelcome" name="tag" value="初心者大歓迎"
+                                    class="hidden peer">
+                                <label for="beginnersWelcome" class="shadow-md 
+                   ">
+                                    初心者大歓迎
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="internationalStudents" name="tag" value="留学生多め"
+                                    class="hidden peer">
+                                <label for="internationalStudents" class="shadow-md 
+                       ">
+                                    留学生多め
+                                </label>
+                            </div>
+                        </li>
+
+                    </div>
+                    </li>
+                    <h3 class="text-lg font-bold mb-6 mt-6">実績・得られるもの</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <li>
+                            <div>
+                                <input type="checkbox" id="seriousCircle" name="tag" value="真面目に活動" class="hidden peer">
+                                <label for="seriousCircle" class="shadow-md 
+                   ">
+                                    真面目に活動
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="enjoyable" name="tag" value="楽しめればOK" class="hidden peer">
+                                <label for="enjoyable" class="shadow-md 
+                   ">
+                                    楽しめればOK
+                                </label>
+                            </div>
+                        </li>
+
+
+
+                        <li>
+                            <div>
+                                <input type="checkbox" id="globalExchange" name="tag" value="国際交流できる"
+                                    class="hidden peer">
+                                <label for="globalExchange" class="shadow-md 
+                   ">
+                                    国際交流できる
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="freeMembership" name="tag" value="入会費・年会費無料"
+                                    class="hidden peer">
+                                <label for="freeMembership" class="shadow-md 
+                   ">
+                                    入会費・年会費無料
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="languageLearning" name="tag" value="言語を学べる"
+                                    class="hidden peer">
+                                <label for="languageLearning" class="shadow-md 
+                   ">
+                                    言語を学べる
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="achievements" name="tag" value="ガクチカ作れる" class="hidden peer">
+                                <label for="achievements" class="shadow-md 
+                   ">
+                                    ガクチカ作れる
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="senpaiFriendly" name="tag" value="先輩とも仲良し"
+                                    class="hidden peer">
+                                <label for="senpaiFriendly" class="shadow-md 
+                   ">
+                                    先輩とも仲良し
+                                </label>
+                            </div>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="volunteer" name="tag" value="ボランティア" class="hidden peer">
+                                <label for="volunteer" class="shadow-md 
+                   ">
+                                    ボランティア
+                                </label>
+                            </div>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="awardWinning" name="tag" value="表彰経験あり" class="hidden peer">
+                                <label for="awardWinning" class="shadow-md 
+                   ">
+                                    表彰経験あり
+                                </label>
+                            </div>
+
+
+                    </div>
+                </ul>
+            </div>
+        </div>
+
+        <script>
+
+            // 🔹 公認と登録団体のチェックボックス
+            const officialCircle = document.getElementById("officialCircle");
+            const certifiedCircle = document.getElementById("certifiedCircle");
+
+            // 🔹 「公認」と「登録団体」はどちらか一方のみ選択可能にする
+            function toggleExclusiveSelection(selected, other) {
+                if (selected.checked) {
+                    other.checked = false; // もう一方を解除
+                }
+            }
+
+            officialCircle.addEventListener("change", function () {
+                toggleExclusiveSelection(this, certifiedCircle);
+            });
+
+            certifiedCircle.addEventListener("change", function () {
+                toggleExclusiveSelection(this, officialCircle);
+            });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const maxTags = 25; // 🔹 選択できるタグの最大数
+                const checkboxes = document.querySelectorAll('input[name="tag"]');
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener("change", function () {
+                        const checkedBoxes = document.querySelectorAll('input[name="tag"]:checked');
+                        const checkedCount = checkedBoxes.length;
+
+                        if (checkedCount > maxTags) {
+                            alert(`タグは最大２５個までしか選択できません！`);
+                            this.checked = false; // 🔹 これ以上選べないようにする
+                            return;
+                        }
+
+
+                    });
+                });
+            });
+        </script>
+
+
+
 
         <style>
-/* 必要なカスタムスタイル */
-.container2 {
-    max-width: 640px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 13px;
-}
+            /* 必要なカスタムスタイル */
+            .container2 {
+                max-width: 640px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 13px;
+            }
 
-/* リストの基本スタイル */
-ul.ks-cboxtags {
-    list-style: none;
-}
-ul.ks-cboxtags li {
-    display: inline;
-}
+            /* リストの基本スタイル */
+            ul.ks-cboxtags {
+                list-style: none;
+            }
 
-/* チェックボックスラベルの基本スタイル */
-ul.ks-cboxtags li label {
-    display: inline-block;
-    background-color: rgba(255, 255, 255, .9);
-    border: 2px solid rgba(139, 139, 139, .3);
-    color: #adadad;
-    border-radius: 25px;
-    white-space: nowrap;
-    padding: 8px 12px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: all .2s;
-}
+            ul.ks-cboxtags li {
+                display: inline;
+            }
 
-/* チェック時のスタイル */
-ul.ks-cboxtags li input[type="checkbox"]:checked + label {
-    border-color: #6dfec7;
-    background-color: #58ebb1;
-    color: #fff;
-    transition: all .2s;
-}
+            /* チェックボックスラベルの基本スタイル */
+            ul.ks-cboxtags li label {
+                display: inline-block;
+                background-color: rgba(255, 255, 255, .9);
+                border: 2px solid rgba(139, 139, 139, .3);
+                color: #adadad;
+                border-radius: 25px;
+                white-space: nowrap;
+                padding: 8px 12px;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                transition: all .2s;
+            }
 
-/* アイコンの変化 */
-ul.ks-cboxtags li label::before {
-    display: inline-block;
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    font-size: 12px;
-    content: "\f067";
-    transition: transform .3s ease-in-out;
-}
+            /* チェック時のスタイル */
+            ul.ks-cboxtags li input[type="checkbox"]:checked+label {
+                border-color: #6dfec7;
+                background-color: #58ebb1;
+                color: #fff;
+                transition: all .2s;
+            }
 
-ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
-    content: "\f00c";
-    transform: rotate(-360deg);
-    transition: transform .3s ease-in-out;
-}
+            /* アイコンの変化 */
+            ul.ks-cboxtags li label::before {
+                display: inline-block;
+                font-family: "Font Awesome 5 Free";
+                font-weight: 900;
+                font-size: 12px;
+                content: "\f067";
+                transition: transform .3s ease-in-out;
+            }
 
+            ul.ks-cboxtags li input[type="checkbox"]:checked+label::before {
+                content: "\f00c";
+                transform: rotate(-360deg);
+                transition: transform .3s ease-in-out;
+            }
+        </style>
 
+        <div class="p-6 border-t">
 
-    </style>
-        
- <div class="p-6 border-t">
-       
-   <!-- 一言 -->
-   <div class="mt-6">
-    <label for="comment" class="block text-gray-700 font-bold mb-4">
-        一言メッセージ 
-     
-    </label>
-    <h3 class="mb-4 text-sm opacity-70">トップ画面に表示される紹介文です（70字以内）</h3>
-    <textarea id="comment" name="comment" maxlength="70" placeholder="例: みんな仲良しのイベントサークルです！" 
-        rows="2"　wrap="hard"
-        class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+            <!-- 一言 -->
+            <div class="mt-6">
+                <label for="comment" class="block text-gray-700 font-bold mb-4">
+                    一言メッセージ
+
+                </label>
+                <h3 class="mb-4 text-sm opacity-70">トップ画面に表示される紹介文です（70字以内）</h3>
+                <textarea id="comment" name="comment" maxlength="70" placeholder="例: みんな仲良しのイベントサークルです！" rows="2"
+                    　wrap="hard"
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
     </textarea>
-</div>
+            </div>
 
-   <!-- 紹介文 -->
-<div class="mb-6 mt-6">
-    <label for="description" class="block text-gray-700 font-bold mb-4">紹介文</label>
-    <textarea id="description" name="description" maxlength="1000" placeholder="サークルの特徴や活動内容を入力してください..." rows="10" 
-    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
-    
+            <!-- 紹介文 -->
+            <div class="mb-6 mt-6">
+                <label for="description" class="block text-gray-700 font-bold mb-4">紹介文</label>
+                <textarea id="description" name="description" maxlength="1000" placeholder="サークルの特徴や活動内容を入力してください..."
+                    rows="10"
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
+
 </textarea>
-</div>
+            </div>
 
 
 
-        <!-- 新歓カレンダー画像 -->
-   
-<div class="mb-6">
-    <label for="calendarPhotos" class="block text-gray-700 font-bold mb-4">新歓カレンダー画像（最大3枚）</label>
-    <div id="calendarPhotoUpload" class="flex gap-2 flex-wrap">
-        <div id="addCalendarPhotoButton" class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
-            <span class="text-2xl text-gray-400">+</span>
-            <input type="file" id="calendarPhotos" accept="image/*" class="hidden">
+            <!-- 新歓カレンダー画像 -->
+
+            <div class="mb-6">
+                <label for="calendarPhotos" class="block text-gray-700 font-bold mb-4">新歓カレンダー画像（最大3枚）</label>
+                <div id="calendarPhotoUpload" class="flex gap-2 flex-wrap">
+                    <div id="addCalendarPhotoButton"
+                        class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer">
+                        <span class="text-2xl text-gray-400">+</span>
+                        <input type="file" id="calendarPhotos" accept="image/*" class="hidden">
+                    </div>
+                </div>
+                <div id="calendarPhotoPreviewContainer" class="flex gap-2 flex-wrap mt-4">
+                    <!-- プレビュー画像がここに追加される -->
+                </div>
+            </div>
+
+
         </div>
-    </div>
-    <div id="calendarPhotoPreviewContainer" class="flex gap-2 flex-wrap mt-4">
-        <!-- プレビュー画像がここに追加される -->
-    </div>
-</div>
 
+        <div class="p-6 mb-6 border-t border-gray-300">
+            <h2 class="text-lg font-bold my-10">詳細情報</h2>
+            <!-- 活動場所 -->
+            <div class="my-7">
+                <label for="location" class="block text-gray-700 font-bold mb-4">主な活動場所・推奨所属キャンパスを選択</label>
+                <select id="location" name="location"
+                    class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
 
-</div>
+                    <option value="今出川">今出川</option>
+                    <option value="京田辺">京田辺</option>
+                    <option value="今出川・京田辺">今出川・京田辺</option>
+                    <option value="その他">その他</option>
+                </select>
+            </div>
 
-<div class="p-6 mb-6 border-t border-gray-300">
-    <h2 class="text-lg font-bold my-10">詳細情報</h2>
-    <!-- 活動場所 -->
-    <div class="my-7">
-        <label for="location" class="block text-gray-700 font-bold mb-4">主な活動場所・推奨所属キャンパスを選択</label>
-        <select id="location" name="location"   class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
+            <!-- 入会金と年会費 -->
+            <div class="mt-4">
+                <label for="admissionFee" class="block text-gray-700 font-bold mb-4">入会金　(無料の場合は０を入力)</label>
+                <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 500"
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                    maxlength="10">
 
-            <option value="今出川">今出川</option>
-            <option value="京田辺">京田辺</option>
-            <option value="今出川・京田辺">今出川・京田辺</option>
-            <option value="その他">その他</option>
-        </select>
-    </div>
+            </div>
 
-  <!-- 入会金と年会費 -->
-  <div class="mt-4">
-    <label for="admissionFee" class="block text-gray-700 font-bold mb-4">入会金　(無料の場合は０を入力)</label>
-    <input type="number" id="admissionFee" name="admissionFee" placeholder="例: 500"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
+            <div class="mt-6">
+                <label for="annualFee" class="block text-gray-700 font-bold mb-4">年会費　(無料の場合は０を入力)</label>
+                <input type="number" id="annualFee" name="annualFee" placeholder="例: 3000"
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                    maxlength="10">
 
-</div>
+            </div>
+            <!-- instagramlink -->
+            <div class="mt-6">
+                <label for="instagram" class="block text-gray-700 font-bold mb-4">Instagram リンク</label>
+                <h3 class="mb-4 text-sm opacity-70">
+                    サークルの公式Instagramのリンクを張り付けてください。
+                </h3>
+                <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..."
+                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                    maxlength="100">
 
-<div class="mt-6">
-    <label for="annualFee" class="block text-gray-700 font-bold mb-4">年会費　(無料の場合は０を入力)</label>
-    <input type="number" id="annualFee" name="annualFee" placeholder="例: 3000"  class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="10">
+            </div>
 
-</div>
-<!-- instagramlink -->
-<div class="mt-6">
-    <label for="instagram" class="block text-gray-700 font-bold mb-4">Instagram リンク</label>
-    <h3 class="mb-4 text-sm opacity-70">
-        サークルの公式Instagramのリンクを張り付けてください。
-        </h3>
-    <input type="text" id="instagram" name="instagram" placeholder="instagramのURLを入力..." class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300" maxlength="100">
-
-</div>
-
-</div>
-
-
-<div class="p-6 border-t border-gray-300">
-  <!-- パスワード入力欄 -->
-<div class="mt-6 mb-6">
-   
-    <label for="password" class="block text-gray-700 font-bold mb-4">
-        パスワード <span class="text-red-500 opacity-80">＊必須</span>
-    </label>
-    <h3 class="mb-4 text-sm opacity-70">
-        管理者用パスワードを設定してください（**大文字・小文字・数字を含み10文字以上**）。<br>
-        サークルページの編集、削除時に必要です。必ずメモを残しておいてください。
-    </h3>
-    
-    <!-- パスワード入力欄 -->
-    <div class="relative">
-        <input 
-        maxlength="30"
-            type="password" 
-            id="password" 
-            name="password" 
-            placeholder="管理者用パスワードを設定" 
-            required 
-            minlength="10"
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{10,}$"
-            title="大文字・小文字・数字を含む10文字以上のパスワードを入力してください"
-            class="w-full border border-[#eba789] rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-300">
-    </div>
-    
-    <!-- パスワード確認用表示欄（テキスト表示） -->
-    <div class="mt-3">
-        <label class="block text-gray-700 font-bold">パスワードの確認</label>
-        <div class="w-full border border-gray-400 rounded-lg p-3 pr-10 bg-gray-100 text-gray-700">
-            <span id="passwordconfirm">（ここにパスワードが表示されます）</span>
         </div>
-    </div>
-    
-    <!-- JavaScript -->
-    <script>
-    document.getElementById("password").addEventListener("input", function () {
-        const password = this.value;
-        document.getElementById("passwordconfirm").textContent = password;  // 入力内容をリアルタイムで表示
-    });
-    </script>
-    
 
-    </div>
-    
 
-    
+        <div class="p-6 border-t border-gray-300">
+            <!-- パスワード入力欄 -->
+            <div class="mt-6 mb-6">
+
+                <label for="password" class="block text-gray-700 font-bold mb-4">
+                    パスワード <span class="text-red-500 opacity-80">＊必須</span>
+                </label>
+                <h3 class="mb-4 text-sm opacity-70">
+                    管理者用パスワードを設定してください（**大文字・小文字・数字を含み10文字以上**）。<br>
+                    サークルページの編集、削除時に必要です。必ずメモを残しておいてください。
+                </h3>
+
+                <!-- パスワード入力欄 -->
+                <div class="relative">
+                    <input maxlength="30" type="password" id="password" name="password" placeholder="管理者用パスワードを設定"
+                        required minlength="10" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{10,}$"
+                        title="大文字・小文字・数字を含む10文字以上のパスワードを入力してください"
+                        class="w-full border border-[#eba789] rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-300">
+                </div>
+
+                <!-- パスワード確認用表示欄（テキスト表示） -->
+                <div class="mt-3">
+                    <label class="block text-gray-700 font-bold">パスワードの確認</label>
+                    <div class="w-full border border-gray-400 rounded-lg p-3 pr-10 bg-gray-100 text-gray-700">
+                        <span id="passwordconfirm">（ここにパスワードが表示されます）</span>
+                    </div>
+                </div>
+
+                <!-- JavaScript -->
+                <script>
+                    document.getElementById("password").addEventListener("input", function () {
+                        const password = this.value;
+                        document.getElementById("passwordconfirm").textContent = password;  // 入力内容をリアルタイムで表示
+                    });
+                </script>
+
+
+            </div>
+
+
+
 
             <!-- サブミットボタン -->
             <input type="submit" value="サークルを掲載する" id="submitButton"
-                   class="submitButton w-full bg-blue-300 shadow-lg text-white my-6 py-2 rounded-full hover:bg-blue-500 duration-300">
- </div>
+                class="submitButton w-full bg-blue-300 shadow-lg text-white my-6 py-2 rounded-full hover:bg-blue-500 duration-300">
+        </div>
     </form>
     <style>
         .submitButton {
             background-image: linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
             box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
-}
+        }
 
 
-input:not(.slider), select, textarea {
-    border: 1px solid transparent;
-    padding: 10px;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-    background-clip: padding-box;
-    background-color: #fff;
+        input:not(.slider),
+        select,
+        textarea {
+            border: 1px solid transparent;
+            padding: 10px;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+            background-clip: padding-box;
+            background-color: #fff;
 
-    /* ✅ border の代わりに box-shadow を使ってグラデーションを適用 */
-    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 1px  rgba(239, 194, 81, 0.75);
-}
-
-
-
-/* ✅ フォーカス時にボーダーのグラデーションを適用 */
-input:focus, select:focus, textarea:focus {
-    box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 2px linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
-}
+            /* ✅ border の代わりに box-shadow を使ってグラデーションを適用 */
+            box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 1px rgba(239, 194, 81, 0.75);
+        }
 
 
 
-
-
+        /* ✅ フォーカス時にボーダーのグラデーションを適用 */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            box-shadow: 0px 0px 0px 2px transparent, 0px 0px 0px 2px linear-gradient(to right, #f5ce62, hsl(353, 100%, 86%), #eba789);
+        }
     </style>
- <script>
- 
+    <script>
 
 
 
 
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    let cropper;
-    let cropTarget = null; // 'top' or 'sub'
-    let croppedTopFile = null; // トリミング後のトップ画像
-    let croppedSubFiles = []; // トリミング後のサブ画像
-    let currentSubFile = null; // 現在選択中のサブ画像
-    let croppedCalendarFiles = [];
-    let currentCalendarFile = null;
 
-   
-    const cropModal = document.getElementById("cropModal");
-    const cropImage = document.getElementById("cropImage");
-    const topPhotoInput = document.getElementById("topPhoto");
-    const subPhotoInput = document.getElementById("subPhotos");
-    const topPhotoPreview = document.getElementById("topPhotoPreview");
-    const subPhotoPreviewContainer = document.getElementById("subPhotoPreviewContainer");
-    const calendarPhotoInput = document.getElementById("calendarPhotos");
-    const calendarPhotoPreviewContainer = document.getElementById("calendarPhotoPreviewContainer");
+        document.addEventListener("DOMContentLoaded", function () {
+            let cropper;
+            let cropTarget = null; // 'top' or 'sub'
+            let croppedTopFile = null; // トリミング後のトップ画像
+            let croppedSubFiles = []; // トリミング後のサブ画像
+            let currentSubFile = null; // 現在選択中のサブ画像
+            let croppedCalendarFiles = [];
+            let currentCalendarFile = null;
 
 
-      // // 画像アップロード処理（トップ画像）
-    document.getElementById('topPhotoUpload').addEventListener('click', () => {
-        document.getElementById('topPhoto').click();
-    });
-    // **トップ画像選択時にトリミング開始**
-    topPhotoInput.addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            openCropModal(file, "top");
-        }
-    });
-
-        // // サブ画像アップロード
-    document.getElementById('subPhotoUpload').addEventListener('click', () => {
-        document.getElementById('subPhotos').click();
-    });
-    // **サブ画像を1枚選択ごとにトリミング開始**
-    subPhotoInput.addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            currentSubFile = file; // 現在のサブ画像を保存
-            openCropModal(file, "sub");
-        }
-    });
-
-  // // calendar画像アップロード
-  document.getElementById('calendarPhotoUpload').addEventListener('click', () => {
-    document.getElementById('calendarPhotos').click();
-    });
-
-  // **calendar画像を1枚選択ごとにトリミング開始**
-  calendarPhotoInput.addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            currentCalendarFile = file; // 現在のサブ画像を保存
-            openCropModal(file, "calendar");
-        }
-    });
+            const cropModal = document.getElementById("cropModal");
+            const cropImage = document.getElementById("cropImage");
+            const topPhotoInput = document.getElementById("topPhoto");
+            const subPhotoInput = document.getElementById("subPhotos");
+            const topPhotoPreview = document.getElementById("topPhotoPreview");
+            const subPhotoPreviewContainer = document.getElementById("subPhotoPreviewContainer");
+            const calendarPhotoInput = document.getElementById("calendarPhotos");
+            const calendarPhotoPreviewContainer = document.getElementById("calendarPhotoPreviewContainer");
 
 
-    // **トリミングモーダルを開く**
-    function openCropModal(file, target) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            cropImage.src = e.target.result;
-            cropModal.classList.remove("hidden");
-            cropTarget = target;
+            // // 画像アップロード処理（トップ画像）
+            document.getElementById('topPhotoUpload').addEventListener('click', () => {
+                document.getElementById('topPhoto').click();
+            });
+            // **トップ画像選択時にトリミング開始**
+            topPhotoInput.addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    openCropModal(file, "top");
+                }
+            });
 
-            // Cropper.js の初期化
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(cropImage, {
-            aspectRatio: 1,         // **トリミング枠だけ正方形に固定**
-            viewMode: 2,            // **iPhoneのように、トリミング枠を中心に画像を表示**
-            dragMode: "move",       // **画像のみ動かせる**
-            cropBoxMovable: false,  // **トリミング枠の移動を禁止**
-            cropBoxResizable: false,// **トリミング枠のサイズ変更を禁止**
-            autoCropArea: 0.9,      // **トリミング枠を大きめに表示**
-            zoomable: true,         // **ピンチイン・アウトでズーム可能**
-            scalable: false,        // **画像のリサイズ不可**
-            modal: true,            // **トリミング枠の外側を半透明にする**
-            background: false,       // **背景を消して見やすくする**
-            viewMode: 1,            // **画像がトリミング枠より外にはみ出てもOK**
-            autoCropArea: 1       // **トリミング枠を最大化**
-        });
+            // // サブ画像アップロード
+            document.getElementById('subPhotoUpload').addEventListener('click', () => {
+                document.getElementById('subPhotos').click();
+            });
+            // **サブ画像を1枚選択ごとにトリミング開始**
+            subPhotoInput.addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    currentSubFile = file; // 現在のサブ画像を保存
+                    openCropModal(file, "sub");
+                }
+            });
 
-           
-        };
-        reader.readAsDataURL(file);
-    }
+            // // calendar画像アップロード
+            document.getElementById('calendarPhotoUpload').addEventListener('click', () => {
+                document.getElementById('calendarPhotos').click();
+            });
 
-    // **トリミングをキャンセル**
-    document.getElementById("cropCancel").addEventListener("click", function () {
-        event.preventDefault(); 
-        event.stopPropagation(); 
-        cropModal.classList.add("hidden");
-        subPhotoInput.value = "";
-        calendarPhotoInput.value = "";
-    });
-
-
+            // **calendar画像を1枚選択ごとにトリミング開始**
+            calendarPhotoInput.addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    currentCalendarFile = file; // 現在のサブ画像を保存
+                    openCropModal(file, "calendar");
+                }
+            });
 
 
-    // **トリミング画像を保存**
-    document.getElementById("cropSave").addEventListener("click", function () {
-        event.preventDefault(); 
-        event.stopPropagation(); 
-        const canvas = cropper.getCroppedCanvas();
-        canvas.toBlob(function (blob) {
-            const croppedFile = new File([blob], "cropped.jpg", { type: "image/jpeg" });
-
-            if (cropTarget === "top") {
-                // トップ画像の保存＆プレビュー
-                croppedTopFile = croppedFile;
+            // **トリミングモーダルを開く**
+            function openCropModal(file, target) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    topPhotoPreview.src = e.target.result;
-                    topPhotoPreview.classList.remove("hidden");
-                   
-                    removeTopPhoto.classList.remove("hidden"); // **削除ボタンを確実に表示**
-                };
-                reader.readAsDataURL(croppedFile);
-            }else  if (cropTarget === "sub") {
-                // サブ画像の保存＆プレビュー
-                croppedSubFiles.push(croppedFile);
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const container = document.createElement("div");
-                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden", "shadow-lg");
+                    cropImage.src = e.target.result;
+                    cropModal.classList.remove("hidden");
+                    cropTarget = target;
 
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.alt = "サブ画像プレビュー";
-                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-[#ddc4ff]");
-                    container.appendChild(img);
-
-                    // 🔹 削除ボタン
-                    const removeBtn = document.createElement("button");
-                    removeBtn.innerHTML = "×";
-                    removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
-                    container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
-                    subPhotoPreviewContainer.appendChild(container);
-
-                     // 🔹 削除ボタンのクリックイベント
-                     removeBtn.addEventListener("click", function () {
-                        event.preventDefault(); 
-                        event.stopPropagation(); 
-                        const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
-                        croppedSubFiles.splice(containerIndex, 1); // 🔹 `croppedSubFiles` から削除
-                        container.remove(); // 🔹 HTML上の要素を削除
-                        updateSubPhotoIndexes(); // 🔹 インデックスを更新
+                    // Cropper.js の初期化
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(cropImage, {
+                        aspectRatio: 1,         // **トリミング枠だけ正方形に固定**
+                        viewMode: 2,            // **iPhoneのように、トリミング枠を中心に画像を表示**
+                        dragMode: "move",       // **画像のみ動かせる**
+                        cropBoxMovable: false,  // **トリミング枠の移動を禁止**
+                        cropBoxResizable: false,// **トリミング枠のサイズ変更を禁止**
+                        autoCropArea: 0.9,      // **トリミング枠を大きめに表示**
+                        zoomable: true,         // **ピンチイン・アウトでズーム可能**
+                        scalable: false,        // **画像のリサイズ不可**
+                        modal: true,            // **トリミング枠の外側を半透明にする**
+                        background: false,       // **背景を消して見やすくする**
+                        viewMode: 1,            // **画像がトリミング枠より外にはみ出てもOK**
+                        autoCropArea: 1       // **トリミング枠を最大化**
                     });
 
-                };
-                reader.readAsDataURL(croppedFile);
 
-                // 次のサブ画像を選択できるようにリセット
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // **トリミングをキャンセル**
+            document.getElementById("cropCancel").addEventListener("click", function () {
+                event.preventDefault();
+                event.stopPropagation();
+                cropModal.classList.add("hidden");
                 subPhotoInput.value = "";
-            }else if (cropTarget === "calendar") {
-                // サブ画像の保存＆プレビュー
-                croppedCalendarFiles.push(croppedFile);
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const container = document.createElement("div");
-                    container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
-
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.alt = "サブ画像プレビュー";
-                    img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
-                    container.appendChild(img);
-
-                    // 🔹 削除ボタン
-                    const removeBtn = document.createElement("button");
-                    removeBtn.innerHTML = "×";
-                    removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
-                    container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
-                    calendarPhotoPreviewContainer.appendChild(container);
-
-                     // 🔹 削除ボタンのクリックイベント
-                     removeBtn.addEventListener("click", function () {
-                        event.preventDefault(); 
-                        event.stopPropagation(); 
-                        const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
-                        croppedCalendarFiles.splice(containerIndex, 1); // 🔹 `croppedCalendarFiles` から削除
-                        container.remove(); // 🔹 HTML上の要素を削除
-                        updateCalendarIndexes(); // 🔹 インデックスを更新
-                    });
-
-                };
-                reader.readAsDataURL(croppedFile);
-
-                // 次のカレンダー画像を選択できるようにリセット
                 calendarPhotoInput.value = "";
-            }
-
-            cropModal.classList.add("hidden");
-        }, "image/jpeg");
-    });
-
-
-    // トップ画像の削除処理
-    removeTopPhoto.addEventListener("click", function () {
-        event.preventDefault(); 
-        event.stopPropagation(); 
-        topPhotoPreview.src = "#";
-        topPhotoPreview.classList.add("hidden");
-        removeTopPhoto.classList.add("hidden"); // 🔹 削除ボタンを隠す
-        topPhotoInput.value = ""; // ファイル選択をリセット
-        croppedTopFile = null; // **FormData に送信されないようにする**
-    });
-
-
-    // **フォーム送信時にトリミング後の画像を `FormData` に追加**
-    document.getElementById("circle-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const form = document.getElementById("circle-form");
-        const formData = new FormData(form);
-
-        // **トリミング後のトップ画像を `FormData` にセット**
-       // **削除済みのデータを送信しないようにする**
-    if (croppedTopFile) {
-        formData.set("topPhoto", croppedTopFile);
-    } else {
-        formData.delete("topPhoto"); // **削除済みなら FormData からも削除**
-    }
-
-    // **サブ画像も、削除されたものを除いて送信**
-    formData.delete("subPhotos"); // **既存の subPhotos を削除**
-    croppedSubFiles.forEach((file) => {
-        formData.append("subPhotos", file);
-    });
-
-     // **calendar画像も、削除されたものを除いて送信**
-     formData.delete("calendarPhotos"); // **既存の calendarPhotos を削除**
-    croppedCalendarFiles.forEach((file) => {
-        formData.append("calendarPhotos", file);
-    });
-
-       
-
-        
-        
-        // **スライダーの値を追加**
-        formData.append("slider1", document.getElementById("slider1").value);
-        formData.append("slider2", document.getElementById("slider2").value);
-        formData.append("slider3", document.getElementById("slider3").value);
-        formData.append("slider4", document.getElementById("slider4").value);
-
-      // 選択されたタグを取得し、カンマ区切りの文字列にする
-    const tagCheckboxes = document.querySelectorAll('input[name="tag"]:checked');
-    const tags = Array.from(tagCheckboxes).map(checkbox => checkbox.value).join(',');
-
-        // **デバッグ用（`FormData` の内容を表示）**
-        for (const pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
-
-
-        const submitButton = document.getElementById("submitButton");
-
-        submitButton.disabled = true;
-        submitButton.value = "送信中...";
-        submitButton.classList.add("opacity-50", "cursor-not-allowed");
+            });
 
 
 
-        // **サーバーへ送信（fetch を1回だけ実行）**
-        fetch("/circles", {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache", // キャッシュを無効化
-            body: formData,
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.error || "登録に失敗しました");
+
+            // **トリミング画像を保存**
+            document.getElementById("cropSave").addEventListener("click", function () {
+                event.preventDefault();
+                event.stopPropagation();
+                const canvas = cropper.getCroppedCanvas();
+                canvas.toBlob(function (blob) {
+                    const croppedFile = new File([blob], "cropped.jpg", { type: "image/jpeg" });
+
+                    if (cropTarget === "top") {
+                        // トップ画像の保存＆プレビュー
+                        croppedTopFile = croppedFile;
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            topPhotoPreview.src = e.target.result;
+                            topPhotoPreview.classList.remove("hidden");
+
+                            removeTopPhoto.classList.remove("hidden"); // **削除ボタンを確実に表示**
+                        };
+                        reader.readAsDataURL(croppedFile);
+                    } else if (cropTarget === "sub") {
+                        // サブ画像の保存＆プレビュー
+                        croppedSubFiles.push(croppedFile);
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const container = document.createElement("div");
+                            container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden", "shadow-lg");
+
+                            const img = document.createElement("img");
+                            img.src = e.target.result;
+                            img.alt = "サブ画像プレビュー";
+                            img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-[#ddc4ff]");
+                            container.appendChild(img);
+
+                            // 🔹 削除ボタン
+                            const removeBtn = document.createElement("button");
+                            removeBtn.innerHTML = "×";
+                            removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
+                            container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
+                            subPhotoPreviewContainer.appendChild(container);
+
+                            // 🔹 削除ボタンのクリックイベント
+                            removeBtn.addEventListener("click", function () {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
+                                croppedSubFiles.splice(containerIndex, 1); // 🔹 `croppedSubFiles` から削除
+                                container.remove(); // 🔹 HTML上の要素を削除
+                                updateSubPhotoIndexes(); // 🔹 インデックスを更新
+                            });
+
+                        };
+                        reader.readAsDataURL(croppedFile);
+
+                        // 次のサブ画像を選択できるようにリセット
+                        subPhotoInput.value = "";
+                    } else if (cropTarget === "calendar") {
+                        // サブ画像の保存＆プレビュー
+                        croppedCalendarFiles.push(croppedFile);
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const container = document.createElement("div");
+                            container.classList.add("relative", "w-24", "h-24", "rounded-lg", "overflow-hidden");
+
+                            const img = document.createElement("img");
+                            img.src = e.target.result;
+                            img.alt = "サブ画像プレビュー";
+                            img.classList.add("w-24", "h-24", "rounded", "object-cover", "border", "border-gray-300");
+                            container.appendChild(img);
+
+                            // 🔹 削除ボタン
+                            const removeBtn = document.createElement("button");
+                            removeBtn.innerHTML = "×";
+                            removeBtn.classList.add("absolute", "z-10", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-2", "py-1");
+                            container.appendChild(removeBtn); // 🔹 削除ボタンを画像の上に配置
+                            calendarPhotoPreviewContainer.appendChild(container);
+
+                            // 🔹 削除ボタンのクリックイベント
+                            removeBtn.addEventListener("click", function () {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                const containerIndex = parseInt(container.dataset.index, 10); // 🔹 削除するインデックスを取得
+                                croppedCalendarFiles.splice(containerIndex, 1); // 🔹 `croppedCalendarFiles` から削除
+                                container.remove(); // 🔹 HTML上の要素を削除
+                                updateCalendarIndexes(); // 🔹 インデックスを更新
+                            });
+
+                        };
+                        reader.readAsDataURL(croppedFile);
+
+                        // 次のカレンダー画像を選択できるようにリセット
+                        calendarPhotoInput.value = "";
+                    }
+
+                    cropModal.classList.add("hidden");
+                }, "image/jpeg");
+            });
+
+
+            // トップ画像の削除処理
+            removeTopPhoto.addEventListener("click", function () {
+                event.preventDefault();
+                event.stopPropagation();
+                topPhotoPreview.src = "#";
+                topPhotoPreview.classList.add("hidden");
+                removeTopPhoto.classList.add("hidden"); // 🔹 削除ボタンを隠す
+                topPhotoInput.value = ""; // ファイル選択をリセット
+                croppedTopFile = null; // **FormData に送信されないようにする**
+            });
+
+
+            // **フォーム送信時にトリミング後の画像を `FormData` に追加**
+            document.getElementById("circle-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const form = document.getElementById("circle-form");
+                const formData = new FormData(form);
+
+                // **トリミング後のトップ画像を `FormData` にセット**
+                // **削除済みのデータを送信しないようにする**
+                if (croppedTopFile) {
+                    formData.set("topPhoto", croppedTopFile);
+                } else {
+                    formData.delete("topPhoto"); // **削除済みなら FormData からも削除**
+                }
+
+                // **サブ画像も、削除されたものを除いて送信**
+                formData.delete("subPhotos"); // **既存の subPhotos を削除**
+                croppedSubFiles.forEach((file) => {
+                    formData.append("subPhotos", file);
                 });
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert("サークルが登録されました！");
-            window.location.href = "/";
-        })
-        .catch(error => {
-            console.error("エラー:", error);
-            alert(`エラーが発生しました。\n${error.message}`);
 
-              // エラー発生時にボタンを再び有効化
-              submitButton.disabled = false;
-            submitButton.value = "サークルを掲載する";
-            submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+                // **calendar画像も、削除されたものを除いて送信**
+                formData.delete("calendarPhotos"); // **既存の calendarPhotos を削除**
+                croppedCalendarFiles.forEach((file) => {
+                    formData.append("calendarPhotos", file);
+                });
+
+
+
+
+
+                // **スライダーの値を追加**
+                formData.append("slider1", document.getElementById("slider1").value);
+                formData.append("slider2", document.getElementById("slider2").value);
+                formData.append("slider3", document.getElementById("slider3").value);
+                formData.append("slider4", document.getElementById("slider4").value);
+
+                // 選択されたタグを取得し、カンマ区切りの文字列にする
+                const tagCheckboxes = document.querySelectorAll('input[name="tag"]:checked');
+                const tags = Array.from(tagCheckboxes).map(checkbox => checkbox.value).join(',');
+
+                // **デバッグ用（`FormData` の内容を表示）**
+                for (const pair of formData.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
+
+
+                const submitButton = document.getElementById("submitButton");
+
+                submitButton.disabled = true;
+                submitButton.value = "送信中...";
+                submitButton.classList.add("opacity-50", "cursor-not-allowed");
+
+
+
+                // **サーバーへ送信（fetch を1回だけ実行）**
+                fetch("/circles", {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache", // キャッシュを無効化
+                    body: formData,
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.error || "登録に失敗しました");
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert("サークルが登録されました！");
+                        window.location.href = "/";
+                    })
+                    .catch(error => {
+                        console.error("エラー:", error);
+                        alert(`エラーが発生しました。\n${error.message}`);
+
+                        // エラー発生時にボタンを再び有効化
+                        submitButton.disabled = false;
+                        submitButton.value = "サークルを掲載する";
+                        submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+                    });
+            });
         });
-    });
-});
 
-function updateSubPhotoIndexes() {
-    const subPhotoContainers = document.querySelectorAll("#subPhotoPreviewContainer .relative");
-    subPhotoContainers.forEach((container, index) => {
-        container.dataset.index = index; // 各コンテナにインデックスを付与
-    });
-}
+        function updateSubPhotoIndexes() {
+            const subPhotoContainers = document.querySelectorAll("#subPhotoPreviewContainer .relative");
+            subPhotoContainers.forEach((container, index) => {
+                container.dataset.index = index; // 各コンテナにインデックスを付与
+            });
+        }
 
     </script>
 </body>
+
 </html>
