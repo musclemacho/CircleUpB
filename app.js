@@ -84,11 +84,11 @@ const storage = multer.diskStorage({
     }
 });
 
-// ✅ アップロードサイズ制限: 5MB
+// ✅ アップロードサイズ制限: 50MB
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB
 });
 
 // MySQL 接続設定
@@ -540,12 +540,12 @@ app.get("/search", (req, res) => {
                 return res.status(500).send("エラーが発生しました: " + err.message);
             }
 
-            res.render("index", { 
-                circles: rows, 
-                page: parseInt(page) || 1, 
+            res.render("index", {
+                circles: rows,
+                page: parseInt(page) || 1,
                 totalPages, // 🔹 追加
-                query: req.query || {}, 
-                isFavorite: false 
+                query: req.query || {},
+                isFavorite: false
             });
         });
     });
@@ -603,7 +603,7 @@ app.get("/", (req, res) => {
             console.error("データ取得エラー:", err);
             return res.status(500).json({ error: "データ取得エラー" });
         }
-        
+
         const totalItems = result[0].count;
         const totalPages = Math.ceil(totalItems / limit); // `limit` を適用
 
@@ -614,13 +614,13 @@ app.get("/", (req, res) => {
                 return res.status(500).json({ error: "データ取得エラー" });
             }
 
-            res.render("index", { 
-                circles, 
-                page, 
-                totalPages,  
-                query: req.query || {}, 
-                isFavorite: false 
-            }); 
+            res.render("index", {
+                circles,
+                page,
+                totalPages,
+                query: req.query || {},
+                isFavorite: false
+            });
         });
     });
 });
