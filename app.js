@@ -12,10 +12,20 @@ const nl2br = (str) => {
     if (!str) return "";
     return str.replace(/\n/g, "<br>");
 };
+const passport = require("passport");
+const cookieParser = require("cookie-parser");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const helmet = require("helmet");
 // 環境変数ファイルの読み込み
 const config = require("./config");
 
+// ログインしている状態かどうかを確かめる関数
+const ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+};
 app.use(
     helmet({
         contentSecurityPolicy: false, // ✅ 完全に無効化
@@ -41,16 +51,100 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 
 app.use(session({
-    secret: "your_secret_key",  // 任意のシークレットキー
+    secret: config.sessionKey,  // 任意のシークレットキー
     resave: false,  // セッションが変更されたときのみ保存
     saveUninitialized: false,  // 未初期化のセッションは保存しない
+    rolling: true,
     cookie: {
         secure: false,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
         sameSite: "lax",  // CSRF対策
-        maxAge: 30 * 60 * 1000 // セッションの有効期限: 30分
+        maxAge: 7 * 24 * 60 * 60 * 1000 // セッションの有効期限: 30分
     }
 }));
+
+// passportの初期化
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new GoogleStrategy(
+    {
+        clientID: config.google.clientId,
+        clientSecret: config.google.clientSecret,
+        callbackURL: config.google.callbackUrl
+    },
+    (accessToken, refreshToken, profile, done) => {
+        const { id, displayName, emails } = profile;
+        const email = emails[0].value;
+        console.log(profile.id)
+
+        db.query(
+            "SELECT * FROM Users WHERE googleId = ?",
+            [id],
+            (err, results) => {
+                if (err) return done(err);
+
+                if (results.length > 0) {
+                    return done(null, results[0]); // 既存ユーザー
+                } else {
+                    // 新規ユーザー登録
+                    db.query(
+                        "INSERT INTO Users (googleId, name, email) VALUES (?, ?, ?)",
+                        [id, displayName, email],
+                        (err, result) => {
+                            if (err) return done(err);
+                            return done(null, { id: result.insertId, googleId: id, name: displayName, email });
+                        }
+                    );
+                }
+            }
+        );
+    }
+));
+
+// ユーザーのシリアライズ & デシリアライズ
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+// クライアントにisAuthentificatedを渡す
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.isAuthenticated();
+    res.locals.user = req.user || null; // ユーザー情報をEJSに渡す
+    next();
+});
+
+// ------ここから下はルートハンドラー--------
+// ログイン画面
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+// ログアウトエンドポイント
+app.post("/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("ログアウトエラーが発生しました");
+            return res.status(500).json({ message: "ログアウトに失敗しました" });
+        }
+        // 
+        req.session = null;
+        // connect.sidはsidが格納されるデフォのオブジェクト名
+        res.clearCookie("connect.sid");
+        res.redirect("/");
+    });
+
+})
+
+// Google OAuth ログインエンドポイント
+app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
+// oauth認証成功時の処理→→/auth/google/callbackにルーティングされる
+app.get("/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: "/" }),
+    (req, res) => {
+        res.redirect("/");
+    }
+);
 
 
 // リクエストをログに記録するミドルウェア
