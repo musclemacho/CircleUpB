@@ -677,7 +677,7 @@ app.get("/searchFav", (req, res) => {
 // 各ページのルート
 app.get('/newCircle', ensureAuthenticated,(req, res) => {
     console.log(req.user)
-    onsole.log(req.sessionID);
+    console.log(req.sessionID);
     res.render('newCircle', { title: '新しいサークル掲載' });
 });
 
