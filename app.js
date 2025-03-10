@@ -694,7 +694,7 @@ app.get(`/contact`, (req, res) => {
 })
 
 app.get("/", (req, res) => {
-    console.log("セッションid:",req.session);
+    console.log("セッションid:",req.sessionID);
     console.log("req.user:", req.user); // デバッグ用
     console.log("isAuthenticated:", req.isAuthenticated()); // デバッグ用
     
