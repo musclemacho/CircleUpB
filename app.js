@@ -56,7 +56,7 @@ app.use(session({
     saveUninitialized: false,  // 未初期化のセッションは保存しない
     rolling: true,
     cookie: {
-        secure: false,  // HTTPS 環境なら true
+        secure: true,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
         sameSite: "none",  // CSRF対策
         maxAge: 7 * 24 * 60 * 60 * 1000 // セッションの有効期限: 30分
@@ -65,7 +65,7 @@ app.use(session({
 
 // passportの初期化
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session());   //req.sessionがあるかどうかでexpress-sessionを使っているかを管理
 
 passport.use(new GoogleStrategy(
     {
