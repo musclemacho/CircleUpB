@@ -367,7 +367,7 @@ async function compressImage(inputPath, filename) {
 
 
 // 🔹 サークルの登録処理
-app.post('/circles', upload.fields([
+app.post('/circles',ensureAuthenticated, upload.fields([
     { name: 'topPhoto', maxCount: 1 },
     { name: 'subPhotos', maxCount: 5 },
     { name: 'calendarPhotos', maxCount: 3 }
@@ -671,7 +671,7 @@ app.get("/searchFav", (req, res) => {
 
 
 // 各ページのルート
-app.get('/newCircle', (req, res) => {
+app.get('/newCircle', ensureAuthenticated,(req, res) => {
     res.render('newCircle', { title: '新しいサークル掲載' });
 });
 
