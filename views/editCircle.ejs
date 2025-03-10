@@ -98,7 +98,7 @@
 <div class="p-6 border-t border-gray-300">
         <!-- サークル名 -->
         <div class="form-group my-5">
-            <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊再登録必須</span></label>
+            <label for="circleName" class="block text-gray-700 font-bold mb-4">サークル名　<span class="text-red-500 opacity-80">＊必須</span></label>
             <input type="text" id="circleName" name="circleName" placeholder="例: Green" required value="<%= circle.circleName %>"
                    class="w-full border border-[#eba789] rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-300">
         </div>
@@ -127,7 +127,7 @@
 
     <!-- サブジャンル -->
     <div class="my-7">
-        <label for="subGenre" class="block text-gray-700 font-bold mb-4">サブジャンルを選択　<span class="text-red-500 opacity-80">＊必須</span></label>
+        <label for="subGenre" class="block text-gray-700 font-bold mb-4">サブジャンルを選択　<span class="text-red-500 opacity-80">＊再登録必須</span></label>
         <select id="subGenre" name="subGenre"      required              class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
 
             <option value="">メインジャンルを選択してください</option>
@@ -889,10 +889,9 @@ ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
     <div class="my-7">
         <label for="location" class="block text-gray-700 font-bold mb-4">主な活動場所・推奨所属キャンパスを選択</label>
         <select id="location" name="location"   class="w-full border border-[#eba789] rounded-lg h-12 focus:outline-none focus:ring-2 focus:ring-orange-300">
-
+            <option value="今出川・京田辺" <%= circle.location === "今出川・京田辺" ? 'selected' : '' %>>今出川・京田辺</option>
             <option value="今出川" <%= circle.location === "今出川" ? 'selected' : '' %>>今出川</option>
             <option value="京田辺" <%= circle.location === "京田辺" ? 'selected' : '' %>>京田辺</option>
-            <option value="今出川・京田辺" <%= circle.location === "今出川・京田辺" ? 'selected' : '' %>>今出川・京田辺</option>
             <option value="未選択" <%= !circle.location ? 'selected' : '' %>>未選択</option>
         </select>
     </div>
