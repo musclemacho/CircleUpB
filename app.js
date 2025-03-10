@@ -49,13 +49,12 @@ app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-
+app.set('trust proxy', 1);
 app.use(session({
     secret: config.sessionKey,  // 任意のシークレットキー
     resave: false,  // セッションが変更されたときのみ保存
     saveUninitialized: false,  // 未初期化のセッションは保存しない
     rolling: true,
-    proxy: true,
     cookie: {
         secure: false,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
@@ -700,7 +699,7 @@ app.get(`/contact`, (req, res) => {
 })
 
 app.get("/", (req, res) => {
-    console.log("セッションid:",req.sessionID);
+    console.log("ルートリクエストの際のセッションid:",req.sessionID);
     console.log("req.user:", req.user); // デバッグ用
     console.log("isAuthenticated:", req.isAuthenticated()); // デバッグ用
     
