@@ -391,6 +391,9 @@ app.post('/circles',ensureAuthenticated, upload.fields([
     console.log("=== Request Body ===", req.body);
     console.log("=== Request Headers ===", req.headers);
     console.log("=== Uploaded Files ===", req.files);
+    const userGoogleId = req.user.googleId;
+    const userName = req.user.displayName;
+    console.log("===uploader===:",userGoogleId,userName);
 
     const {
         circleName, mainGenre, subGenre, comment, other, tag, description, password,
@@ -438,8 +441,8 @@ app.post('/circles',ensureAuthenticated, upload.fields([
             circleName, mainGenre, subGenre, comment, other, tag, description, password,
             admissionFee, annualFee, location, instagram,
             parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
-            topPhoto, subPhotos, calendarPhotos
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            topPhoto, subPhotos, calendarPhotos , created_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.query(
@@ -449,7 +452,7 @@ app.post('/circles',ensureAuthenticated, upload.fields([
             description, password,
             parsedAdmissionFee, parsedAnnualFee, location, instagram,
             parsedSlider1, parsedSlider2, parsedSlider3, parsedSlider4,
-            compressedTopPhoto, compressedSubPhotos.join(','), compressedCalendarPhotos.join(',')
+            compressedTopPhoto, compressedSubPhotos.join(','), compressedCalendarPhotos.join(','), userGoogleId
         ],
         (err, result) => {
             if (err) {
