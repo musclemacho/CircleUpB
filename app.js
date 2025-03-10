@@ -142,6 +142,8 @@ app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "em
 app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
+        console.log("Google OAuth callback reached");
+        console.log("User:", req.user);
         res.redirect("/");
     }
 );
