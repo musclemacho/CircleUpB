@@ -58,7 +58,7 @@ app.use(session({
     cookie: {
         secure: false,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
-        sameSite: "lax",  // CSRF対策
+        sameSite: "none",  // CSRF対策
         maxAge: 7 * 24 * 60 * 60 * 1000 // セッションの有効期限: 30分
     }
 }));
