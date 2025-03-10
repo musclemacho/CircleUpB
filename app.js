@@ -151,7 +151,7 @@ app.get("/auth/google/callback",
     (req, res) => {
         console.log("Google OAuth callback reached");
         console.log("User:", req.user);
-        console.log(req.sessionID);
+        console.log("oauthコールバック後のセッションid:",req.sessionID);
         
         res.redirect("/");
     }
