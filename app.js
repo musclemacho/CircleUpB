@@ -694,8 +694,10 @@ app.get(`/contact`, (req, res) => {
 })
 
 app.get("/", (req, res) => {
+    console.log("セッションid:",req.session);
     console.log("req.user:", req.user); // デバッグ用
     console.log("isAuthenticated:", req.isAuthenticated()); // デバッグ用
+    
     let page = parseInt(req.query.page) || 1; // デフォルト1ページ目
     let limit = 25; // 1ページあたりの表示数
     let offset = (page - 1) * limit;
