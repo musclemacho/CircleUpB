@@ -103,8 +103,15 @@ passport.use(new GoogleStrategy(
 ));
 
 // ユーザーのシリアライズ & デシリアライズ
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+passport.serializeUser((user, done) => {
+    console.log("🔹 serializeUser 呼び出し: ", user);
+    done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+    console.log("🔹 deserializeUser 呼び出し: ", user);
+    done(null, user);
+});
 
 // クライアントにisAuthentificatedを渡す
 app.use((req, res, next) => {
