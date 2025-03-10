@@ -49,7 +49,7 @@ app.locals.nl2br = nl2br;  // EJS で使用できるようにする
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-
+app.set('trust proxy', 1);
 app.use(session({
     secret: config.sessionKey,  // 任意のシークレットキー
     resave: false,  // セッションが変更されたときのみ保存
