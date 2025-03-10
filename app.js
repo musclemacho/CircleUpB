@@ -144,6 +144,8 @@ app.get("/auth/google/callback",
     (req, res) => {
         console.log("Google OAuth callback reached");
         console.log("User:", req.user);
+        console.log(req.sessionID);
+        
         res.redirect("/");
     }
 );
@@ -674,6 +676,7 @@ app.get("/searchFav", (req, res) => {
 
 // 各ページのルート
 app.get('/newCircle', ensureAuthenticated,(req, res) => {
+    console.log(req.user)
     res.render('newCircle', { title: '新しいサークル掲載' });
 });
 
