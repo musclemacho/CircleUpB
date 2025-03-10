@@ -82,14 +82,17 @@
          <li><a href="/newCircle" class="block text-gray-800 text-lg hover:text-black transition">サークルを投稿する</a>
          </li>
          <% if (isAuthenticated) { %>
-             <form action="/logout" method="POST">
-                 <button type="submit" class="block text-gray-800 text-lg hover:text-black transition">
-                     ログアウト
-                 </button>
-             </form>
-             <% } else { %>
-                 <a href="/login" class="block text-gray-800 text-lg hover:text-black transition">ログイン</a>
-                 <% } %>
+            <form action="/logout" method="POST">
+                <button type="submit" class="flex items-center text-red-600 text-lg hover:text-red-800 transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i> ログアウト
+                </button>
+            </form>
+        <% } else { %>
+            <a href="/login" class="flex items-center text-green-600 text-lg hover:text-green-800 transition">
+                <i class="fas fa-sign-in-alt mr-2"></i> ログイン
+            </a>
+        <% } %>
+        
      </ul>
  </div>
 
