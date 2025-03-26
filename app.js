@@ -56,7 +56,7 @@ app.use(session({
     saveUninitialized: false,  // 未初期化のセッションは保存しない
     rolling: true,
     cookie: {
-        secure: true,  // HTTPS 環境なら true
+        secure: false,  // HTTPS 環境なら true
         httpOnly: true, // JavaScript からアクセス不可（XSS対策）
         SameSite: "None",  // CSRF対策
         maxAge: 7 * 24 * 60 * 60 * 1000 // セッションの有効期限: 1週間
