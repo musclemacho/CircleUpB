@@ -649,7 +649,7 @@ slider1.addEventListener('input', () => {
            
 <li>
     <div>
-                        <input type="checkbox" id="enjoyable" name="tag" value="何でもできる" class="hidden peer">
+                        <input type="checkbox" id="enjoyable" name="tag" value="何でもできる" class="hidden peer" <%= circle.tag.includes("何でもできる") ? "checked" : "" %>>
                         <label for="enjoyable"class="shadow-md 
                        ">
                             何でもできる
